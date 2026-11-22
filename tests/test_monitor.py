@@ -14,10 +14,11 @@ class TestEventMonitor(unittest.TestCase):
     def setUp(self):
         self.monitor = EventMonitor()
 
-    def test_get_cst_time_str(self):
+    def test_get_cst_details(self):
         dt_utc = datetime.datetime(2026, 11, 22, 12, 0, 0, tzinfo=datetime.timezone.utc)
-        expected = "22/11/2026 a las 06:00 AM"
-        self.assertEqual(self.monitor.get_cst_time_str(dt_utc), expected)
+        date_str, time_str = self.monitor.get_cst_details(dt_utc)
+        self.assertEqual(date_str, "22/11/2026")
+        self.assertEqual(time_str, "06:00 AM")
 
     def test_download_image_success(self):
         with patch('urllib.request.urlretrieve') as mock_retrieve:
@@ -102,14 +103,13 @@ class TestEventMonitor(unittest.TestCase):
                 return mock_info
             return None
 
-        # We mock specific methods to avoid complex datetime mocking
         with patch('src.event_monitor.requests.get'), \
              patch('src.event_monitor.EventMonitor.get_event_info', side_effect=side_effect_get_info) as mock_get_info, \
              patch('src.event_monitor.EventMonitor.download_image') as mock_download, \
              patch('src.event_monitor.send_telegram_notification') as mock_send_tg, \
-             patch('src.event_monitor.EventMonitor.get_cst_time_str') as mock_get_cst_time:
+             patch('src.event_monitor.EventMonitor.get_cst_details') as mock_get_cst_details:
             
-            mock_get_cst_time.return_value = "23/11/2026 a las 08:00 PM"
+            mock_get_cst_details.return_value = ("23/11/2026", "08:00 PM")
             mock_download.return_value = "/tmp/oscars.jpg"
             mock_send_tg.return_value = (True, None)
 
@@ -122,7 +122,8 @@ class TestEventMonitor(unittest.TestCase):
             msg = args[0]
             self.assertIn("🚨 EVENTO DETECTADO: The Oscars!", msg)
             self.assertIn("✨ The Oscars", msg)
-            self.assertIn("⏰ Hora: 23/11/2026 a las 08:00 PM", msg)
+            self.assertIn("📅 Fecha: 23/11/2026", msg)
+            self.assertIn("⏰ Hora: 08:00 PM", msg)
             self.assertIn("📺 Ver en: ABC", msg)
             self.assertIn("MEDIA:tmp/oscars.jpg", msg)
 

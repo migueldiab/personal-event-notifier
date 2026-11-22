@@ -10,25 +10,34 @@ class EventMonitor:
         self.events = INTEREST_EVENTS
         self.channel_id = TELEGRAM_CHANNEL_ID
 
-    def check_events(self):
-        self.run_monitor()
+    def check_events(self, events_input=None):
+        self.run_monitor(events_input)
 
-    def run_monitor(self):
+    def run_monitor(self, events_input=None):
         print(f"--- Starting Monitor Cycle: {datetime.datetime.now()} ---")
         found_any = False
         
-        for event in self.events:
+        # Use provided input (split by comma) or fallback to global config
+        if events_input:
+            targets = [e.strip() for e in events_input.split(',') if e.strip()]
+        else:
+            targets = self.events
+            
+        for event in targets:
             print(f"Checking {event}...")
             info = self.get_event_info(event)
             
             if info and info.get("happening"):
                 dt_utc = datetime.datetime.strptime(f"{info['date']} {info['air_time']}", "%Y-%m-%d %H:%M")
                 dt_utc = dt_utc.replace(tzinfo=datetime.timezone.utc)
-                time_str = self.get_cst_time_str(dt_utc)
+                
+                # Get formatted components
+                date_str, time_str = self.get_cst_details(dt_utc)
                 
                 msg = (
                     f"🚨 EVENTO DETECTADO: {event}!\\n"
                     f"✨ {info['show_name']}\\n"
+                    f"📅 Fecha: {date_str}\\n"
                     f"⏰ Hora: {time_str}\\n"
                     f"📺 Ver en: {info['network']} (Link: {info['watch_url']})\\n"
                 )
@@ -36,7 +45,7 @@ class EventMonitor:
                 if info.get("image_url"):
                     img_path = self.download_image(info['image_url'], f"{event.replace(' ', '_')}.jpg")
                     if img_path:
-                        # Ensure we don't have double slashes like MEDIA://
+                        # Ensure no double slashes like MEDIA://
                         msg += f"MEDIA:{img_path.lstrip('/')}"
                 
                 success, error = send_telegram_notification(msg, self.channel_id)
@@ -50,9 +59,10 @@ class EventMonitor:
             
         print(f"--- Cycle Complete. Found: {found_any} ---")
 
-    def get_cst_time_str(self, dt_utc):
+    def get_cst_details(self, dt_utc):
+        """Returns (date_str, time_str) in CST."""
         dt_cst = dt_utc.astimezone(datetime.timezone(datetime.timedelta(hours=-6)))
-        return dt_cst.strftime("%d/%m/%Y a las %I:%M %p")
+        return dt_cst.strftime("%d/%m/%Y"), dt_cst.strftime("%I:%M %p")
 
     def download_image(self, image_url, filename):
         try:
@@ -106,8 +116,6 @@ class EventMonitor:
 
         show = match.get("show")
         
-        # Optimization: Try to use nextAirDate directly from the show object
-        # This avoids an extra network request for the schedule.
         next_air_date = show.get("nextAirDate")
         if next_air_date:
             try:
@@ -115,7 +123,6 @@ class EventMonitor:
                 date_part = parts[0]
                 air_time = parts[1] if len(parts) > 1 else ""
                 
-                # Verify it's in the future
                 day_dt = datetime.datetime.strptime(date_part, "%Y-%m-%d").date()
                 if day_dt >= datetime.date.today():
                     return {
@@ -129,9 +136,8 @@ class EventMonitor:
                         "happening": True
                     }
             except Exception:
-                pass # Fall back to schedule if parsing fails
+                pass
 
-        # Fallback: Full schedule fetch
         show_id = show.get("id")
         schedule_url = f"https://api.tvmaze.com/shows/{show_id}/schedule?page=0"
         schedule = []
@@ -164,4 +170,6 @@ class EventMonitor:
 
 if __name__ == "__main__":
     monitor = EventMonitor()
-    monitor.run_monitor()
+    # Allow passing events via command line, e.g., python3 main.py "Oscars,SXSW"
+    user_input = sys.argv[1] if len(sys.argv) > 1 else None
+    monitor.run_monitor(user_input)

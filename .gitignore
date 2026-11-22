@@ -1,0 +1,54 @@
+# --- Python Bytecode & Caches ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# --- Virtual Environments ---
+.venv/
+venv/
+ENV/
+env/
+
+# --- Packaging & Build Artifacts ---
+build/
+dist/
+*.egg-info/
+.eggs/
+wheels/
+
+# --- Testing, Linting & Type Checking ---
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# --- Environment Variables & Secrets ---
+.env
+.env.*
+!.env.example
+
+# --- Jupyter Notebooks ---
+.ipynb_checkpoints/
+
+# --- Linux & General System ---
+*~
+*.swp
+*.swo
+*.bak
+*.tmp
+*.log
+.directory
+.Trash-*
+
+# --- Editors & IDEs ---
+.vscode/
+.idea/
+*.code-workspace
+
+
+
