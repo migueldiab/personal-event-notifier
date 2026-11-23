@@ -4,30 +4,43 @@ import sys
 import os
 
 # Add project root to path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from src.event_monitor import EventMonitor
 
 class TestEventMonitorIntegration(unittest.TestCase):
+
     def setUp(self):
         self.monitor = EventMonitor()
 
     @patch('requests.get')
     def test_macy_parade_detection(self, mock_get):
         """Verify that 'Macy's Day Parade' is detected and formatted correctly."""
-        # Mock TVMaze search response
-        mock_get.return_value.status_code = 200
-        mock_get.return_value.json.return_value = [
-            {
-                "show": {
-                    "name": "Macy's Thanksgiving Day Parade",
-                    "nextAirDate": "2026-11-26 12:00",
-                    "network": {"name": "NBC"},
-                    "url": "http://macy.com",
-                    "image": {"medium": "http://img.com/parade.jpg"}
-                }
+        # Mock responses for search and next episode
+        search_response = {
+            "show": {
+                "name": "Macy's Thanksgiving Day Parade",
+                "_links": {
+                    "nextepisode": {
+                        "href": "https://api.tvmaze.com/shows/123/episodes/456"
+                    }
+                },
+                "network": {"name": "NBC"},
+                "url": "http://macy.com",
+                "image": {"medium": "http://img.com/parade.jpg"}
             }
+        }
+        next_ep_response = {
+            "air_date": "2026-11-26",
+            "air_time": "12:00",
+            "airstamp": "2026-11-26T12:00:00Z"
+        }
+
+        mock_get.side_effect = [
+            MagicMock(status_code=200, json=lambda: [search_response]),
+            MagicMock(status_code=200, json=lambda: next_ep_response)
         ]
+        mock_get.return_value.raise_for_status.return_value = None
 
         result = self.monitor.get_event_info("Macy's Day Parade")
         

@@ -67,13 +67,13 @@ class TestEventMonitor(unittest.TestCase):
         self.assertEqual(match['show']['name'], "Macy's Thanksgiving Day Parade")
 
     def test_get_event_info_no_matches(self):
-        with patch('src.event_monitor.requests.get') as mock_get:
+        with patch('src.event_monitor.fetch_with_retry') as mock_get:
             mock_get.return_value.json.return_value = []
             match = self.monitor.get_event_info('NonExistentEvent')
             self.assertIsNone(match)
 
     def test_get_event_info_no_schedule(self):
-        with patch('src.event_monitor.requests.get') as mock_get:
+        with patch('src.event_monitor.fetch_with_retry') as mock_get:
             mock_get.side_effect = [
                 MagicMock(json=lambda: [{'show': {'name': 'Test Show', 'id': '123', '_links': {'nextepisode': {'href': 'https://api.tvmaze.com/shows/123/episodes/456'}}}}]),
                 MagicMock(json=lambda: [])
@@ -99,7 +99,7 @@ class TestEventMonitor(unittest.TestCase):
                 return mock_info
             return None
 
-        with patch('src.event_monitor.requests.get'), \
+        with patch('src.event_monitor.fetch_with_retry'), \
              patch('src.event_monitor.EventMonitor.get_event_info', side_effect=side_effect_get_info) as mock_get_info, \
              patch('src.event_monitor.EventMonitor.download_image') as mock_download, \
              patch('src.event_monitor.send_telegram_notification') as mock_send_tg:
@@ -122,7 +122,7 @@ class TestEventMonitor(unittest.TestCase):
             self.assertIn('MEDIA:/tmp/oscars.jpg', msg)
 
     def test_run_monitor_fallback_info(self):
-        with patch('src.event_monitor.requests.get'), \
+        with patch('src.event_monitor.fetch_with_retry'), \
              patch('src.event_monitor.EventMonitor.get_event_info') as mock_get_info, \
              patch('src.event_monitor.EventMonitor.download_image'), \
              patch('src.event_monitor.datetime'), \
@@ -143,12 +143,12 @@ class TestEventMonitor(unittest.TestCase):
             self.monitor.run_monitor()
             self.assertTrue(mock_get_info.called)
 
-    @patch('src.event_monitor.requests.get')
+    @patch('src.event_monitor.fetch_with_retry')
     @patch('src.event_monitor.EventMonitor.get_event_info')
     @patch('src.event_monitor.EventMonitor.download_image')
     @patch('src.event_monitor.datetime')
     @patch('src.event_monitor.send_telegram_notification')
-    def test_run_monitor_image_failure(self, mock_send_tg, mock_datetime, mock_download, mock_get_info, mock_get_req):
+    def test_run_monitor_image_failure(self, mock_send_tg, mock_datetime, mock_download, mock_get_info, mock_fetch):
         mock_datetime.today.return_value = datetime.date(2026, 11, 22)
         mock_datetime.strptime.return_value = datetime.datetime(2026, 11, 23, 20, 0, 0)
         mock_datetime.now.return_value = datetime.datetime(2026, 11, 22, 12, 0, 0)
@@ -167,10 +167,9 @@ class TestEventMonitor(unittest.TestCase):
         self.monitor.run_monitor()
         self.assertTrue(mock_send_tg.called)
 
-    @patch('src.event_monitor.requests.get')
-    def test_get_event_info_nextepisode_success(self, mock_get):
+    @patch('src.event_monitor.fetch_with_retry')
+    def test_get_event_info_nextepisode_success(self, mock_fetch):
         search_response = MagicMock()
-        # Explicitly defining the nested structure to avoid any ambiguity
         search_response.json.return_value = [{
             'show': {
                 'name': 'Oscars',
@@ -191,14 +190,12 @@ class TestEventMonitor(unittest.TestCase):
             'air_time': '20:00',
             'airstamp': '2026-11-23T20:00:00Z'
         }
-        next_ep_response.raise_for_status.return_value = None
-        mock_get.side_effect = [search_response, next_ep_response]
+        mock_fetch.side_effect = [search_response, next_ep_response]
         
         result = self.monitor.get_event_info('Oscars')
         
         self.assertIsNotNone(result)
         self.assertEqual(result['show_name'], 'Oscars')
         self.assertEqual(result['air_date'], '2026-11-23')
-        # Use assertIn because exact format of time string might vary with zone info
         self.assertIn('02:00', result['air_time'])
         self.assertEqual(result['network'], 'HBO')
