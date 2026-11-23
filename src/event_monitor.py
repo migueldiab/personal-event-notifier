@@ -1,9 +1,10 @@
-import datetime
-import requests
-import os
-import difflib
 from .config import INTEREST_EVENTS, TELEGRAM_CHANNEL_ID
 from .utils import send_telegram_notification
+from datetime import datetime
+from zoneinfo import ZoneInfo
+import difflib
+import os
+import requests
 
 class EventMonitor:
     def __init__(self):
@@ -14,7 +15,7 @@ class EventMonitor:
         self.run_monitor(events_input)
 
     def run_monitor(self, events_input=None):
-        print(f"--- Starting Monitor Cycle: {datetime.datetime.now()} ---")
+        print(f"--- Starting Monitor Cycle: {datetime.now()} ---")
         found_any = False
         
         if events_input:
@@ -23,37 +24,23 @@ class EventMonitor:
             targets = self.events
             
         for event in targets:
-            print(f"Checking {event}...")
             info = self.get_event_info(event)
-            
-            if info and info.get("happening"):
-                raw_date = info.get("date", "0000-00-00")
-                raw_time = info.get("air_time", "00:00")
-                
-                try:
-                    dt_utc = datetime.datetime.strptime(f"{raw_date} {raw_time}", "%Y-%m-%d %H:%M")
-                    dt_utc = dt_utc.replace(tzinfo=datetime.timezone.utc)
-                except ValueError:
-                    dt_utc = datetime.datetime.strptime(raw_date, "%Y-%m-%d").replace(hour=0, minute=0, tzinfo=datetime.timezone.utc)
-                
-                date_str, time_str = self.get_cst_details(dt_utc)
-                
+
+            if info:
                 show_name = info.get("show_name", "Desconocido")
                 network = info.get("network", "S/N")
                 watch_url = info.get("watch_url", "#")
+                show_date = info.get("air_date")
+                show_time = info.get("air_time")
                 
                 msg = (
                     f"🚨 EVENTO DETECTADO: {event}!\n"
                     f"✨ {show_name}\n"
-                    f"📅 Fecha: {date_str}\n"
-                    f"⏰ Hora: {time_str}\n"
-                    f"📺 Ver en: {network} (Link: {watch_url})"
+                    f"📅 Fecha: {show_date}\n"
+                    f"⏰ Hora: {show_time}\n"
+                    f"📺 Ver en: {network} (Link: {watch_url})\n"
+                    f"\nMEDIA:{info.get("image_url")}"
                 )
-                
-                if info.get("image_url"):
-                    img_path = self.download_image(info['image_url'], f"{event.replace(' ', '_')}.jpg")
-                    if img_path:
-                        msg += f"\nMEDIA:{img_path.lstrip('/')}"
                 
                 success, error = send_telegram_notification(msg, self.channel_id)
                 if success:
@@ -68,7 +55,7 @@ class EventMonitor:
 
     def get_cst_details(self, dt_utc):
         """Returns (date_str, time_str) in CST."""
-        dt_cst = dt_utc.astimezone(datetime.timezone(datetime.timedelta(hours=-6)))
+        dt_cst = dt_utc.astimezone(timezone(timedelta(hours=-6)))
         return dt_cst.strftime("%d/%m/%Y"), dt_cst.strftime("%I:%M %p")
 
     def download_image(self, image_url, filename):
@@ -91,18 +78,15 @@ class EventMonitor:
             if not show:
                 continue
             show_name = show.get("name", "").lower()
-            print(f"compraing: {show_name}")
 
             if show_name == event_name_lower:
                 return entry
 
             score = difflib.SequenceMatcher(None, event_name_lower, show_name).ratio()
-            print(f"score: {score}")
             if score > best_score:
                 best_score = score
                 best_match = entry
         
-        print(f"best score: {best_score}")
         if best_score > 0.6:
             return best_match
         return None
@@ -125,56 +109,25 @@ class EventMonitor:
             return None
 
         show = match.get("show")
-        print(f"show: {show}")
         
-        next_air_date = show.get("nextAirDate")
-        if next_air_date:
+        nextepisode = show.get("_links").get("nextepisode")
+        if nextepisode and nextepisode.get("href"):
             try:
-                parts = next_air_date.split(' ')
-                date_part = parts[0]
-                air_time = parts[1] if len(parts) > 1 else ""
+                resp = requests.get(nextepisode["href"], timeout=15)
+                resp.raise_for_status()
+                next_ep_data = resp.json()
+                dt_cst = datetime.fromisoformat(next_ep_data.get("airstamp")).astimezone(ZoneInfo("America/Chicago"))
                 
-                day_dt = datetime.datetime.strptime(date_part, "%Y-%m-%d").date()
-                if day_dt >= datetime.date.today():
-                    return {
-                        "event_name": event_name,
-                        "show_name": show.get("name"),
-                        "date": date_part,
-                        "air_time": air_time,
-                        "network": show.get("network", {}).get("name", "TV/Streaming"),
-                        "watch_url": show.get("url"),
-                        "image_url": show.get("image", {}).get("medium"),
-                        "happening": True
-                    }
-            except Exception:
-                pass
+                return {
+                    "event_name": event_name,
+                    "show_name": show.get("name"),
+                    "air_date": dt_cst.date().strftime("%Y-%m-%d"),
+                    "air_time": dt_cst.time().strftime("%I:%M:%S %p %Z"),
+                    "network": show.get("network", {}).get("name", "TV/Streaming"),
+                    "watch_url": show.get("url"),
+                    "image_url": show.get("image", {}).get("medium"),
+                }
+            except Exception as e:
+                print(f"⚠️ Error fetching nextepisode from {nextepisode['href']}: {e}")
 
-        show_id = show.get("id")
-        schedule_url = f"https://api.tvmaze.com/shows/{show_id}/schedule?page=0"
-        schedule = []
-        try:
-            sched_r = requests.get(schedule_url, timeout=15)
-            sched_r.raise_for_status()
-            schedule = sched_r.json()
-        except Exception:
-            pass
-
-        today = datetime.date.today()
-        for day in schedule:
-            day_str = day.get("date")
-            if not day_str: continue
-            day_dt = datetime.datetime.strptime(day_str, "%Y-%m-%d").date()
-            
-            if day_dt >= today:
-                for episode in day.get("episodes", []):
-                    return {
-                        "event_name": event_name,
-                        "show_name": show.get("name"),
-                        "date": day_str,
-                        "air_time": episode.get("air_time"),
-                        "network": show.get("network", {}).get("name", "TV/Streaming"),
-                        "watch_url": show.get("url"),
-                        "image_url": show.get("image", {}).get("medium"),
-                        "happening": True
-                    }
         return None

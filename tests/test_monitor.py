@@ -73,7 +73,6 @@ class TestEventMonitor(unittest.TestCase):
         self.assertIsNotNone(match)
         self.assertEqual(match['show']['name'], "Macy's Thanksgiving Day Parade")
 
-
     def test_get_event_info_no_matches(self):
         with patch('src.event_monitor.requests.get') as mock_get:
             mock_get.return_value.json.return_value = []
@@ -117,9 +116,9 @@ class TestEventMonitor(unittest.TestCase):
             mock_get_cst_details.return_value = ("23/11/2026", "08:00 PM")
             mock_download.return_value = "/tmp/oscars.jpg"
             mock_send_tg.return_value = (True, None)
-
+            
             self.monitor.run_monitor()
-
+            
             mock_get_info.assert_called()
             mock_send_tg.assert_called_once()
             
@@ -182,3 +181,40 @@ class TestEventMonitor(unittest.TestCase):
         
         self.monitor.run_monitor()
         self.assertTrue(mock_send_tg.called)
+
+    @patch('src.event_monitor.requests.get')
+    def test_get_event_info_nextepisode_success(self, mock_get):
+        # Mock first request: Search Shows
+        search_response = MagicMock()
+        search_response.json.return_value = [
+            {
+                "show": {
+                    "name": "Oscars",
+                    "id": "123",
+                    "nextepisode": {
+                        "href": "https://api.tvmaze.com/shows/123/episodes/456"
+                    },
+                    "url": "http://oscars.com",
+                    "image": {"medium": "http://img.com/med.jpg"},
+                    "network": {"name": "HBO"}
+                }
+            }
+        ]
+        
+        # Mock second request: Nextepisode Details
+        next_ep_response = MagicMock()
+        next_ep_response.json.return_value = {
+            "air_date": "2026-11-23",
+            "air_time": "20:00"
+        }
+        next_ep_response.raise_for_status.return_value = None
+        
+        mock_get.side_effect = [search_response, next_ep_response]
+        
+        result = self.monitor.get_event_info("Oscars")
+        
+        self.assertIsNotNone(result)
+        self.assertEqual(result["show_name"], "Oscars")
+        self.assertEqual(result["date"], "2026-11-23")
+        self.assertEqual(result["air_time"], "20:00")
+        self.assertEqual(result["network"], "HBO")
