@@ -38,8 +38,8 @@ class EventMonitor:
                 
                 date_str, time_str = self.get_cst_details(dt_utc)
                 
-                show_name = info.get("show_name", "Unknown Show")
-                network = info.get("network", "N/A")
+                show_name = info.get("show_name", "Desconocido")
+                network = info.get("network", "S/N")
                 watch_url = info.get("watch_url", "#")
                 
                 msg = (
@@ -62,7 +62,7 @@ class EventMonitor:
                 else:
                     print(f"❌ Failure: Failed to send Telegram for {event}: {error}")
             else:
-                print(f"ℹ️ Status: No upcoming occurrence found for {event}")
+                print(f"ℹ️ Status: No upcoming occurrence found for {event}. Data: {info}")
             
         print(f"--- Cycle Complete. Hits: {found_any} ---")
 
@@ -91,36 +91,23 @@ class EventMonitor:
             if not show:
                 continue
             show_name = show.get("name", "").lower()
+            print(f"compraing: {show_name}")
 
             if show_name == event_name_lower:
                 return entry
 
             score = difflib.SequenceMatcher(None, event_name_lower, show_name).ratio()
+            print(f"score: {score}")
             if score > best_score:
                 best_score = score
                 best_match = entry
         
-        if best_score > 0.8:
+        print(f"best score: {best_score}")
+        if best_score > 0.6:
             return best_match
         return None
 
     def get_event_info(self, event_name):
-        # FIXED: Check verification mode BEFORE the network call
-        if event_name == "VERIFY_SUCCESS":
-            return {
-                "show": {
-                    "name": "Test de Conectividad Total",
-                    "nextAirDate": "2026-11-22 15:30",
-                    "network": {"name": "Directo"},
-                    "url": "http://test.com",
-                    "image": {"medium": "http://img.com/verify.jpg"}
-                },
-                "event_name": "Verificación E2E",
-                "date": "2026-11-22",
-                "air_time": "15:30",
-                "happening": True
-            }
-
         search_url = f"https://api.tvmaze.com/search/shows?q={event_name.replace(' ', '%20')}"
         try:
             r = requests.get(search_url, timeout=15)
@@ -138,6 +125,7 @@ class EventMonitor:
             return None
 
         show = match.get("show")
+        print(f"show: {show}")
         
         next_air_date = show.get("nextAirDate")
         if next_air_date:

@@ -62,12 +62,17 @@ class TestEventMonitor(unittest.TestCase):
         self.assertIsNone(match)
 
     def test_find_best_match_low_similarity(self):
-        event_name = "The Oscars"
+        event_name = "Macy's Day Parade"
         results = [
-            {"show": {"name": "Cooking Show"}},
+            {"show": {"name": "Macy's Thanksgiving Day Parade"}},
+            {"show": {"name": "Cedar Park Parade"}},
+            {"show": {"name": "30 Rock"}},
+            {"show": {"name": "Rock"}},
         ]
         match = self.monitor.find_best_match(event_name, results)
-        self.assertIsNone(match)
+        self.assertIsNotNone(match)
+        self.assertEqual(match['show']['name'], "Macy's Thanksgiving Day Parade")
+
 
     def test_get_event_info_no_matches(self):
         with patch('src.event_monitor.requests.get') as mock_get:
