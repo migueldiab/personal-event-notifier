@@ -3,6 +3,7 @@ import logging
 import requests
 import datetime
 import shlex
+from urllib.parse import quote
 from typing import Dict, Any, Optional
 
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
@@ -17,8 +18,7 @@ def send_telegram_notification(message, channel_id):
 
 def build_tvmaze_query_url(query: str) -> str:
     base_url = "https://api.tvmaze.com/search/shows?q="
-    encoded_query = query.replace(" ", "%20")
-    return base_url + encoded_query
+    return base_url + quote(query)
 
 def parse_date(date_str: str) -> Optional[datetime.date]:
     try:
