@@ -1,4 +1,4 @@
-from .config import INTEREST_EVENTS, TELEGRAM_CHANNEL_ID, WATCHLIST_PATH, TIMEZONE
+from .config import TELEGRAM_CHANNEL_ID, TIMEZONE
 from .utils import (
     send_telegram_notification, 
     build_tvmaze_query_url, 
@@ -15,7 +15,6 @@ from typing import List, Optional, Dict, Any
 
 class EventMonitor:
     def __init__(self) -> None:
-        self.events: List[str] = INTEREST_EVENTS
         self.channel_id: str = TELEGRAM_CHANNEL_ID
 
     def check_events(self, events_input: Optional[str] = None) -> None:
@@ -23,20 +22,11 @@ class EventMonitor:
 
     def run_monitor(self, events_input: Optional[str] = None) -> None:
         logger.info(f"--- Starting Monitor Cycle: {datetime.now()} ---")
-        found_any = False
         
-        try:
-            with open(WATCHLIST_PATH, 'r') as f:
-                data = json.load(f)
-                watchlist = list(data) if isinstance(data, (dict, list)) else []
-        except (FileNotFoundError, json.JSONDecodeError):
-            watchlist = []
-        
-        if events_input:
-            targets = [e.strip() for e in events_input.split(',') if e.strip()]
-        else:
-            combined = list(dict.fromkeys(watchlist + self.events))
-            targets = combined
+        if not events_input:
+            return None
+
+        targets = [e.strip() for e in events_input.split(',') if e.strip()]
         
         today = datetime.now().astimezone(ZoneInfo(TIMEZONE)).date()
         limit_date = today + timedelta(days=7)
@@ -49,6 +39,7 @@ class EventMonitor:
                 if show_date_str:
                     target_date = parse_date(show_date_str)
                     if target_date and target_date > limit_date:
+                        logger.info(f"next event date is: {target_date}")
                         continue
                 
                 show_name = info.get("show_name", "Desconocido")
@@ -75,7 +66,7 @@ class EventMonitor:
             else:
                 logger.info(f"ℹ️ Status: No upcoming occurrence found for {event}. Data: {info}")
             
-        logger.info(f"--- Cycle Complete. Hits: {found_any} ---")
+        logger.info(f"--- Cycle Complete. Hits: {len(targets)} ---")
 
     def download_image(self, image_url: str, filename: str) -> Optional[str]:
         try:
@@ -127,6 +118,7 @@ class EventMonitor:
             return None
 
         show = match.get("show")
+        logger.info(f"found match, getting next episode for {show.get("name")}:warning")
         
         nextepisode = show.get("_links").get("nextepisode")
         if nextepisode and nextepisode.get("href"):

@@ -106,7 +106,7 @@ class TestEventMonitor(unittest.TestCase):
             mock_download.return_value = '/tmp/oscars.jpg'
             mock_send_tg.return_value = (True, None)
             
-            self.monitor.run_monitor()
+            self.monitor.run_monitor("The Oscars")
             
             mock_get_info.assert_called()
             mock_send_tg.assert_called_once()
@@ -119,27 +119,6 @@ class TestEventMonitor(unittest.TestCase):
             self.assertIn('Hora: 20:00', msg)
             self.assertIn('Ver en: ABC', msg)
             self.assertIn('MEDIA:/tmp/oscars.jpg', msg)
-
-    def test_run_monitor_fallback_info(self):
-        with patch('src.event_monitor.fetch_with_retry'), \
-             patch('src.event_monitor.EventMonitor.get_event_info') as mock_get_info, \
-             patch('src.event_monitor.EventMonitor.download_image'), \
-             patch('src.event_monitor.datetime'), \
-             patch('src.event_monitor.send_telegram_notification') as mock_send_tg:
-            
-            mock_get_info.return_value = {
-                'event_name': 'SXSW',
-                'show_name': 'SXSW',
-                'date': '2026-11-23',
-                'air_time': '20:00',
-                'network': 'TV/Streaming',
-                'watch_url': 'http://sxsw.com',
-                'image_url': None,
-            }
-            mock_send_tg.return_value = (True, None)
-            
-            self.monitor.run_monitor()
-            self.assertTrue(mock_get_info.called)
 
     @patch('src.event_monitor.fetch_with_retry')
     @patch('src.event_monitor.EventMonitor.get_event_info')
@@ -161,7 +140,7 @@ class TestEventMonitor(unittest.TestCase):
         }
         mock_download.return_value = None
         mock_send_tg.return_value = (True, None)
-        self.monitor.run_monitor()
+        self.monitor.run_monitor("The Oscars")
         self.assertTrue(mock_send_tg.called)
 
     @patch('src.event_monitor.fetch_with_retry')
