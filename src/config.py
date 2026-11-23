@@ -1,6 +1,5 @@
 import os
 
-# Eventos de interés
 INTEREST_EVENTS = [
     "The Oscars",
     "Rock & Roll Hall of Fame Inductions",
@@ -13,5 +12,5 @@ INTEREST_EVENTS = [
     "Oktoberfest"
 ]
 
-# Configuración de Telegram
 TELEGRAM_CHANNEL_ID = "-1004330304115"
+TIMEZONE = "America/Chicago"
