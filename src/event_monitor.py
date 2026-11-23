@@ -1,10 +1,11 @@
 from .config import INTEREST_EVENTS, TELEGRAM_CHANNEL_ID
 from .utils import send_telegram_notification
-from datetime import datetime
+from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 import difflib
 import os
 import requests
+import json
 
 class EventMonitor:
     def __init__(self):
@@ -18,19 +19,41 @@ class EventMonitor:
         print(f"--- Starting Monitor Cycle: {datetime.now()} ---")
         found_any = False
         
+        # Load priority watchlist
+        try:
+            with open('src/watchlist.json', 'r') as f:
+                data = json.load(f)
+                watchlist = list(data) if isinstance(data, (dict, list)) else []
+        except (FileNotFoundError, json.JSONDecodeError):
+            watchlist = []
+        
         if events_input:
             targets = [e.strip() for e in events_input.split(',') if e.strip()]
         else:
-            targets = self.events
-            
+            # Priority: Watchlist first, then standard interests
+            combined = list(dict.fromkeys(watchlist + self.events))
+            targets = combined
+
+        today = datetime.now().astimezone(ZoneInfo("America/Chicago")).date()
+        limit_date = today + timedelta(days=7)
+        
         for event in targets:
             info = self.get_event_info(event)
-
+            
             if info:
+                show_date_str = info.get("air_date")
+                if show_date_str:
+                    try:
+                        target_date = datetime.strptime(show_date_str, "%Y-%m-%d").date()
+                        if target_date > limit_date:
+                            continue
+                    except ValueError:
+                        pass
+                
                 show_name = info.get("show_name", "Desconocido")
                 network = info.get("network", "S/N")
                 watch_url = info.get("watch_url", "#")
-                show_date = info.get("air_date")
+                show_date = show_date_str
                 show_time = info.get("air_time")
                 
                 msg = (
@@ -39,7 +62,7 @@ class EventMonitor:
                     f"📅 Fecha: {show_date}\n"
                     f"⏰ Hora: {show_time}\n"
                     f"📺 Ver en: {network} (Link: {watch_url})\n"
-                    f"\nMEDIA:{info.get("image_url")}"
+                    f"\nMEDIA:{info.get('image_url')}"
                 )
                 
                 success, error = send_telegram_notification(msg, self.channel_id)
