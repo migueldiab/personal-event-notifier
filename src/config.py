@@ -15,3 +15,7 @@ INTEREST_EVENTS = [
 
 # Configuración de Telegram
 TELEGRAM_CHANNEL_ID = "-1004330304115"
+
+# Configuración del sistema
+WATCHLIST_PATH = "src/watchlist.json"
+TIMEZONE = "America/Chicago"

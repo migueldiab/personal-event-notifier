@@ -1,4 +1,4 @@
-from .config import INTEREST_EVENTS, TELEGRAM_CHANNEL_ID
+from .config import INTEREST_EVENTS, TELEGRAM_CHANNEL_ID, WATCHLIST_PATH, TIMEZONE
 from .utils import (
     send_telegram_notification, 
     build_tvmaze_query_url, 
@@ -26,7 +26,7 @@ class EventMonitor:
         found_any = False
         
         try:
-            with open('src/watchlist.json', 'r') as f:
+            with open(WATCHLIST_PATH, 'r') as f:
                 data = json.load(f)
                 watchlist = list(data) if isinstance(data, (dict, list)) else []
         except (FileNotFoundError, json.JSONDecodeError):
@@ -38,7 +38,7 @@ class EventMonitor:
             combined = list(dict.fromkeys(watchlist + self.events))
             targets = combined
         
-        today = datetime.now().astimezone(ZoneInfo("America/Chicago")).date()
+        today = datetime.now().astimezone(ZoneInfo(TIMEZONE)).date()
         limit_date = today + timedelta(days=7)
         
         for event in targets:
