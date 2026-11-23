@@ -10,8 +10,8 @@ logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 logger = logging.getLogger(__name__)
 
 def send_telegram_notification(message, channel_id):
-    cmd = 'hermes send -t telegram ' + shlex.quote(message)
-    res = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+    args = ["hermes", "send", "-t", "telegram", message]
+    res = subprocess.run(args, shell=False, capture_output=True, text=True)
     if res.returncode == 0:
         return True, "Success"
     return False, res.stderr
