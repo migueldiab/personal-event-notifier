@@ -91,7 +91,6 @@ class TestEventMonitor(unittest.TestCase):
             'network': 'ABC',
             'watch_url': 'http://oscars.com',
             'image_url': '/tmp/oscars.jpg',
-            'happening': True
         }
 
         def side_effect_get_info(name):
@@ -136,7 +135,6 @@ class TestEventMonitor(unittest.TestCase):
                 'network': 'TV/Streaming',
                 'watch_url': 'http://sxsw.com',
                 'image_url': None,
-                'happening': False
             }
             mock_send_tg.return_value = (True, None)
             
@@ -160,7 +158,6 @@ class TestEventMonitor(unittest.TestCase):
             'network': 'ABC',
             'watch_url': 'http://url.com',
             'image_url': 'http://img.com/img.jpg',
-            'happening': True
         }
         mock_download.return_value = None
         mock_send_tg.return_value = (True, None)
