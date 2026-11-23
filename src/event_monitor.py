@@ -53,11 +53,6 @@ class EventMonitor:
             
         print(f"--- Cycle Complete. Hits: {found_any} ---")
 
-    def get_cst_details(self, dt_utc):
-        """Returns (date_str, time_str) in CST."""
-        dt_cst = dt_utc.astimezone(timezone(timedelta(hours=-6)))
-        return dt_cst.strftime("%d/%m/%Y"), dt_cst.strftime("%I:%M %p")
-
     def download_image(self, image_url, filename):
         try:
             import urllib.request
