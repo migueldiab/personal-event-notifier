@@ -399,8 +399,8 @@ module WeeklyLocalEvents
         uri.hostname,
         uri.port,
         use_ssl: uri.scheme == "https",
-        read_timeout: config.fetch_timeout,
-        open_timeout: config.fetch_timeout,
+        read_timeout: config.request_timeout,
+        open_timeout: config.request_timeout,
       ) do |http|
         http.request(request)
       end
