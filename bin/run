@@ -1,0 +1,8 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "bundler/setup"
+require "weekly_local_events"
+
+app = WeeklyLocalEvents::Application.new
+app.run

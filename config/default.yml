@@ -1,0 +1,21 @@
+# frozen_string_literal: true
+
+# Default configuration - override via environment variables
+telegram_channel_id: ""
+telegram_token: ""
+time_zone: "America/Chicago"
+lookahead_days: 7
+sources:
+  - austinchronicle
+  - do512
+  - communityimpact
+interests:
+  - Oscars
+  - "Rock & Roll Hall of Fame"
+  - SXSW
+  - "Edinburgh Fringe"
+  - "Macy's Parade"
+  - "Rio Carnival"
+  - "Notting Hill Carnival"
+  - Olympics
+  - Oktoberfest

@@ -1,54 +1,52 @@
-# --- Python Bytecode & Caches ---
-__pycache__/
-*.py[cod]
-*$py.class
+# See https://help.github.com/articles/ignoring-files for more about ignoring files.
+
+# Compiled
+*.gem
 *.so
-.Python
+*.o
+*.a
+*.mkmf.log
 
-# --- Virtual Environments ---
-.venv/
-venv/
-ENV/
-env/
+# Bundler
+.bundle/
+Gemfile.lock
 
-# --- Packaging & Build Artifacts ---
-build/
-dist/
-*.egg-info/
-.eggs/
-wheels/
+# RSpec
+.rspec
 
-# --- Testing, Linting & Type Checking ---
-.pytest_cache/
-.mypy_cache/
-.ruff_cache/
-.coverage
-htmlcov/
-.tox/
-.nox/
+# Coverage
+coverage/
 
-# --- Environment Variables & Secrets ---
-.env
-.env.*
-!.env.example
+# OS
+.DS_Store
+Thumbs.db
 
-# --- Jupyter Notebooks ---
-.ipynb_checkpoints/
-
-# --- Linux & General System ---
-*~
+# Editor
+.idea/
+.vscode/
 *.swp
 *.swo
-*.bak
-*.tmp
-*.log
-.directory
-.Trash-*
 
-# --- Editors & IDEs ---
-.vscode/
-.idea/
-*.code-workspace
+# Temp/Logs
+tmp/
+logs/
 
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Specs
+spec/fixtures/**
+spec/fixtures/*.yml
+spec/fixtures/*.yaml
+
+# Vendor
+vendor/bundle
+vendor/cache
+
+# Database
+*.sqlite3
+*.sqlite3-journal
 
 
