@@ -1,15 +1,304 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-# Weekly Local Events - Main entry point
-# Usage: bin/weekly_local_events
+# CLI entry point for the WeeklyLocalEvents gem.
+#
+# Usage:
+#   bin/weekly_local_events --help
+#   bin/weekly_local_events --json --days 14
+#   bin/weekly_local_events --notify --days 7
+#   bin/weekly_local_events weekly_local_sites all
+#   bin/weekly_local_events weekly_local_sites austin_chronicle
 
-require_relative "../lib/weekly_local_events"
+require "optparse"
+require "json"
+require "pathname"
+require "logger"
+require "time"
+
+# Resolve the gem path relative to this script's parent directory
+SCRIPT_DIR = File.expand_path("..", __dir__)
+GEM_LIB_DIR = File.join(SCRIPT_DIR, "lib")
+
+# Prepend lib to $LOAD_PATH so `require 'weekly_local_events'` works
+$LOAD_PATH.unshift(GEM_LIB_DIR) unless $LOAD_PATH.include?(GEM_LIB_DIR)
+
+require "weekly_local_events"
+require "weekly_local_events/config"
+require "weekly_local_events/scraper_registry"
+require "weekly_local_events/notifier"
+require "weekly_local_events/aggregator"
+require "weekly_local_events/application"
+require "weekly_local_events/summary"
+
+# ─── Exit codes ───────────────────────────────────────────────────────────────
+
+EXIT_SUCCESS = 0
+EXIT_ERROR = 1
+EXIT_CONFIG_ERROR = 2
+EXIT_NO_EVENTS = 3
+
+# ─── Configuration ────────────────────────────────────────────────────────────
+
+DEFAULT_DAYS = 7
+
+# ─── Argument parsing ─────────────────────────────────────────────────────────
+
+options = {
+  help: false,
+  json: false,
+  notify: false,
+  days: DEFAULT_DAYS,
+  subcommand: nil,
+  subcommand_arg: nil,
+}
+
+parser = OptionParser.new do |opts|
+  opts.banner = <<~BANNER
+    Usage: weekly_local_events [options] [subcommand]
+
+    Weekly Local Events - Scrape local Austin events from multiple sources.
+
+    Options:
+        --help                       Show this help message and exit.
+        --json                       Output results as JSON to stdout.
+        --notify                     Send Telegram notification (requires
+                                     TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID env vars).
+        --days N                     Fetch events for next N days (default: #{DEFAULT_DAYS}).
+        --log-level LEVEL            Set log level: DEBUG, INFO, WARN, ERROR (default: INFO).
+
+    Subcommands:
+        weekly_local_sites all       Run all configured scrapers.
+        weekly_local_sites <name>    Run a specific scraper by name.
+
+    Examples:
+        weekly_local_events --json --days 14
+        weekly_local_events --notify --days 7
+        weekly_local_events weekly_local_sites all
+        weekly_local_events weekly_local_sites austin_chronicle
+  BANNER
+
+  opts.on("--help", "-h", "Show this help message and exit") do
+    options[:help] = true
+  end
+
+  opts.on("--json", "Output results as JSON to stdout") do
+    options[:json] = true
+  end
+
+  opts.on("--notify", "Send Telegram notification (requires TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID)") do
+    options[:notify] = true
+  end
+
+  opts.on("--days N", Integer, "Fetch events for next N days (default: #{DEFAULT_DAYS})") do |days|
+    options[:days] = days
+  end
+
+  opts.on("--log-level LEVEL", "Set log level: DEBUG, INFO, WARN, ERROR (default: INFO)") do |level|
+    options[:log_level] = level
+  end
+end
+
+# Parse arguments: first non-option tokens are subcommand and its arg
+args = ARGV.dup
+remaining = []
 
 begin
-  WeeklyLocalEvents.run
+  parser.parse!(args)
+rescue OptionParser::InvalidOption => e
+  $stderr.puts "Error: #{e.message}"
+  $stderr.puts "Run 'weekly_local_events --help' for usage information."
+  exit EXIT_ERROR
+end
+
+# Remaining non-option arguments are subcommand and its argument
+options[:subcommand] = args.shift
+options[:subcommand_arg] = args.shift
+
+# ─── Help ─────────────────────────────────────────────────────────────────────
+
+if options[:help]
+  puts parser.help
+  exit EXIT_SUCCESS
+end
+
+# ─── Validate arguments ───────────────────────────────────────────────────────
+
+if options[:days] <= 0
+  $stderr.puts "Error: --days must be a positive integer, got #{options[:days]}"
+  exit EXIT_CONFIG_ERROR
+end
+
+if options[:days] > 365
+  $stderr.puts "Error: --days must be <= 365, got #{options[:days]}"
+  exit EXIT_CONFIG_ERROR
+end
+
+# ─── Load configuration ───────────────────────────────────────────────────────
+
+begin
+  config = WeeklyLocalEvents::Config.new
+rescue WeeklyLocalEvents::ConfigError => e
+  $stderr.puts "Configuration error: #{e.message}"
+  exit EXIT_CONFIG_ERROR
 rescue StandardError => e
-  STDERR.puts "Error: #{e.message}"
-  STDERR.puts e.backtrace.first(5).join("\n")
-  exit 1
+  $stderr.puts "Error loading configuration: #{e.class} - #{e.message}"
+  exit EXIT_CONFIG_ERROR
+end
+
+# Override date_range_days if --days was specified
+config.instance_variable_set(:@date_range_days, options[:days])
+
+# Override log level if specified
+if options[:log_level]
+  config.instance_variable_set(:@log_level, options[:log_level])
+end
+
+# ─── Build logger ─────────────────────────────────────────────────────────────
+
+begin
+  logger = config.logger
+rescue StandardError => e
+  logger = Logger.new($stderr).tap { |l| l.level = Logger::WARN }
+end
+
+# ─── Subcommand: weekly_local_sites ───────────────────────────────────────────
+
+if options[:subcommand] == "weekly_local_sites"
+  if options[:subcommand_arg].nil?
+    $stderr.puts "Error: weekly_local_sites requires an argument (all or <scraper_name>)"
+    $stderr.puts "Usage: weekly_local_events weekly_local_sites all"
+    $stderr.puts "       weekly_local_events weekly_local_sites austin_chronicle"
+    exit EXIT_CONFIG_ERROR
+  end
+
+  if options[:subcommand_arg] == "all"
+    # Run all registered scrapers
+    begin
+      registry = WeeklyLocalEvents::ScraperRegistry.new(config)
+      all_scrapers = registry.all
+      logger.info "Running all #{all_scrapers.size} registered scrapers..."
+
+      all_events = []
+      all_scrapers.each do |scraper|
+        begin
+          events = scraper.scrape
+          logger.info "  #{scraper.name}: #{events.size} events"
+          all_events.concat(events)
+        rescue StandardError => e
+          logger.error "  #{scraper.name} failed: #{e.class} - #{e.message}"
+        end
+      end
+
+      # Aggregate results
+      aggregator = WeeklyLocalEvents::Aggregator.new(config)
+      aggregated = aggregator.aggregate(all_events)
+
+      # Telegram notification
+      if options[:notify]
+        begin
+          notifier = WeeklyLocalEvents::Notifier.new(config)
+          notifier.notify(aggregated)
+          logger.info "Telegram notification sent."
+        rescue StandardError => e
+          logger.error "Telegram notification failed: #{e.class} - #{e.message}"
+        end
+      end
+
+      # Output
+      if options[:json]
+        output = {
+          total: aggregated.size,
+          sources: all_scrapers.map { |s| { name: s.name, count: aggregated.count { |e| e.source == s.name } }.to_h }.to_h,
+          events: aggregated.map { |e| e.to_hash },
+        }
+        puts JSON.pretty_generate(output)
+      else
+        puts "Events found: #{aggregated.size}"
+        aggregated.each do |event|
+          puts "  [#{event.source}] #{event.title} - #{event.venue&.name} - #{event.date}"
+        end
+      end
+
+      exit aggregated.empty? ? EXIT_NO_EVENTS : EXIT_SUCCESS
+    rescue StandardError => e
+      $stderr.puts "Error: #{e.class} - #{e.message}"
+      exit EXIT_ERROR
+    end
+  else
+    # Run a specific scraper
+    scraper_name = options[:subcommand_arg]
+    begin
+      registry = WeeklyLocalEvents::ScraperRegistry.new(config)
+      scraper = registry.get(scraper_name)
+      logger.info "Running scraper: #{scraper.name}"
+
+      events = scraper.scrape
+      logger.info "  #{scraper.name}: #{events.size} events"
+
+      # Aggregate
+      aggregator = WeeklyLocalEvents::Aggregator.new(config)
+      aggregated = aggregator.aggregate(events)
+
+      # Telegram notification
+      if options[:notify]
+        begin
+          notifier = WeeklyLocalEvents::Notifier.new(config)
+          notifier.notify(aggregated)
+          logger.info "Telegram notification sent."
+        rescue StandardError => e
+          logger.error "Telegram notification failed: #{e.class} - #{e.message}"
+        end
+      end
+
+      # Output
+      if options[:json]
+        output = {
+          source: scraper_name,
+          total: aggregated.size,
+          events: aggregated.map { |e| e.to_hash },
+        }
+        puts JSON.pretty_generate(output)
+      else
+        puts "#{scraper_name} events: #{aggregated.size}"
+        aggregated.each do |event|
+          puts "  #{event.title} - #{event.venue&.name} - #{event.date}"
+        end
+      end
+
+      exit aggregated.empty? ? EXIT_NO_EVENTS : EXIT_SUCCESS
+    rescue WeeklyLocalEvents::NotFoundError => e
+      $stderr.puts "Error: #{e.message}"
+      $stderr.puts "Available scrapers:"
+      registry = WeeklyLocalEvents::ScraperRegistry.new(config)
+      registry.all.each { |s| $stderr.puts "  - #{s.name}" }
+      exit EXIT_CONFIG_ERROR
+    rescue StandardError => e
+      $stderr.puts "Error: #{e.class} - #{e.message}"
+      exit EXIT_ERROR
+    end
+  end
+end
+
+# ─── Default: run full pipeline ───────────────────────────────────────────────
+
+begin
+  app = WeeklyLocalEvents::Application.new(config)
+  summary = app.run
+
+  # Output results
+  if options[:json]
+    output = {
+      total: summary.total,
+      sources: summary.sources,
+    }
+    puts JSON.pretty_generate(output)
+  else
+    puts "Summary: #{summary}"
+  end
+
+  exit summary.total == 0 ? EXIT_NO_EVENTS : EXIT_SUCCESS
+rescue StandardError => e
+  $stderr.puts "Error: #{e.class} - #{e.message}"
+  exit EXIT_ERROR
 end
