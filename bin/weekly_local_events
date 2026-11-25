@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Weekly Local Events - Main entry point
+# Usage: bin/weekly_local_events
+
+require_relative "../lib/weekly_local_events"
+
+begin
+  WeeklyLocalEvents.run
+rescue StandardError => e
+  STDERR.puts "Error: #{e.message}"
+  STDERR.puts e.backtrace.first(5).join("\n")
+  exit 1
+end

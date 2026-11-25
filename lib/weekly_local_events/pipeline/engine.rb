@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "weekly_local_events/core/event"
-
 module WeeklyLocalEvents
   module Pipeline
     class Engine

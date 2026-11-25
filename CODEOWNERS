@@ -1,0 +1,20 @@
+# Code owners for WeeklyLocalEvents
+# Format: /path * @owner
+
+# Core library
+/lib/weekly_local_events/ * @weekly-local-events-maintainers
+
+# Scraper implementations
+/lib/weekly_local_events/scrapers/ * @weekly-local-events-maintainers
+
+# Tests
+/spec/ * @weekly-local-events-maintainers
+
+# Configuration
+/config/ * @weekly-local-events-maintainers
+
+# CI/CD
+.github/ * @weekly-local-events-maintainers
+
+# All other files
+* @weekly-local-events-maintainers

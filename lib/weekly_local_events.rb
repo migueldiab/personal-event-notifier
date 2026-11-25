@@ -1,21 +1,45 @@
 # frozen_string_literal: true
 
 require "weekly_local_events/version"
+require "weekly_local_events/application"
+require "weekly_local_events/base_scraper"
+require "weekly_local_events/event"
+require "weekly_local_events/venue"
+require "weekly_local_events/scraper_registry"
+require "weekly_local_events/notifier"
+require "weekly_local_events/aggregator"
+require "weekly_local_events/config"
+require "weekly_local_events/summary"
+require "weekly_local_events/notification_result"
 
 module WeeklyLocalEvents
-  # Main entry point for the weekly local events monitor
-  class Application
-    attr_reader :config
+  VERSION = '0.1.0'
 
-    def initialize(config_path: nil)
-      @config = Config.load(path: config_path)
+  class Error < StandardError; end
+  class ScraperError < Error; end
+  class NotFoundError < ScraperError; end
+  class ParseError < ScraperError; end
+  class RateLimitError < ScraperError; end
+
+  class << self
+    def config
+      @config ||= Config.new
+    end
+
+    def scraper_registry
+      @scraper_registry ||= ScraperRegistry.new
+    end
+
+    def notifier
+      @notifier ||= Notifier.new(config)
+    end
+
+    def aggregator
+      @aggregator ||= Aggregator.new
     end
 
     def run
-      pipeline = Pipeline::Engine.new(config)
-      events = pipeline.execute
-      NotificationDispatcher.dispatch(events)
-      puts "Processed #{events.size} events."
+      Application.new(config, scraper_registry, notifier, aggregator).run
     end
   end
 end

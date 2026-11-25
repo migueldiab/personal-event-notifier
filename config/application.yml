@@ -1,0 +1,26 @@
+# Application-wide configuration
+# Loaded via Rails.application.config_for(:application)
+
+app:
+  name: "Weekly Local Events"
+  version: "0.1.0"
+
+# Scraper settings
+scrapers:
+  default_timeout: 30
+  retry_attempts: 2
+  retry_delay: 2
+  user_agent: "WeeklyLocalEvents/0.1.0 (+https://github.com/madrax/WeeklyLocalEvents)"
+
+# Event aggregation
+aggregation:
+  min_price_threshold: 0.00
+  max_events_per_batch: 50
+
+# Notification settings
+notifications:
+  enabled: true
+  digest_time: "18:00"  # 6PM CST
+  digest_timezone: "America/Chicago"
+  daily_alert_enabled: false
+  daily_alert_time: "07:00"

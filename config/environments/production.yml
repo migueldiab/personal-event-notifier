@@ -1,0 +1,11 @@
+# Production environment configuration
+scrapers:
+  verbose: false
+  dry_run: false
+  rate_limit: 5  # requests per second
+
+notifications:
+  enabled: true
+  test_mode: false
+
+log_level: warn

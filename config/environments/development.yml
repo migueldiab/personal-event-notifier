@@ -1,0 +1,11 @@
+# Development environment configuration
+scrapers:
+  verbose: true
+  dry_run: false
+  rate_limit: 2  # requests per second
+
+notifications:
+  enabled: true
+  test_mode: true
+
+log_level: debug

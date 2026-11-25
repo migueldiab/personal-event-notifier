@@ -1,0 +1,11 @@
+# Test environment configuration
+scrapers:
+  verbose: false
+  dry_run: true
+  rate_limit: 50
+
+notifications:
+  enabled: false
+  test_mode: true
+
+log_level: error
