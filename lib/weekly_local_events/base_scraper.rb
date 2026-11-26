@@ -423,6 +423,10 @@ module WeeklyLocalEvents
       config.logger&.info("[#{name}] #{msg}")
     end
 
+    def log_warn(msg)
+      config.logger&.warn("[#{name}] #{msg}")
+    end
+
     def log_error(msg)
       config.logger&.error("[#{name}] #{msg}")
     end
