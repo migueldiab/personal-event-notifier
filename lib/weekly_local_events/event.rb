@@ -209,9 +209,25 @@ module WeeklyLocalEvents
     def parse_price_to_cents(price_str)
       return nil if price_str.to_s.strip.empty?
 
+      s = price_str.to_s.strip
+
+      # Handle "Free" case
+      return 0 if s.downcase == "free"
+
+      # Handle price ranges like "$10-50" or "$10 to $50"
+      if s.include?("-") || s.include?(" to ") || s.include?("–")
+        parts = s.split(/[-–]|\s+to\s+/i)
+        min_cents = extract_cents(parts.first)
+        return min_cents if min_cents
+        return nil
+      end
+
+      extract_cents(s)
+    end
+
+    def extract_cents(price_str)
       s = price_str.to_s.strip.gsub(/[^0-9.]/, "")
       return nil if s.empty?
-
       dollars = s.to_f
       (dollars * 100).round
     end

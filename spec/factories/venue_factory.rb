@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :venue do
+  factory :venue, class: "WeeklyLocalEvents::Venue" do
     name { Faker::Company.name }
     address { Faker::Address.street_address }
     city { 'Austin' }
