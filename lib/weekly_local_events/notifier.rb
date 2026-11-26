@@ -32,7 +32,13 @@ module WeeklyLocalEvents
 
     def to_s
       return "TelegramResponse(OK: message_id=#{message_id})" if success?
-      "TelegramResponse(FAILED: #{error || api_error})"
+      if error
+        "TelegramResponse(FAILED: #{error})"
+      elsif api_error && api_error.is_a?(Hash)
+        "TelegramResponse(FAILED: #{api_error['description'] || api_error['error_code'] || 'API error'})"
+      else
+        "TelegramResponse(FAILED: #{api_error})"
+      end
     end
   end
 
@@ -117,7 +123,7 @@ module WeeklyLocalEvents
 
       grouped = events.group_by { |e| normalize_category(e.category) }
 
-      category_order = %w[Music Comedy Festival Sports Art Food & Drink Market Education Theater Family Nightlife Outdoor Religious Politics Technology]
+      category_order = ["Music", "Comedy", "Festival", "Sports", "Art", "Food & Drink", "Market", "Education", "Theater", "Family", "Nightlife", "Outdoor", "Religious", "Politics", "Technology", "Other"]
 
       category_order.each do |cat|
         cat_events = grouped[cat]
@@ -138,7 +144,7 @@ module WeeklyLocalEvents
         lines << "⛪ *#{cat}* " if cat == "Religious"
         lines << "🗳️ *#{cat}* " if cat == "Politics"
         lines << "💻 *#{cat}* " if cat == "Technology"
-        lines << "📋 *#{cat}* " unless category_order.include?(cat)
+        lines << "📋 *#{cat}* " if cat == "Other"
 
         cat_events.each do |event|
           price = event.price_range
@@ -160,7 +166,7 @@ module WeeklyLocalEvents
 
       total = summary[:total] || summary["total"] || 0
       free_count = summary[:free_count] || summary["free_count"] || 0
-      paid_count = summary[:paid_count] || summary["paid_count"] || 0
+      paid_count = summary[:paid_count] || summary["paid_count"] || (total - free_count)
       categories = summary[:categories] || summary["categories"] || []
       sources = summary[:sources] || summary["sources"] || []
 
@@ -324,7 +330,7 @@ module WeeklyLocalEvents
 
       cat = category.to_s.strip.downcase
       case cat
-      when /concert|live music|show|performance|gig|band|musician/
+      when /concert|live music|show|performance|gig|band|musician|music/
         "Music"
       when /comedy|stand-up|improv|joke|humor/
         "Comedy"
@@ -332,13 +338,11 @@ module WeeklyLocalEvents
         "Festival"
       when /sport|game|match|tournament|athletic/
         "Sports"
-      when /art|exhibition|gallery|museum|painting|sculpture/
-        "Art"
-      when /food|culinary|dining|restaurant|tasting|cook/
+      when /food|culinary|dining|restaurant|tasting|cook|food & drink/
         "Food & Drink"
       when /market|bazaar|craft|vendor/
         "Market"
-      when /conference|workshop|seminar|lecture|class|training/
+      when /conference|workshop|seminar|lecture|class|training|education/
         "Education"
       when /theater|play|drama|musical|broadway/
         "Theater"
@@ -354,6 +358,8 @@ module WeeklyLocalEvents
         "Politics"
       when /tech|startup|hackathon|developer|coding/
         "Technology"
+      when /art|exhibition|gallery|museum|painting|sculpture/
+        "Art"
       else
         "Other"
       end

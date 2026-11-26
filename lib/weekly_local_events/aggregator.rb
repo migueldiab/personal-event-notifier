@@ -263,7 +263,7 @@ module WeeklyLocalEvents
 
       cat = category.to_s.strip.downcase
       @category_normalization[cat] ||= case cat
-      when /concert|live music|show|performance|gig|band|musician/
+      when /concert|live music|show|performance|gig|band|musician|music/
         "Music"
       when /comedy|stand-up|improv|joke|humor/
         "Comedy"
