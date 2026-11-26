@@ -27,13 +27,14 @@ module WeeklyLocalEvents
 
     # Map of scraper names to their class constants.
     KNOWN_SCRAPERS = {
-      "austin_chronicle" => "WeeklyLocalEvents::Scrapers::AustinChronicleScraper",
-      "do512"            => "WeeklyLocalEvents::Scrapers::Do512Scraper",
-      "community_impact" => "WeeklyLocalEvents::Scrapers::CommunityImpactScraper",
-      "eventbrite_austin" => "WeeklyLocalEvents::Scrapers::EventbriteAustinScraper",
-      "acl_live"         => "WeeklyLocalEvents::Scrapers::ACLLiveScraper",
-      "stubbss"          => "WeeklyLocalEvents::Scrapers::StubbssScraper",
-      "paramount_austin" => "WeeklyLocalEvents::Scrapers::ParamountAustinScraper",
+      "austin_chronicle"     => "WeeklyLocalEvents::Scrapers::AustinChronicleScraper",
+      "austin_chronicle_rss" => "WeeklyLocalEvents::Scrapers::AustinChronicleRSSScraper",
+      "do512"                => "WeeklyLocalEvents::Scrapers::Do512Scraper",
+      "community_impact"     => "WeeklyLocalEvents::Scrapers::CommunityImpactScraper",
+      "eventbrite_austin"    => "WeeklyLocalEvents::Scrapers::EventbriteAustinScraper",
+      "acl_live"             => "WeeklyLocalEvents::Scrapers::ACLLiveScraper",
+      "stubbss"              => "WeeklyLocalEvents::Scrapers::StubbssScraper",
+      "paramount_austin"     => "WeeklyLocalEvents::Scrapers::ParamountAustinScraper",
     }.freeze
 
     def initialize(config = nil)
