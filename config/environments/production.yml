@@ -1,11 +1,14 @@
 # Production environment configuration
-scrapers:
-  verbose: false
-  dry_run: false
-  rate_limit: 5  # requests per second
-
-notifications:
-  enabled: true
-  test_mode: false
-
-log_level: warn
+date_range_days: 14
+request_timeout: 60
+request_delay: 3
+max_retries: 5
+log_level: WARN
+enabled_scrapers:
+  - austin_chronicle
+  - do512
+  - community_impact
+  - eventbrite_austin
+  - acl_live
+  - stubbss
+  - paramount_austin
