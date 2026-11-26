@@ -60,11 +60,12 @@ module WeeklyLocalEvents
       private
 
       # Fetch the RSS feed XML and parse it.
+      # Overrides BaseScraper#fetch to avoid HTML5 parsing (which breaks <link> elements).
       #
       # @return [Array<Event>]
       def fetch_rss
-        xml = fetch(RSS_URL)
-        parse_response(xml)
+        body = fetch_raw(RSS_URL)
+        parse_response(body)
       end
 
       # Parse raw XML string into a Nokogiri XML document.
@@ -77,6 +78,51 @@ module WeeklyLocalEvents
       rescue LoadError
         require "nokogiri"
         Nokogiri::XML(body)
+      end
+
+      # Fetch raw body from a URL without HTML5 parsing.
+      # Used for XML feeds where HTML5 parsing would corrupt elements (e.g. <link> is void in HTML5).
+      #
+      # @param url [String] the URL to fetch
+      # @return [String] raw response body
+      def fetch_raw(url)
+        uri = URI(url)
+        raise ArgumentError, "Invalid URL: #{url}" unless uri.scheme && uri.host
+
+        max_retries = @config[:max_retries] || 3
+        attempts = 0
+        last_error = nil
+
+        while attempts < max_retries
+          attempts += 1
+          begin
+            http = Net::HTTP.new(uri.host, uri.port)
+            http.use_ssl = (uri.scheme == "https")
+            request = Net::HTTP::Get.new(uri.request_uri)
+            request["User-Agent"] = @config[:user_agent] || default_user_agent
+            request["Accept"] = "application/rss+xml, application/xml, text/xml"
+
+            response = http.request(request)
+            case response
+            when Net::HTTPSuccess
+              return response.body
+            when Net::HTTPTooManyRequests
+              raise RateLimitError, "Rate limited: #{url} (attempt #{attempts})"
+            when Net::HTTPNotFound
+              raise NotFoundError, "Not found: #{url}"
+            else
+              raise ScraperError, "HTTP #{response.code}: #{url}"
+            end
+          rescue RateLimitError, NotFoundError, ScraperError
+            raise
+          rescue StandardError => e
+            last_error = e
+            log_error "Attempt #{attempts}/#{max_retries} for #{url}: #{e.class} - #{e.message}"
+            sleep(2**attempts) if attempts < max_retries
+          end
+        end
+
+        raise ScraperError, "Failed after #{max_retries} attempts for #{url}: #{last_error&.class} - #{last_error&.message}"
       end
 
       # Namespace map for XPath queries on RSS documents.
@@ -121,7 +167,8 @@ module WeeklyLocalEvents
         creator = extract_creator(item)
 
         # RSS feed does not contain venue or price information
-        venue = nil
+        # Create a placeholder venue so the Event validates (venue is required)
+        venue = Venue.from_hash({ name: "The Austin Chronicle (RSS)" })
         price = nil
 
         event_hash = {

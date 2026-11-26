@@ -171,9 +171,9 @@ RSpec.describe WeeklyLocalEvents::Scrapers::AustinChronicleRSSScraper do
       expect(events[0].source).to eq("austin_chronicle_rss")
     end
 
-    it "sets venue to nil (RSS has no venue data)" do
+    it "sets venue to placeholder for RSS events (no venue in RSS feed)" do
       events = scraper.parse_response(sample_rss)
-      expect(events[0].venue).to be_nil
+      expect(events[0].venue.name).to eq("The Austin Chronicle (RSS)")
     end
 
     it "sets price to nil (RSS has no price data)" do
