@@ -36,8 +36,7 @@ logs/
 .env.local
 .env.*.local
 
-# Specs
-spec/fixtures/**
+# Specs (fixtures are committed test data; only ignore local config files)
 spec/fixtures/*.yml
 spec/fixtures/*.yaml
 

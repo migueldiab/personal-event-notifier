@@ -11,7 +11,7 @@ RSpec.describe WeeklyLocalEvents::Scrapers::Do512Scraper do
   let(:date_range) { WeeklyLocalEvents::DateRange.from_days(3) }
   let(:config_with_range) do
     { name: "do512", base_url: "https://www.do512.com",
-      date_range: date_range, user_agent: "TestBot/1.0", rate_limit_delay: 0.1 }
+      date_range: date_range, user_agent: "TestBot/1.0", rate_limit_delay: 0.1, pages: 2 }
   end
   let(:scraper_with_range) { described_class.new(config_with_range) }
 
@@ -196,7 +196,7 @@ RSpec.describe WeeklyLocalEvents::Scrapers::Do512Scraper do
 
   describe "#events" do
     it "returns an array of Event objects" do
-      stub_request(:get, %r{https://www.do512.com/events/\?date=\d{4}-\d{2}-\d{2}})
+      stub_request(:get, %r{https://www\.do512\.com/events})
         .to_return(status: 200, body: sample_html, headers: { "Content-Type" => "text/html" })
 
       events = scraper_with_range.events
@@ -205,7 +205,7 @@ RSpec.describe WeeklyLocalEvents::Scrapers::Do512Scraper do
     end
 
     it "handles network failures gracefully" do
-      stub_request(:get, %r{https://www.do512.com/events/\?date=\d{4}-\d{2}-\d{2}})
+      stub_request(:get, %r{https://www\.do512\.com/events})
         .to_raise(Errno::ECONNREFUSED)
 
       events = scraper_with_range.events
@@ -214,7 +214,7 @@ RSpec.describe WeeklyLocalEvents::Scrapers::Do512Scraper do
     end
 
     it "handles HTTP 404 gracefully" do
-      stub_request(:get, %r{https://www.do512.com/events/\?date=\d{4}-\d{2}-\d{2}})
+      stub_request(:get, %r{https://www\.do512\.com/events})
         .to_return(status: 404)
 
       events = scraper_with_range.events
@@ -223,7 +223,7 @@ RSpec.describe WeeklyLocalEvents::Scrapers::Do512Scraper do
     end
 
     it "handles HTTP 429 (rate limit) gracefully" do
-      stub_request(:get, %r{https://www.do512.com/events/\?date=\d{4}-\d{2}-\d{2}})
+      stub_request(:get, %r{https://www\.do512\.com/events})
         .to_return(status: 429)
 
       events = scraper_with_range.events
