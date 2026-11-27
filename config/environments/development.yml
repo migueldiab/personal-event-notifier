@@ -1,11 +1,14 @@
 # Development environment configuration
-scrapers:
-  verbose: true
-  dry_run: false
-  rate_limit: 2  # requests per second
-
-notifications:
-  enabled: true
-  test_mode: true
-
-log_level: debug
+date_range_days: 7
+request_timeout: 30
+request_delay: 2
+max_retries: 3
+log_level: DEBUG
+enabled_scrapers:
+  - austin_chronicle
+  - do512
+  - community_impact
+  - eventbrite_austin
+  - acl_live
+  - stubbss
+  - paramount_austin
