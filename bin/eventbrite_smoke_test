@@ -1,0 +1,34 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Smoke test for Eventbrite API credentials.
+#
+# Usage:
+#   bin/eventbrite_smoke_test <event_id>
+#   EVENTBRITE_TEST_EVENT_ID=12345 bin/eventbrite_smoke_test
+#
+# Exits 0 when a bearer-authenticated GET /v3/events/{id}/ succeeds.
+
+require "rubygems"
+require "bundler/setup"
+require "dotenv/load"
+
+$LOAD_PATH.unshift(File.expand_path("../lib", __dir__))
+require "weekly_local_events/eventbrite_client"
+
+event_id = ARGV[0] || ENV["EVENTBRITE_TEST_EVENT_ID"]
+abort "Usage: bin/eventbrite_smoke_test <event_id>" if event_id.to_s.strip.empty?
+
+client = WeeklyLocalEvents::EventbriteClient.from_env
+abort "No Eventbrite credentials configured. See .env.example." unless client.configured?
+
+begin
+  event = client.event(event_id)
+rescue WeeklyLocalEvents::EventbriteClient::Error => e
+  warn "Eventbrite API request failed: #{e.class} - #{e.message}"
+  exit 1
+end
+
+puts "OK: authenticated GET /v3/events/#{event_id}/ succeeded"
+puts "  id:    #{event['id']}"
+puts "  title: #{event['name']['text']}" if event["name"].is_a?(Hash)
