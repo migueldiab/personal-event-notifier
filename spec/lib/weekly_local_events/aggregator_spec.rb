@@ -439,4 +439,26 @@ RSpec.describe WeeklyLocalEvents::Aggregator do
       expect(uncategorized.instance_variable_get(:@category)).to be_nil
     end
   end
+
+  describe "configurable date window" do
+    it "uses config.date_range_days for the end date instead of DEFAULT_DAYS" do
+      config = instance_double(WeeklyLocalEvents::Config, date_range_days: 14)
+      configured = described_class.new(config)
+      within_window = build(:event, title: "Day ten", venue: dedup_venue, date: today + 10)
+      beyond_window = build(:event, title: "Day fifteen", venue: dedup_venue, date: today + 15)
+
+      result = configured.aggregate([within_window, beyond_window])
+
+      expect(result).to eq([within_window])
+    end
+
+    it "falls back to DEFAULT_DAYS when no config is supplied" do
+      within_default = build(:event, title: "Day six", venue: dedup_venue, date: today + 6)
+      beyond_default = build(:event, title: "Day ten", venue: dedup_venue, date: today + 10)
+
+      result = aggregator.aggregate([within_default, beyond_default])
+
+      expect(result).to eq([within_default])
+    end
+  end
 end

@@ -291,7 +291,7 @@ end
 
 begin
   app = WeeklyLocalEvents::Application.new(config)
-  summary = app.run(dry_run: options[:dry_run])
+  summary = app.run(dry_run: options[:dry_run], notify: options[:notify])
 
   # Output results
   if options[:json]

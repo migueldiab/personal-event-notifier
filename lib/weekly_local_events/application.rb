@@ -22,18 +22,19 @@ module WeeklyLocalEvents
       @config = config
       @scraper_registry = ScraperRegistry.new(config)
       @notifier = Notifier.new(config)
-      @aggregator = Aggregator.new
+      @aggregator = Aggregator.new(config)
     end
 
     # Run the full pipeline: scrape → aggregate → notify → Summary.
     #
-    # @param dry_run [Boolean] if true, skip notification step
+    # @param dry_run [Boolean] if true, skip notification step (takes precedence)
+    # @param notify [Boolean] if true, send the aggregated events to the notifier
     # @return [Summary] with total event count and per-source breakdown.
-    def run(dry_run: false)
+    def run(dry_run: false, notify: false)
       log_info "Starting Weekly Local Events run at #{Time.now}"
       events = scrape_all
       aggregated = aggregate(events)
-      result = dry_run ? NotificationResult.new(success: true, events_sent: 0, dry_run: true) : notify(aggregated)
+      result = notification_result(aggregated, dry_run: dry_run, notify: notify)
       log_info "Run complete. Found #{aggregated.size} events, notification #{result.to_s.downcase}."
       Summary.new(total: aggregated.size, sources: aggregated.map(&:source).tally)
     end
@@ -84,6 +85,17 @@ module WeeklyLocalEvents
     end
 
     private
+
+    # Decide the notification outcome. `dry_run` always wins so an explicit
+    # --notify can never cause an accidental send during a dry run.
+    #
+    # @return [NotificationResult]
+    def notification_result(events, dry_run:, notify:)
+      return NotificationResult.new(success: true, events_sent: 0, dry_run: true) if dry_run
+      return notify(events) if notify
+
+      NotificationResult.new(success: true, events_sent: 0)
+    end
 
     # Scrape every active source once and return all collected events.
     #

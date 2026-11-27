@@ -198,11 +198,12 @@ module WeeklyLocalEvents
       @start_date ||= Date.today
     end
 
-    # Generate the end date for filtering (default: today + DEFAULT_DAYS).
+    # Generate the end date for filtering (default: today + configured days).
+    # Falls back to DEFAULT_DAYS when no config is available.
     #
     # @return [Date]
     def end_date
-      @end_date ||= Date.today + DEFAULT_DAYS
+      @end_date ||= Date.today + (@config&.date_range_days || DEFAULT_DAYS)
     end
 
     # Normalize a title for deduplication: lowercase, strip punctuation,

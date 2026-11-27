@@ -83,4 +83,36 @@ RSpec.describe WeeklyLocalEvents::Application do
       expect(summary.to_h[:total]).to eq(summary.to_h[:sources].values.sum)
     end
   end
+
+  describe "notification and config wiring" do
+    let(:config) { instance_double(WeeklyLocalEvents::Config, logger: nil) }
+    let(:events) { [instance_double(WeeklyLocalEvents::Event, source: "alpha")] }
+    let(:registry) { instance_double(WeeklyLocalEvents::ScraperRegistry, active: []) }
+    let(:aggregator) { instance_double(WeeklyLocalEvents::Aggregator, aggregate: events) }
+    let(:notifier) { instance_double(WeeklyLocalEvents::Notifier, notify: nil) }
+
+    before do
+      allow(WeeklyLocalEvents::ScraperRegistry).to receive(:new).and_return(registry)
+      allow(WeeklyLocalEvents::Aggregator).to receive(:new).and_return(aggregator)
+      allow(WeeklyLocalEvents::Notifier).to receive(:new).and_return(notifier)
+    end
+
+    it "sends aggregated events to the notifier when notify: true and dry_run: false" do
+      described_class.new(config).run(dry_run: false, notify: true)
+
+      expect(notifier).to have_received(:notify).with(events).once
+    end
+
+    it "never sends when dry_run: true, even if notify: true" do
+      described_class.new(config).run(dry_run: true, notify: true)
+
+      expect(notifier).not_to have_received(:notify)
+    end
+
+    it "passes config into Aggregator.new so --days overrides are honoured" do
+      described_class.new(config).run(dry_run: true, notify: false)
+
+      expect(WeeklyLocalEvents::Aggregator).to have_received(:new).with(config).once
+    end
+  end
 end
