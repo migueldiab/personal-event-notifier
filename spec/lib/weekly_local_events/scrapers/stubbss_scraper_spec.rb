@@ -67,6 +67,14 @@ RSpec.describe WeeklyLocalEvents::Scrapers::StubbssScraper do
     allow(scraper.config).to receive(:logger).and_return(logger)
   end
 
+  # Build a scraper with different politeness settings while keeping the
+  # logger stubbed, so no example can emit real log noise or really sleep.
+  def build_scraper(overrides = {})
+    described_class.new(config.merge(overrides)).tap do |instance|
+      allow(instance.config).to receive(:logger).and_return(logger)
+    end
+  end
+
   describe "#initialize" do
     it "sets the name and base URL for Stubb's" do
       expect(scraper.name).to eq("stubbss")
@@ -161,6 +169,80 @@ RSpec.describe WeeklyLocalEvents::Scrapers::StubbssScraper do
 
       expect(scraper.events).to eq([])
       expect(logger).to have_received(:warn).with(/Failed to fetch/)
+    end
+  end
+
+  describe "rate limiting" do
+    it "defaults to a polite 2 second delay (about 30 requests per minute)" do
+      expect(described_class.new.rate_limit_delay).to eq(2.0)
+      expect(described_class::DEFAULT_RATE_LIMIT_DELAY).to eq(2.0)
+    end
+
+    it "accepts request_delay as an alias for rate_limit_delay" do
+      expect(build_scraper(rate_limit_delay: nil, request_delay: 7.5).rate_limit_delay).to eq(7.5)
+    end
+
+    it "waits the configured delay before giving up on a failed request" do
+      polite = build_scraper(rate_limit_delay: 0.25, max_retries: 2)
+      allow(polite).to receive(:sleep)
+      stub_request(:get, events_url).to_return(status: 500)
+
+      expect(polite.events).to eq([])
+      expect(polite).to have_received(:sleep).with(0.25).once
+      expect(a_request(:get, events_url)).to have_been_made.once
+    end
+
+    it "does not back off at all when max_retries is one" do
+      immediate = build_scraper(rate_limit_delay: 0.25, max_retries: 1)
+      allow(immediate).to receive(:sleep)
+      stub_request(:get, events_url).to_return(status: 500)
+
+      expect(immediate.events).to eq([])
+      expect(immediate).not_to have_received(:sleep)
+    end
+
+    it "does not retry or wait when the site returns 429" do
+      stub_request(:get, events_url).to_return(status: 429, headers: { "Retry-After" => "60" })
+
+      expect(scraper.events).to eq([])
+      expect(logger).to have_received(:warn).with(/\[stubbss\] Failed to fetch.*Rate limited/)
+      expect(a_request(:get, events_url)).to have_been_made.once
+    end
+
+    it "never makes more requests than max_pages allows" do
+      budgeted = build_scraper(max_pages: 2)
+      stub_request(:get, events_url)
+        .to_return(status: 200, body: html_with_next_link, headers: { "Content-Type" => "text/html" })
+      stub_request(:get, page_two_url)
+        .to_return(status: 200, body: page_two_html, headers: { "Content-Type" => "text/html" })
+
+      expect(budgeted.events.map(&:title)).to eq(["Jazz Night", "Blues Night"])
+      expect(a_request(:get, events_url)).to have_been_made.once
+      expect(a_request(:get, page_two_url)).to have_been_made.once
+    end
+  end
+
+  describe "ticket links" do
+    it "uses an external Buy Tickets link when the card has no title anchor" do
+      ticket_url = "https://www.ticketmaster.com/event/1A0099B2C3D4E5F6"
+      html = <<~HTML
+        <div class="event-card">
+          <h3>Big Show</h3>
+          <time datetime="2026-12-10T20:00:00">December 10, 2026</time>
+          <span class="time">8:00 PM</span>
+          <span class="venue">Stubb's Waller Creek Amphitheater</span>
+          <a class="buy-tickets" href="#{ticket_url}">Buy Tickets</a>
+        </div>
+      HTML
+      stub_request(:get, events_url)
+        .to_return(status: 200, body: html, headers: { "Content-Type" => "text/html" })
+
+      event = scraper.events.first
+
+      expect(event.title).to eq("Big Show")
+      expect(event.date).to eq(Date.new(2026, 12, 10))
+      expect(event.venue.name).to eq("Stubb's Waller Creek Amphitheater")
+      expect(event.url).to eq(ticket_url)
     end
   end
 
