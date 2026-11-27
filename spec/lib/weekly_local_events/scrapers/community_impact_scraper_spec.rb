@@ -11,7 +11,8 @@ RSpec.describe WeeklyLocalEvents::Scrapers::CommunityImpactScraper do
   let(:date_range) { WeeklyLocalEvents::DateRange.from_days(3) }
   let(:config_with_range) do
     { name: "community_impact", base_url: "https://communityimpact.com",
-      date_range: date_range, user_agent: "TestBot/1.0" }
+      date_range: date_range, user_agent: "TestBot/1.0",
+      rate_limit_delay: 0, max_retries: 2, backoff_base: 0.01, jitter: 0 }
   end
   let(:scraper_with_range) { described_class.new(config_with_range) }
 
@@ -331,7 +332,7 @@ RSpec.describe WeeklyLocalEvents::Scrapers::CommunityImpactScraper do
 
   describe "#events" do
     it "returns an array of Event objects" do
-      stub_request(:get, %r{https://communityimpact.com/austin/calendar/\?from=\d{4}-\d{2}-\d{2}&to=\d{4}-\d{2}-\d{2}})
+      stub_request(:get, %r{https://communityimpact.com/austin/calendar/\?from=\d{4}-\d{2}-\d{2}&to=\d{4}-\d{2}-\d{2}(&page=\d+)?})
         .to_return(status: 200, body: "<html><head><script type=\"application/ld+json\">#{sample_json_ld}</script></head><body></body></html>", headers: { "Content-Type" => "text/html" })
 
       events = scraper_with_range.events
@@ -340,8 +341,10 @@ RSpec.describe WeeklyLocalEvents::Scrapers::CommunityImpactScraper do
     end
 
     it "handles network failures gracefully" do
-      stub_request(:get, %r{https://communityimpact.com/austin/calendar/\?from=\d{4}-\d{2}-\d{2}&to=\d{4}-\d{2}-\d{2}})
+      stub_request(:get, %r{https://communityimpact.com/austin/calendar/\?from=\d{4}-\d{2}-\d{2}&to=\d{4}-\d{2}-\d{2}(&page=\d+)?})
         .to_raise(Errno::ECONNREFUSED)
+      stub_request(:get, %r{https://(satxevents|dfwevents)\.communityimpact\.com/calendar/})
+        .to_return(status: 404)
 
       events = scraper_with_range.events
       expect(events).to be_an(Array)
@@ -349,7 +352,9 @@ RSpec.describe WeeklyLocalEvents::Scrapers::CommunityImpactScraper do
     end
 
     it "handles HTTP 404 gracefully" do
-      stub_request(:get, %r{https://communityimpact.com/austin/calendar/\?from=\d{4}-\d{2}-\d{2}&to=\d{4}-\d{2}-\d{2}})
+      stub_request(:get, %r{https://communityimpact.com/austin/calendar/\?from=\d{4}-\d{2}-\d{2}&to=\d{4}-\d{2}-\d{2}(&page=\d+)?})
+        .to_return(status: 404)
+      stub_request(:get, %r{https://(satxevents|dfwevents)\.communityimpact\.com/calendar/})
         .to_return(status: 404)
 
       events = scraper_with_range.events
@@ -358,7 +363,9 @@ RSpec.describe WeeklyLocalEvents::Scrapers::CommunityImpactScraper do
     end
 
     it "handles HTTP 429 (rate limit) gracefully" do
-      stub_request(:get, %r{https://communityimpact.com/austin/calendar/\?from=\d{4}-\d{2}-\d{2}&to=\d{4}-\d{2}-\d{2}})
+      stub_request(:get, %r{https://communityimpact.com/austin/calendar/\?from=\d{4}-\d{2}-\d{2}&to=\d{4}-\d{2}-\d{2}(&page=\d+)?})
+        .to_return(status: 429)
+      stub_request(:get, %r{https://(satxevents|dfwevents)\.communityimpact\.com/calendar/})
         .to_return(status: 429)
 
       events = scraper_with_range.events
@@ -367,7 +374,7 @@ RSpec.describe WeeklyLocalEvents::Scrapers::CommunityImpactScraper do
     end
 
     it "handles pagination across multiple pages" do
-      stub_request(:get, %r{https://communityimpact.com/austin/calendar/\?from=\d{4}-\d{2}-\d{2}&to=\d{4}-\d{2}-\d{2}&page=\d+})
+      stub_request(:get, %r{https://communityimpact.com/austin/calendar/\?from=\d{4}-\d{2}-\d{2}&to=\d{4}-\d{2}-\d{2}(&page=\d+)?})
         .to_return(status: 200, body: "<html><head><script type=\"application/ld+json\">#{sample_json_ld}</script></head><body></body></html>", headers: { "Content-Type" => "text/html" })
 
       events = scraper_with_range.events
@@ -490,6 +497,60 @@ RSpec.describe WeeklyLocalEvents::Scrapers::CommunityImpactScraper do
 
     it "handles empty string" do
       expect(scraper.send(:resolve_event_url, "")).to be_nil
+    end
+  end
+
+  describe "anti-bot resilience" do
+    it "builds an anti-bot fetcher limited to about five requests per minute" do
+      expect(scraper.anti_bot_fetcher).to be_a(WeeklyLocalEvents::AntiBotFetcher)
+      expect(scraper.rate_limit_delay).to eq(12.0)
+    end
+
+    it "includes satxevents and dfwevents in the regional fallback chain" do
+      variants = scraper.send(:regional_variant_urls, "https://communityimpact.com/austin/calendar/?from=2026-12-01")
+
+      expect(variants).to include(a_string_including("satxevents.communityimpact.com"))
+      expect(variants).to include(a_string_including("dfwevents.communityimpact.com"))
+    end
+
+    it "fetches events from the primary calendar" do
+      stub_request(:get, %r{https://communityimpact\.com/austin/calendar/\?from=\d{4}-\d{2}-\d{2}})
+        .to_return(status: 200,
+                   body: "<html><head><script type=\"application/ld+json\">#{sample_json_ld}</script></head></html>",
+                   headers: { "Content-Type" => "text/html" })
+
+      expect(scraper_with_range.events.map(&:title)).to include("Live Jazz Night")
+    end
+
+    it "falls back to a regional variant after repeated 429 responses" do
+      primary = %r{https://communityimpact\.com/austin/calendar/\?from=\d{4}-\d{2}-\d{2}}
+      regional = %r{https://satxevents\.communityimpact\.com/calendar/\?from=\d{4}-\d{2}-\d{2}}
+      stub_request(:get, primary).to_return(status: 429, body: "")
+      stub_request(:get, regional)
+        .to_return(status: 200,
+                   body: "<html><head><script type=\"application/ld+json\">#{sample_json_ld}</script></head></html>",
+                   headers: { "Content-Type" => "text/html" })
+
+      events = scraper_with_range.events
+
+      expect(events.size).to eq(3)
+      expect(events.map(&:title)).to include("Live Jazz Night")
+    end
+
+    it "returns no events and does not raise on a bot-challenge page" do
+      stub_request(:get, %r{https://(communityimpact\.com/austin|satxevents\.communityimpact\.com|dfwevents\.communityimpact\.com)/calendar/})
+        .to_return(status: 200, body: "<html><title>Just a moment...</title></html>")
+
+      expect { scraper_with_range.events }.not_to raise_error
+      expect(scraper_with_range.events).to be_empty
+    end
+
+    it "skips premium content that redirects to the login wall" do
+      stub_request(:get, %r{https://communityimpact\.com/austin/calendar/})
+        .to_return(status: 302, headers: { "Location" => "https://communityimpact.com/premium-signin" })
+
+      expect { scraper_with_range.events }.not_to raise_error
+      expect(scraper_with_range.events).to be_empty
     end
   end
 end

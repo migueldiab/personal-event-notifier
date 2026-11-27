@@ -47,6 +47,14 @@ module WeeklyLocalEvents
     class CommunityImpactScraper < BaseScraper
       BASE_URL = "https://communityimpact.com".freeze
       CALENDAR_PATH = "/austin/calendar/".freeze
+      REGIONAL_HOSTS = %w[
+        satxevents.communityimpact.com
+        dfwevents.communityimpact.com
+      ].freeze
+      DEFAULT_RATE_LIMIT_DELAY = 12.0 # ~5 requests/minute
+      EVENTS_PER_PAGE = 24
+
+      attr_reader :anti_bot_fetcher
 
       # @param config [Config, Hash, nil] scraper configuration
       def initialize(config = nil)
@@ -54,8 +62,9 @@ module WeeklyLocalEvents
         cfg[:name] = "community_impact"
         cfg[:base_url] = BASE_URL
         cfg[:user_agent] = "WeeklyLocalEvents/#{VERSION} (https://github.com/madrax/weekly-local-events)"
-        cfg[:rate_limit_delay] = 2.5
+        cfg[:rate_limit_delay] = (cfg[:rate_limit_delay] || cfg[:request_delay] || DEFAULT_RATE_LIMIT_DELAY).to_f
         super(cfg)
+        @anti_bot_fetcher = build_anti_bot_fetcher(cfg)
       end
 
       # Fetch all events for the configured date range.
@@ -63,7 +72,9 @@ module WeeklyLocalEvents
       # @return [Array<Event>]
       def events
         all_events = []
-        date_range.start_date.to_date.downto(date_range.end_date.to_date) do |date|
+        # Walk newest-first so future dates can be skipped without losing
+        # earlier days in the configured range.
+        date_range.end_date.to_date.downto(date_range.start_date.to_date) do |date|
           next if date > Date.today
 
           page = 1
@@ -74,6 +85,8 @@ module WeeklyLocalEvents
 
             all_events.concat(events)
             page += 1
+            # A short page is the last page; the recon found 24 cards per page.
+            break if events.length < EVENTS_PER_PAGE
             break unless has_next_page?(url, page)
           end
         end
@@ -93,7 +106,65 @@ module WeeklyLocalEvents
         events_from_json_ld(doc)
       end
 
+      # Fetch a page through the resilient pipeline: rate limiting, retries,
+      # regional variants and (last resort) a stealth headless browser.
+      #
+      # @param url [String] page URL
+      # @return [Array<Event>]
+      def scrape_page(url)
+        html = anti_bot_fetcher.fetch(url, fallback_urls: regional_variant_urls(url))
+        return [] if html.to_s.strip.empty?
+
+        parse_response(html)
+      rescue StandardError => e
+        log_error "Error scraping #{url}: #{e.class} - #{e.message}"
+        []
+      end
+
       private
+
+      # Build the anti-bot fetching pipeline from scraper configuration.
+      #
+      # Test-friendly overrides: :request, :rate_limiter, :headless_fetcher,
+      # :backoff_base and :jitter may be supplied in a Hash config.
+      #
+      # @param cfg [Hash] effective scraper configuration
+      # @return [AntiBotFetcher]
+      def build_anti_bot_fetcher(cfg)
+        request = cfg[:request] || ->(url, headers:) { http_get(url, headers) }
+        limiter = cfg[:rate_limiter] || build_rate_limiter(cfg)
+        headless = cfg[:headless_fetcher] || HeadlessBrowserFetcher.new(logger: config.logger)
+
+        AntiBotFetcher.new(
+          request: request,
+          rate_limiter: limiter,
+          max_retries: max_retries,
+          backoff_base: cfg.fetch(:backoff_base, 2.0),
+          jitter: cfg.fetch(:jitter, RateLimiter::DEFAULT_JITTER),
+          logger: config.logger,
+          headless_fetcher: headless
+        )
+      end
+
+      def build_rate_limiter(cfg)
+        delay = cfg[:rate_limit_delay].to_f
+        rpm = cfg[:requests_per_minute] || (delay.positive? ? 60.0 / delay : 0)
+        RateLimiter.new(
+          requests_per_minute: rpm,
+          jitter: cfg.fetch(:jitter, RateLimiter::DEFAULT_JITTER)
+        )
+      end
+
+      # Rewrite a primary calendar URL onto the named regional variants.
+      #
+      # @param url [String] primary calendar URL
+      # @return [Array<String>] regional calendar URLs
+      def regional_variant_urls(url)
+        uri = URI(url)
+        REGIONAL_HOSTS.map do |host|
+          URI::HTTPS.build(host: host, path: "/calendar/", query: uri.query).to_s
+        end
+      end
 
       # Build the full calendar URL for a given date and page.
       #
