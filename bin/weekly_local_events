@@ -223,7 +223,7 @@ if options[:subcommand] == "weekly_local_sites"
       else
         puts "Events found: #{aggregated.size}"
         aggregated.each do |event|
-          puts "  [#{event.source}] #{event.title} - #{event.venue&.name} - #{event.date}"
+          puts "  #{event.to_cli_line}"
         end
       end
 
@@ -269,7 +269,7 @@ if options[:subcommand] == "weekly_local_sites"
       else
         puts "#{scraper_name} events: #{aggregated.size}"
         aggregated.each do |event|
-          puts "  #{event.title} - #{event.venue&.name} - #{event.date}"
+          puts "  #{event.to_cli_line}"
         end
       end
 
@@ -305,7 +305,7 @@ begin
   else
     puts "Summary: #{summary}"
     summary.events.each do |event|
-      puts "  [#{event.source}] #{event.title} - #{event.venue&.name} - #{event.date}"
+      puts "  #{event.to_cli_line}"
     end
   end
 
