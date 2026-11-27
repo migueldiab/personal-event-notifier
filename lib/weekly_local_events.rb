@@ -52,7 +52,7 @@ module WeeklyLocalEvents
     end
 
     def run
-      Application.new(config, scraper_registry, notifier, aggregator).run
+      Application.new(config).run
     end
   end
 end

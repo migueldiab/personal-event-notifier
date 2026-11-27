@@ -110,4 +110,16 @@ RSpec.describe WeeklyLocalEvents do
       expect(registry.active.map(&:name)).to contain_exactly(*configured)
     end
   end
+
+  describe ".run" do
+    it "builds the Application with only the config and returns its Summary" do
+      summary = WeeklyLocalEvents::Summary.new(total: 3, sources: { "do512" => 3 })
+      app = instance_double(WeeklyLocalEvents::Application, run: summary)
+
+      expect(WeeklyLocalEvents::Application).to receive(:new)
+        .with(described_class.config).once.and_return(app)
+
+      expect(described_class.run).to be(summary)
+    end
+  end
 end
