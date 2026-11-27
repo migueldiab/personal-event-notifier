@@ -1022,6 +1022,114 @@ RSpec.describe WeeklyLocalEvents::Notifier do
       categories.each do |cat, emoji|
         expect(result).to include("#{emoji} *#{cat}*")
       end
+      result = notifier.send_message(long_text)
+      expect(result.success?).to be true
+    end
+  end
+
+  describe "#send_telegram_api" do
+    before do
+      allow(config).to receive(:notifications_enabled?).and_return(true)
+      allow(config).to receive(:telegram_bot_token).and_return("test_token")
+      allow(config).to receive(:notification_channel_id).and_return("-1004330304115")
+    end
+
+    it "returns success for valid response" do
+      mock_http = double(is_a?: true)
+      mock_response_obj = double(is_a?: true, body: JSON.generate(mock_response))
+      allow(Net::HTTP).to receive(:new).and_return(mock_http)
+      allow(Net::HTTP).to receive(:start).and_yield(mock_http)
+      allow(mock_http).to receive(:request).and_return(mock_response_obj)
+      result = notifier.send_telegram_api("test message")
+      expect(result.success?).to be true
+    end
+
+    it "returns error for failed API response" do
+      error_response = { "ok" => false, "description" => "Bad Request: message is too long" }
+      mock_http = double(is_a?: false)
+      mock_response_obj = double(is_a?: false, body: JSON.generate(error_response))
+      allow(Net::HTTP).to receive(:new).and_return(mock_http)
+      allow(Net::HTTP).to receive(:start).and_yield(mock_http)
+      allow(mock_http).to receive(:request).and_return(mock_response_obj)
+      result = notifier.send_telegram_api("test")
+      expect(result.success?).to be false
+      expect(result.error).to include("Bad Request")
+    end
+
+    it "handles network errors" do
+      allow(Net::HTTP).to receive(:start).and_raise(SocketError.new("Network unreachable"))
+      result = notifier.send_telegram_api("test")
+      expect(result.success?).to be false
+      expect(result.error).to include("Network error")
+    end
+
+    it "handles JSON parse errors" do
+      mock_http = double(is_a?: false)
+      mock_response_obj = double(is_a?: false, body: "not json")
+      allow(Net::HTTP).to receive(:new).and_return(mock_http)
+      allow(Net::HTTP).to receive(:start).and_yield(mock_http)
+      allow(mock_http).to receive(:request).and_return(mock_response_obj)
+      result = notifier.send_telegram_api("test")
+      expect(result.success?).to be false
+      expect(result.error).to include("Unknown Telegram API error")
+    end
+  end
+
+  describe "TelegramResponse" do
+    it "creates a successful response" do
+      response = WeeklyLocalEvents::TelegramResponse.new(success: true, message_id: 12345)
+      expect(response.success?).to be true
+      expect(response.message_id).to eq(12345)
+      expect(response.error).to be_nil
+    end
+
+    it "creates a failed response" do
+      response = WeeklyLocalEvents::TelegramResponse.new(success: false, error: "Something went wrong")
+      expect(response.success?).to be false
+      expect(response.error).to eq("Something went wrong")
+    end
+
+    it "converts to hash" do
+      response = WeeklyLocalEvents::TelegramResponse.new(success: true, message_id: 100)
+      h = response.to_h
+      expect(h[:success]).to be true
+      expect(h[:message_id]).to eq(100)
+    end
+
+    it "converts to string" do
+      response = WeeklyLocalEvents::TelegramResponse.new(success: true, message_id: 100)
+      expect(response.to_s).to include("OK")
+      expect(response.to_s).to include("100")
+    end
+  end
+
+  describe "#normalize_category" do
+    it "normalizes music-related categories" do
+      expect(notifier.send(:normalize_category, "concert")).to eq("Music")
+      expect(notifier.send(:normalize_category, "live music")).to eq("Music")
+      expect(notifier.send(:normalize_category, "gig")).to eq("Music")
+    end
+
+    it "normalizes comedy-related categories" do
+      expect(notifier.send(:normalize_category, "stand-up")).to eq("Comedy")
+      expect(notifier.send(:normalize_category, "improv")).to eq("Comedy")
+    end
+
+    it "normalizes other categories" do
+      expect(notifier.send(:normalize_category, "festival")).to eq("Festival")
+      expect(notifier.send(:normalize_category, "sports")).to eq("Sports")
+      expect(notifier.send(:normalize_category, "art")).to eq("Art")
+      expect(notifier.send(:normalize_category, "food")).to eq("Food & Drink")
+      expect(notifier.send(:normalize_category, "tech")).to eq("Technology")
+    end
+
+    it "returns 'Other' for unknown categories" do
+      expect(notifier.send(:normalize_category, "unknown category")).to eq("Other")
+    end
+
+    it "returns 'Other' for nil or empty" do
+      expect(notifier.send(:normalize_category, nil)).to eq("Other")
+      expect(notifier.send(:normalize_category, "")).to eq("Other")
     end
 
     it "covers unknown category with '📋' emoji" do

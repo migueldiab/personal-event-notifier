@@ -123,7 +123,7 @@ module WeeklyLocalEvents
 
       grouped = events.group_by { |e| normalize_category(e.category) }
 
-      category_order = ["Music", "Comedy", "Festival", "Sports", "Art", "Food & Drink", "Market", "Education", "Theater", "Family", "Nightlife", "Outdoor", "Religious", "Politics", "Technology", "Other"]
+      category_order = %w[Music Comedy Festival Sports Art Food & Drink Market Education Theater Family Nightlife Outdoor Religious Politics Technology Other]
 
       category_order.each do |cat|
         cat_events = grouped[cat]
