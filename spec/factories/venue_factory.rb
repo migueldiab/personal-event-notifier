@@ -1,17 +1,5 @@
 # frozen_string_literal: true
 
-FactoryBot.define do
-  factory :venue, class: "WeeklyLocalEvents::Venue" do
-    initialize_with do
-      WeeklyLocalEvents::Venue.new(
-        name: "ACL Live",
-        address: "310 W 5th St",
-        city: "Austin",
-        state: "TX",
-        zip: "78701",
-        phone: "512-542-8255",
-        url: "https://aclive.com",
-      )
-    end
-  end
-end
+# Venue factories now live in spec/factories/weekly_local_events/aggregator.rb
+# alongside the event and price factories they depend on. Keeping a single
+# definition set avoids FactoryBot::DuplicateDefinitionError.

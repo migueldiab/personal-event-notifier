@@ -115,14 +115,16 @@ module WeeklyLocalEvents
     # @return [Array<Event>]
     # @raise [NotFoundError] if the scraper is not registered
     def run(name)
+      # Let lookup errors surface so callers can detect an unknown name;
+      # only failures raised by the scraper itself are handled gracefully.
       scraper = get(name)
-      scraper.scrape
-    rescue NotFoundError => e
-      log_error "Scraper not found: #{e.message}"
-      []
-    rescue StandardError => e
-      log_error "Scraper '#{name}' failed: #{e.class} - #{e.message}"
-      []
+
+      begin
+        scraper.scrape
+      rescue StandardError => e
+        log_error "Scraper '#{name}' failed: #{e.class} - #{e.message}"
+        []
+      end
     end
 
     # Run all registered scrapers and merge results.
