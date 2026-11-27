@@ -372,11 +372,20 @@ module WeeklyLocalEvents
       "#{base}/#{stripped}"
     end
 
+    # Perform a GET for the resilient fetch pipeline.
+    #
+    # @param url [String] absolute URL
+    # @param extra_headers [Hash] additional request headers
+    # @return [Net::HTTPResponse]
+    def http_get(url, extra_headers = {})
+      perform_request(URI(url), extra_headers)
+    end
+
     # Perform the actual HTTP request with headers and cookies.
     #
     # @param uri [URI]
     # @return [Net::HTTPResponse]
-    def perform_request(uri)
+    def perform_request(uri, extra_headers = {})
       require "net/http"
 
       request = Net::HTTP::Get.new(uri)
@@ -394,6 +403,8 @@ module WeeklyLocalEvents
         cookie_str = cookies.map { |k, v| "#{k}=#{v}" }.join("; ")
         request["Cookie"] = cookie_str
       end
+
+      extra_headers.each { |key, value| request[key] = value.to_s }
 
       Net::HTTP.start(
         uri.hostname,
