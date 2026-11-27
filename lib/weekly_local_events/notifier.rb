@@ -117,7 +117,7 @@ module WeeklyLocalEvents
 
       grouped = events.group_by { |e| normalize_category(e.category) }
 
-      category_order = %w[Music Comedy Festival Sports Art Food & Drink Market Education Theater Family Nightlife Outdoor Religious Politics Technology]
+      category_order = %w[Music Comedy Festival Sports Art Food & Drink Market Education Theater Family Nightlife Outdoor Religious Politics Technology Other]
 
       category_order.each do |cat|
         cat_events = grouped[cat]
@@ -138,7 +138,7 @@ module WeeklyLocalEvents
         lines << "⛪ *#{cat}* " if cat == "Religious"
         lines << "🗳️ *#{cat}* " if cat == "Politics"
         lines << "💻 *#{cat}* " if cat == "Technology"
-        lines << "📋 *#{cat}* " unless category_order.include?(cat)
+        lines << "📋 *#{cat}* " if cat == "Other"
 
         cat_events.each do |event|
           price = event.price_range
@@ -324,7 +324,7 @@ module WeeklyLocalEvents
 
       cat = category.to_s.strip.downcase
       case cat
-      when /concert|live music|show|performance|gig|band|musician/
+      when /concert|live music|show|performance|gig|band|musician|music/
         "Music"
       when /comedy|stand-up|improv|joke|humor/
         "Comedy"
