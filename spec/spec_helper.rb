@@ -2,9 +2,12 @@
 
 # SimpleCov coverage reporting
 require "simplecov"
-SimpleCov.start
+SimpleCov.start do
+  skip "/spec/"
+  skip "/.bundle/"
+  group "Libraries", "lib"
+end
 
-# Core application
 require "weekly_local_events"
 require "weekly_local_events/pipeline/engine"
 require "weekly_local_events/pipeline/normalizer"

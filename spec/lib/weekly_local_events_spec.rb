@@ -26,4 +26,56 @@ RSpec.describe WeeklyLocalEvents do
       expect(described_class.aggregator).to be_a(WeeklyLocalEvents::Aggregator)
     end
   end
+
+  describe ".VERSION" do
+    it "returns the correct version string" do
+      expect(described_class::VERSION).to eq("0.1.0")
+    end
+  end
+
+  describe ".Error" do
+    it "is a StandardError subclass" do
+      expect(described_class::Error).to be < StandardError
+    end
+  end
+
+  describe ".ScraperError" do
+    it "is an Error subclass" do
+      expect(described_class::ScraperError).to be < described_class::Error
+    end
+  end
+
+  describe ".NotFoundError" do
+    it "is a ScraperError subclass" do
+      expect(described_class::NotFoundError).to be < described_class::ScraperError
+    end
+  end
+
+  describe ".ParseError" do
+    it "is a ScraperError subclass" do
+      expect(described_class::ParseError).to be < described_class::ScraperError
+    end
+  end
+
+  describe ".RateLimitError" do
+    it "is a ScraperError subclass" do
+      expect(described_class::RateLimitError).to be < described_class::ScraperError
+    end
+  end
+
+  describe "error hierarchy chain" do
+    it "is correct: NotFoundError/ParseError/RateLimitError < ScraperError < Error < StandardError" do
+      expect(described_class::NotFoundError.ancestors).to include(described_class::ScraperError)
+      expect(described_class::NotFoundError.ancestors).to include(described_class::Error)
+      expect(described_class::NotFoundError.ancestors).to include(StandardError)
+
+      expect(described_class::ParseError.ancestors).to include(described_class::ScraperError)
+      expect(described_class::ParseError.ancestors).to include(described_class::Error)
+      expect(described_class::ParseError.ancestors).to include(StandardError)
+
+      expect(described_class::RateLimitError.ancestors).to include(described_class::ScraperError)
+      expect(described_class::RateLimitError.ancestors).to include(described_class::Error)
+      expect(described_class::RateLimitError.ancestors).to include(StandardError)
+    end
+  end
 end
