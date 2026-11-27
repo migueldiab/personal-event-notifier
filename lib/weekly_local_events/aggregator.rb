@@ -101,7 +101,9 @@ module WeeklyLocalEvents
     # @param events [Array<Event>]
     # @return [Array<Event>]
     def sort_by_date(events)
-      events.sort_by { |event| event.date || Date.max }
+      # Tuple key keeps dated events in chronological order and pushes
+      # undated events to the end without relying on a non-existent Date.max.
+      events.sort_by { |event| [event.date.nil? ? 1 : 0, event.date] }
     end
 
     # Enrich events with additional data (geocoding, categories).
@@ -118,7 +120,7 @@ module WeeklyLocalEvents
         if event.venue && !event.venue.geocoded?
           begin
             event.venue.geocode!
-          rescue Venue::GeocodeError
+          rescue WeeklyLocalEvents::GeocodeError
             # Silently skip — venue remains un-geocoded
           end
         end
