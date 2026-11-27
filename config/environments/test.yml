@@ -1,11 +1,10 @@
-# Test environment configuration
-scrapers:
-  verbose: false
-  dry_run: true
-  rate_limit: 50
-
-notifications:
-  enabled: false
-  test_mode: true
-
-log_level: error
+test:
+  date_range_days: 7
+  request_timeout: 5
+  request_delay: 0
+  max_retries: 1
+  log_level: WARN
+  enabled_scrapers:
+    - austin_chronicle
+    - do512
+    - community_impact
