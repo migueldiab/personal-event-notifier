@@ -9,57 +9,88 @@ RSpec.describe WeeklyLocalEvents::Scrapers::StubbssScraper do
 
   # A hash config keeps retries instant (no backoff sleeps); the scraper
   # builds its own Config internally, whose logger we replace with a double.
+  # reference_date pins MM/DD parsing to the Wayback capture date so the
+  # expected dates are deterministic.
   let(:config) do
     { name: "stubbss", base_url: described_class::BASE_URL,
-      rate_limit_delay: 0, max_retries: 1 }
+      rate_limit_delay: 0, max_retries: 1,
+      reference_date: Date.new(2026, 10, 11) }
   end
   let(:logger) { instance_double(Logger, warn: nil, info: nil, error: nil) }
-  let(:events_url) { "https://www.stubbsaustin.com/events/" }
-  let(:page_two_url) { "https://www.stubbsaustin.com/events/?page=2" }
+  let(:events_url) { "https://stubbsaustin.com/concert-listings/" }
+  let(:page_two_url) { "https://stubbsaustin.com/concert-listings/?page=2" }
 
-  let(:sample_html) do
-    <<~HTML
-      <div class="event-card">
-        <h3><a href="/events/2026-12-01-jazz-night">Jazz Night</a></h3>
-        <time datetime="2026-12-01T19:30:00">December 1, 2026</time>
-        <span class="time">7:30 PM</span>
-        <span class="venue">Stubb's Bar-B-Q</span>
-        <span class="price">$25</span>
-        <p class="description">An evening of jazz.</p>
-      </div>
-    HTML
-  end
-
-  let(:page_two_html) do
-    <<~HTML
-      <div class="event-card">
-        <h3><a href="/events/2026-12-02-blues-night">Blues Night</a></h3>
-        <time datetime="2026-12-02T20:00:00">December 2, 2026</time>
-        <span class="time">8:00 PM</span>
-        <span class="venue">Stubb's Bar-B-Q</span>
-        <span class="price">$18</span>
-      </div>
-    HTML
-  end
-
+  # Verbatim #tw-responsive block from the 2026-10-11 Wayback snapshot.
+  let(:fixture_path) { File.expand_path("../../../fixtures/stubbs_concert_listings.html", __dir__) }
+  let(:fixture_html) { File.read(fixture_path) }
   let(:html_with_next_link) do
-    <<~HTML
-      #{sample_html}
-      <a class="next" href="/events/?page=2">Next</a>
-    HTML
+    "#{fixture_html}\n<a rel=\"next\" href=\"/concert-listings/?page=2\">Next</a>"
   end
-
+  let(:page_two_html) do
+    card_html(title: "Blues Night", date: "12/2", time: "Show: 8:00pm",
+              detail_href: "https://stubbsaustin.com/tm-event/blues-night/")
+  end
   let(:incomplete_html) do
-    <<~HTML
-      <div class="event-card">
-        <h3><a href="/events/2026-12-05-mystery-show">Mystery Show</a></h3>
-      </div>
-    HTML
+    card_html(title: "Mystery Show", date: "", time: "", detail_href: "https://stubbsaustin.com/tm-event/mystery-show/")
+  end
+  let(:empty_html) do
+    "<html><body><div class=\"tm-paginate\"></div><p>No events scheduled.</p></body></html>"
   end
 
-  let(:empty_html) do
+  # A single card reduced to the markup the real site actually emits.
+  def card_html(title:, **opts)
+    date = opts.fetch(:date, "10/11")
+    time = opts.fetch(:time, "Show: 7:00pm")
+    detail_href = opts[:detail_href]
+    ticket_href = opts[:ticket_href]
+    price = opts.fetch(:price, "")
+    venue = opts.fetch(:venue, "")
+    name = if detail_href
+             %(<div class="tw-name"><a href="#{detail_href}">#{title}</a></div>)
+           else
+             %(<div class="tw-name">#{title}</div>)
+           end
+    ticket = if ticket_href
+               %(<a href="#{ticket_href}" class="button button-primary tw-buy-tix-btn tw_onsale">Buy Tickets</a>)
+             else
+               ""
+             end
+
     <<~HTML
-      <html><body><p>No events scheduled.</p></body></html>
+      <div id="tw-responsive" class="event-list">
+        <div class="tw-plugin-upcoming-event-list">
+          <div class="container">
+            <div class="tw-section">
+              <div class="row">
+                <div class="four columns date-img-wrapper">
+                  <div class="tw-event-datetime">
+                    <div class="tw-date-time date-col">
+                      <span class="tw-day-of-week">Sun</span>
+                      <span class="tw-event-date">#{date}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="five columns">
+                  #{name}
+                  <div class="tw-venue-details">#{venue}</div>
+                  <div class="tw-date-time">
+                    <span class="tw-event-time-complete">
+                      <span class="tw-event-time">#{time}</span>
+                    </span>
+                  </div>
+                  <div class="tw-age-restriction">All Ages</div>
+                </div>
+                <div class="three columns">
+                  <div class="tw-info-price-buy-tix">
+                    <span class="tw-price">#{price}</span>
+                    #{ticket}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     HTML
   end
 
@@ -76,9 +107,9 @@ RSpec.describe WeeklyLocalEvents::Scrapers::StubbssScraper do
   end
 
   describe "#initialize" do
-    it "sets the name and base URL for Stubb's" do
+    it "sets the name and canonical base URL for Stubb's" do
       expect(scraper.name).to eq("stubbss")
-      expect(scraper.base_url).to eq("https://www.stubbsaustin.com")
+      expect(scraper.base_url).to eq("https://stubbsaustin.com")
     end
 
     it "inherits from BaseScraper and honours the supplied rate settings" do
@@ -89,27 +120,50 @@ RSpec.describe WeeklyLocalEvents::Scrapers::StubbssScraper do
   end
 
   describe "#events" do
-    it "returns Event objects with the correct fields from a valid response" do
+    it "parses the real concert-listings markup into Event objects" do
       stub_request(:get, events_url)
-        .to_return(status: 200, body: sample_html, headers: { "Content-Type" => "text/html" })
+        .to_return(status: 200, body: fixture_html, headers: { "Content-Type" => "text/html" })
 
       events = scraper.events
 
       expect(events).to be_an(Array)
       expect(events).to all(be_a(WeeklyLocalEvents::Event))
-      expect(events.size).to eq(1)
+      expect(events.size).to eq(24)
 
       event = events.first
-      expect(event.title).to eq("Jazz Night")
-      expect(event.date).to eq(Date.new(2026, 12, 1))
-      expect(event.time).to eq("19:30")
-      expect(event.begin_time).to eq("19:30")
+      expect(event.title).to eq("Gospel Brunch: The Levites")
+      expect(event.date).to eq(Date.new(2026, 10, 11))
+      expect(event.time).to eq("10:30")
+      expect(event.begin_time).to eq("10:30")
       expect(event.venue.name).to eq("Stubb's Bar-B-Q")
-      expect(event.price).to eq("$25")
-      expect(event.price_cents).to eq(2500)
-      expect(event.url).to eq("https://www.stubbsaustin.com/events/2026-12-01-jazz-night")
+      expect(event.url).to eq("https://stubbsaustin.com/tm-event/gospel-brunch-the-levites-11/")
       expect(event.source).to eq("stubbss")
-      expect(event.description).to eq("An evening of jazz.")
+      expect(event.tags).to include("All Ages")
+    end
+
+    it "decodes HTML entities and follows the /tm-event/ detail link" do
+      stub_request(:get, events_url)
+        .to_return(status: 200, body: fixture_html, headers: { "Content-Type" => "text/html" })
+
+      event = scraper.events[1]
+
+      expect(event.title).to eq("Cavetown – Running With Scissors Tour")
+      expect(event.date).to eq(Date.new(2026, 10, 13))
+      expect(event.time).to eq("19:00")
+      expect(event.url).to eq("https://stubbsaustin.com/tm-event/cavetown-running-with-scissors-tour/")
+    end
+
+    it "rolls MM/DD dates already past into the following year" do
+      stub_request(:get, events_url)
+        .to_return(status: 200, body: fixture_html, headers: { "Content-Type" => "text/html" })
+
+      titles = scraper.events.map(&:title)
+
+      vacations = scraper.events.find { |event| event.title.start_with?("Vacations") }
+      saint_levant = scraper.events.find { |event| event.title.start_with?("SAINT LEVANT") }
+      expect(titles.size).to eq(24)
+      expect(vacations.date).to eq(Date.new(2027, 3, 12))
+      expect(saint_levant.date).to eq(Date.new(2027, 4, 20))
     end
 
     it "collects events from every page linked by a next-page element" do
@@ -120,14 +174,12 @@ RSpec.describe WeeklyLocalEvents::Scrapers::StubbssScraper do
 
       events = scraper.events
 
-      expect(events.map(&:title)).to eq(["Jazz Night", "Blues Night"])
-      expect(events[0].url).to eq("https://www.stubbsaustin.com/events/2026-12-01-jazz-night")
-      expect(events[1].url).to eq("https://www.stubbsaustin.com/events/2026-12-02-blues-night")
+      expect(events.map(&:title)).to eq(scraper.parse_response(fixture_html).map(&:title) + ["Blues Night"])
       expect(a_request(:get, events_url)).to have_been_made.once
       expect(a_request(:get, page_two_url)).to have_been_made.once
     end
 
-    it "sets missing fields to nil (or empty string for Event-normalized fields)" do
+    it "defaults missing fields without dropping an otherwise valid card" do
       stub_request(:get, events_url)
         .to_return(status: 200, body: incomplete_html, headers: { "Content-Type" => "text/html" })
 
@@ -137,14 +189,14 @@ RSpec.describe WeeklyLocalEvents::Scrapers::StubbssScraper do
       event = events.first
       expect(event.title).to eq("Mystery Show")
       expect(event.date).to be_nil
-      expect(event.venue).to be_nil
       expect(event.begin_time).to be_nil
       expect(event.price_cents).to be_nil
       # Event#initialize coerces nil price/time/description to empty strings.
       expect(event.price).to eq("")
       expect(event.time).to eq("")
       expect(event.description).to eq("")
-      expect(event.url).to eq("https://www.stubbsaustin.com/events/2026-12-05-mystery-show")
+      expect(event.venue.name).to eq("Stubb's Bar-B-Q")
+      expect(event.url).to eq("https://stubbsaustin.com/tm-event/mystery-show/")
       expect(event.source).to eq("stubbss")
     end
 
@@ -216,24 +268,17 @@ RSpec.describe WeeklyLocalEvents::Scrapers::StubbssScraper do
       stub_request(:get, page_two_url)
         .to_return(status: 200, body: page_two_html, headers: { "Content-Type" => "text/html" })
 
-      expect(budgeted.events.map(&:title)).to eq(["Jazz Night", "Blues Night"])
+      expect(budgeted.events.size).to eq(25)
       expect(a_request(:get, events_url)).to have_been_made.once
       expect(a_request(:get, page_two_url)).to have_been_made.once
     end
   end
 
   describe "ticket links" do
-    it "uses an external Buy Tickets link when the card has no title anchor" do
+    it "uses an external Buy Tickets link when the real card has no title anchor" do
       ticket_url = "https://www.ticketmaster.com/event/1A0099B2C3D4E5F6"
-      html = <<~HTML
-        <div class="event-card">
-          <h3>Big Show</h3>
-          <time datetime="2026-12-10T20:00:00">December 10, 2026</time>
-          <span class="time">8:00 PM</span>
-          <span class="venue">Stubb's Waller Creek Amphitheater</span>
-          <a class="buy-tickets" href="#{ticket_url}">Buy Tickets</a>
-        </div>
-      HTML
+      html = card_html(title: "Big Show", date: "12/10", time: "Show: 8:00pm",
+                       ticket_href: ticket_url)
       stub_request(:get, events_url)
         .to_return(status: 200, body: html, headers: { "Content-Type" => "text/html" })
 
@@ -241,8 +286,18 @@ RSpec.describe WeeklyLocalEvents::Scrapers::StubbssScraper do
 
       expect(event.title).to eq("Big Show")
       expect(event.date).to eq(Date.new(2026, 12, 10))
-      expect(event.venue.name).to eq("Stubb's Waller Creek Amphitheater")
+      expect(event.venue.name).to eq("Stubb's Bar-B-Q")
       expect(event.url).to eq(ticket_url)
+    end
+
+    it "prefers the /tm-event/ detail link over the ticket CTA" do
+      ticket_url = "https://www.ticketmaster.com/event/ZZZZ"
+      detail_url = "https://stubbsaustin.com/tm-event/big-show/"
+      html = card_html(title: "Big Show", detail_href: detail_url, ticket_href: ticket_url)
+      stub_request(:get, events_url)
+        .to_return(status: 200, body: html, headers: { "Content-Type" => "text/html" })
+
+      expect(scraper.events.first.url).to eq(detail_url)
     end
   end
 
@@ -256,12 +311,7 @@ RSpec.describe WeeklyLocalEvents::Scrapers::StubbssScraper do
     end
 
     it "skips cards that have no title" do
-      html = <<~HTML
-        <div class="event-card">
-          <span class="venue">Stubb's Bar-B-Q</span>
-          <span class="price">$25</span>
-        </div>
-      HTML
+      html = card_html(title: "")
 
       expect(scraper.parse_response(html)).to eq([])
     end
