@@ -2,6 +2,7 @@
 
 require "spec_helper"
 require "webmock/rspec"
+require "json"
 require "weekly_local_events/scrapers/acl_live_scraper"
 
 RSpec.describe WeeklyLocalEvents::Scrapers::ACLLiveScraper do
@@ -227,6 +228,12 @@ RSpec.describe WeeklyLocalEvents::Scrapers::ACLLiveScraper do
   end
 
   describe "#events" do
+    # The scraper now walks the pagination endpoint after the first page.
+    before do
+      stub_request(:get, %r{https://www\.acllive\.com/events/events_ajax/\d+})
+        .to_return(status: 200, body: "\"\"", headers: { "Content-Type" => "application/json" })
+    end
+
     it "returns an array of Event objects" do
       stub_request(:get, "https://www.acllive.com/events")
         .to_return(status: 200, body: sample_html, headers: { "Content-Type" => "text/html" })
@@ -293,6 +300,110 @@ RSpec.describe WeeklyLocalEvents::Scrapers::ACLLiveScraper do
 
     it "handles time without minutes" do
       expect(scraper.normalize_time("7 PM")).to eq("19:00")
+    end
+  end
+
+  # Verbatim capture from https://www.acllive.com/events on 2026-11-27 (CST),
+  # plus the JSON-wrapped HTML fragment from /events/events_ajax/12.
+  describe "live ACL Live markup" do
+    let(:live_events_body) do
+      File.read(File.expand_path("../../../fixtures/acllive_events.html", __dir__))
+    end
+    let(:live_ajax_body) do
+      File.read(File.expand_path("../../../fixtures/acllive_ajax_12.json", __dir__))
+    end
+    let(:live_scraper) { described_class.new(config_with_range) }
+
+    it "parses all 12 real event cards from the /events page" do
+      expect(live_scraper.parse_response(live_events_body).size).to eq(12)
+    end
+
+    it "excludes the Vue template event card" do
+      titles = live_scraper.parse_response(live_events_body).map(&:title)
+      expect(titles).not_to include("{{decodeURI(data.name)}}")
+    end
+
+    it "extracts title, date, venue and URL from the live card markup" do
+      first = live_scraper.parse_response(live_events_body).first
+      expect(first.title).to eq("Michael Martin Murphey's Cowboy Christmas")
+      expect(first.date).to eq(Date.new(2026, 11, 27))
+      expect(first.venue.name).to eq("ACL Live at The Moody Theater")
+      expect(first.url).to eq(
+        "https://www.acllive.com/event/2026-11-27-michael-martin-murphey-s-cowboy-christmas-at-8-pm",
+      )
+    end
+
+    it "normalizes dates with repeated whitespace in the date span" do
+      ben = live_scraper.parse_response(live_events_body).find { |event| event.title == "Eric Benét" }
+      expect(ben.date).to eq(Date.new(2026, 12, 1))
+    end
+
+    it "maps data-venue=3 to 3TEN and derives its category" do
+      poi = live_scraper.parse_response(live_events_body).find { |event| event.title == "Poi Dog Pondering" }
+      expect(poi.venue.name).to eq("ACL Live at 3TEN")
+      expect(poi.category).to eq("3TEN ACL Live")
+    end
+
+    it "parses a JSON-wrapped AJAX fragment into events" do
+      events = live_scraper.parse_ajax_response(live_ajax_body)
+      expect(events.size).to eq(12)
+      expect(events.first.title).to eq("Ben Schwartz & Friends")
+    end
+
+    it "derives the show time from the event URL slug" do
+      echos = live_scraper.parse_ajax_response(live_ajax_body).find { |event| event.title == "Echos" }
+      expect(echos.time).to eq("19:30")
+    end
+  end
+
+  describe "#events with AJAX pagination" do
+    let(:live_events_body) do
+      File.read(File.expand_path("../../../fixtures/acllive_events.html", __dir__))
+    end
+    let(:live_ajax_body) do
+      File.read(File.expand_path("../../../fixtures/acllive_ajax_12.json", __dir__))
+    end
+    let(:live_scraper) { described_class.new(config_with_range) }
+    let(:empty_json) { "\"\"" }
+
+    it "walks the AJAX pages and returns every unique event" do
+      stub_request(:get, "https://www.acllive.com/events")
+        .to_return(status: 200, body: live_events_body)
+      stub_request(:get, %r{events_ajax/12\?})
+        .to_return(status: 200, body: live_ajax_body, headers: { "Content-Type" => "application/json" })
+      stub_request(:get, %r{events_ajax/24\?})
+        .to_return(status: 200, body: empty_json, headers: { "Content-Type" => "application/json" })
+
+      events = live_scraper.events
+      expect(events.size).to eq(24)
+      expect(events.map(&:url).uniq.size).to eq(24)
+      expect(events.last.title).to eq("Underoath")
+    end
+
+    it "deduplicates events that repeat across pages" do
+      stub_request(:get, "https://www.acllive.com/events")
+        .to_return(status: 200, body: live_events_body)
+      stub_request(:get, %r{events_ajax/12\?})
+        .to_return(status: 200, body: JSON.generate(live_events_body))
+      stub_request(:get, %r{events_ajax/24\?})
+        .to_return(status: 200, body: empty_json)
+
+      expect(live_scraper.events.size).to eq(12)
+    end
+
+    it "stops when the AJAX endpoint returns 406" do
+      stub_request(:get, "https://www.acllive.com/events")
+        .to_return(status: 200, body: live_events_body)
+      stub_request(:get, %r{events_ajax/12\?}).to_return(status: 406)
+
+      expect(live_scraper.events.size).to eq(12)
+    end
+
+    it "does not request AJAX pages when the primary page fails" do
+      stub_request(:get, "https://www.acllive.com/events").to_raise(Errno::ECONNREFUSED)
+
+      expect(live_scraper.events).to be_empty
+      expect(a_request(:get, %r{events_ajax})).not_to have_been_made
     end
   end
 end
