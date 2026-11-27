@@ -16,6 +16,7 @@ Gemfile.lock
 
 # Coverage
 coverage/
+coverage.*
 
 # OS
 .DS_Store
