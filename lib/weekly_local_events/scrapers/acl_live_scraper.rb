@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "json"
 require "weekly_local_events/base_scraper"
 require "weekly_local_events/event"
 require "weekly_local_events/venue"
@@ -24,6 +25,19 @@ module WeeklyLocalEvents
       BASE_URL = "https://www.acllive.com".freeze
       EVENTS_PATH = "/events".freeze
       VENUE_NAME = "ACL Live at The Moody Theater".freeze
+      EVENTS_PER_PAGE = 12
+      MAX_PAGES = 10
+      AJAX_QUERY = "category=0&venue=0&team=0&exclude=&per_page=12&came_from_page=event-list-page".freeze
+      VENUE_NAMES = {
+        "2" => "ACL Live at The Moody Theater",
+        "3" => "ACL Live at 3TEN",
+        "4" => "Austin PBS Tapings",
+      }.freeze
+      VENUE_CATEGORIES = {
+        "2" => "ACL Live",
+        "3" => "3TEN ACL Live",
+        "4" => "Austin PBS Tapings",
+      }.freeze
 
       # @param config [Config, Hash, nil] scraper configuration
       def initialize(config = nil)
@@ -36,11 +50,34 @@ module WeeklyLocalEvents
         super(cfg)
       end
 
-      # Fetch all events for the configured date range.
+      # Fetch all events, following the site's AJAX "load more" pagination.
       #
       # @return [Array<Event>]
       def events
-        scrape_page(EVENTS_PATH)
+        page = fetch_events_page
+        return [] unless page
+
+        collected = parse_response(page)
+        seen = {}
+        collected.each { |event| remember_event(event, seen) }
+        offset = EVENTS_PER_PAGE
+
+        MAX_PAGES.times do
+          fragment = fetch_ajax_page(offset)
+          break if fragment.nil? || fragment.strip.empty?
+
+          batch = parse_response(fragment)
+          break if batch.empty?
+
+          batch.each do |event|
+            collected << event if remember_event(event, seen)
+          end
+
+          sleep(rate_limit_delay)
+          offset += EVENTS_PER_PAGE
+        end
+
+        collected
       end
 
       # Parse an HTML document into Event instances.
@@ -54,6 +91,22 @@ module WeeklyLocalEvents
         events_from_doc(doc, fetch_details: fetch_details)
       end
 
+      # Parse the JSON-wrapped HTML fragment returned by the AJAX endpoint.
+      #
+      # @param body [String] raw JSON response body
+      # @return [Array<Event>]
+      def parse_ajax_response(body)
+        return [] if body.nil? || body.to_s.strip.empty?
+
+        payload = JSON.parse(body.to_s)
+        return [] unless payload.is_a?(String)
+
+        parse_response(payload)
+      rescue JSON::ParserError => e
+        log_warn "Invalid AJAX payload: #{e.message}"
+        []
+      end
+
       private
 
       # Parse events from a Nokogiri document.
@@ -62,13 +115,16 @@ module WeeklyLocalEvents
       # @param fetch_details [Boolean] whether to fetch event page details
       # @return [Array<Event>]
       def events_from_doc(doc, fetch_details: false)
-        # Try Nokogiri CSS selectors first (for structured HTML)
+        # Current live markup: div.eventItem.entry cards with data-venue attributes.
+        events = events_from_live_cards(doc, fetch_details: fetch_details)
+        return events unless events.empty?
+
+        # Legacy structured markup (kept for older fixtures/integrations).
         events = events_from_css(doc, fetch_details: fetch_details)
         return events unless events.empty?
 
         # Fallback: parse text content for SPA-style pages
-        body_text = doc.text
-        parse_events_from_text(body_text)
+        parse_events_from_text(doc.text)
       end
 
       # Parse events using Nokogiri CSS selectors.
@@ -445,6 +501,129 @@ module WeeklyLocalEvents
         end
 
         nil
+      end
+
+      # Fetch the first events page, logging and swallowing transport errors.
+      #
+      # @return [Nokogiri::HTML::Document, nil]
+      def fetch_events_page
+        url = build_url(EVENTS_PATH)
+        fetch(url)
+      rescue StandardError => e
+        log_error "Error scraping #{url}: #{e.class} - #{e.message}"
+        nil
+      end
+
+      # Fetch one AJAX page. Non-2xx responses and malformed JSON stop
+      # pagination gracefully instead of raising.
+      def fetch_ajax_page(offset)
+        url = ajax_url(offset)
+        response = http_get(
+          url,
+          "Accept" => "application/json",
+          "X-Requested-With" => "XMLHttpRequest",
+        )
+        return nil unless response.is_a?(Net::HTTPSuccess)
+
+        payload = JSON.parse(response.body.to_s)
+        payload.is_a?(String) ? payload : ""
+      rescue JSON::ParserError => e
+        log_warn "Invalid AJAX response from #{url}: #{e.message}"
+        nil
+      rescue StandardError => e
+        log_warn "AJAX page #{offset} failed: #{e.class} - #{e.message}"
+        nil
+      end
+
+      def ajax_url(offset)
+        "#{BASE_URL}/events/events_ajax/#{offset}?#{AJAX_QUERY}"
+      end
+
+      # The same show can reappear when the listing changes between requests.
+      def remember_event(event, seen)
+        key = if event.url.to_s.empty?
+                [event.title, event.date, event.venue&.name]
+              else
+                event.url
+              end
+        return false if seen.key?(key)
+
+        seen[key] = true
+        true
+      end
+
+      # Parse the server-rendered cards used by the live /events page and the
+      # AJAX fragments. Verified against the 2026-11-27 capture.
+      def events_from_live_cards(doc, fetch_details: false)
+        doc.css("div.eventItem.entry").filter_map do |card|
+          # The search overlay ships a Vue <template> carrying the same classes.
+          next if card.ancestors.any? { |ancestor| ancestor.name == "template" }
+
+          parse_live_card(card, fetch_details: fetch_details)
+        end
+      end
+
+      def parse_live_card(card, fetch_details: false)
+        title = card.at_css("h3.title a")&.text.to_s.strip
+        url = live_url(card)
+        return nil if title.to_s.empty? || url.empty?
+
+        date = live_date(card)
+        return nil unless date
+
+        description = nil
+        price = nil
+        if fetch_details
+          description = fetch_event_description(url)
+          price = fetch_event_price(url)
+        end
+
+        Event.from_hash({
+          title: title,
+          date: date,
+          time: time_from_slug(url),
+          venue: live_venue(card),
+          price: price,
+          url: url,
+          source: "acl_live",
+          category: VENUE_CATEGORIES[card["data-venue"].to_s],
+          description: description,
+        })
+      rescue EventParseError
+        nil
+      end
+
+      def live_url(card)
+        href = card.at_css("h3.title a[href]")&.[]("href").to_s
+        return "" if href.empty? || href.start_with?("{{")
+
+        href.start_with?("/") ? "#{BASE_URL}#{href}" : href
+      end
+
+      def live_date(card)
+        raw = card.at_css(".date .m-date__singleDate")&.text.to_s.gsub(/\s+/, " ").strip
+        slug_date = live_url(card)[%r{/event/(\d{4}-\d{2}-\d{2})-}, 1].to_s
+        normalize_date(raw) || normalize_date(slug_date)
+      end
+
+      def live_venue(card)
+        name = card.at_css(".info .location")&.text.to_s.gsub(/\s+/, " ").strip
+        name = VENUE_NAMES[card["data-venue"].to_s].to_s if name.empty? || name.start_with?("{{")
+        Venue.from_hash(name: name.empty? ? VENUE_NAME : name)
+      end
+
+      # ACL Live encodes the start time in the canonical URL slug, e.g.
+      # /event/2026-12-06-echos-at-7-30-pm -> 19:30.
+      def time_from_slug(url)
+        match = url.to_s.match(/at-(\d{1,2})(?:-(\d{2}))?-(am|pm)\z/i)
+        return nil unless match
+
+        hour = match[1].to_i
+        minutes = match[2].to_i
+        period = match[3].upcase
+        hour = 0 if hour == 12 && period == "AM"
+        hour += 12 if period == "PM" && hour != 12
+        format("%02d:%02d", hour, minutes)
       end
     end
   end
