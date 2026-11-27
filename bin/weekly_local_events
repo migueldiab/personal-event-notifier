@@ -291,18 +291,22 @@ end
 
 begin
   app = WeeklyLocalEvents::Application.new(config)
-  summary = app.run(dry_run: options[:dry_run])
+  summary = app.run(dry_run: options[:dry_run], notify: options[:notify])
 
   # Output results
   if options[:json]
     output = {
       total: summary.total,
       sources: summary.sources,
+      events: summary.events.map(&:to_hash),
       dry_run: options[:dry_run],
     }
     puts JSON.pretty_generate(output)
   else
     puts "Summary: #{summary}"
+    summary.events.each do |event|
+      puts "  [#{event.source}] #{event.title} - #{event.venue&.name} - #{event.date}"
+    end
   end
 
   exit summary.total == 0 ? EXIT_NO_EVENTS : EXIT_SUCCESS

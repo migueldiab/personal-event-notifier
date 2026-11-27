@@ -27,7 +27,7 @@ module WeeklyLocalEvents
 
     REQUIRED_KEYS = %w[notification_channel_id telegram_bot_token].freeze
 
-    attr_reader :sites, :log_level, :date_range_days, :request_timeout,
+    attr_reader :sites, :enabled_scrapers, :log_level, :date_range_days, :request_timeout,
                 :request_delay, :max_retries, :max_events_per_batch
 
     def initialize
@@ -90,6 +90,8 @@ module WeeklyLocalEvents
     def build_attributes
       @sites = (raw["sites"] || DEFAULTS[:sites]).dup
       @sites = @sites.map(&:to_s) unless @sites.is_a?(Array)
+      @enabled_scrapers = (raw["enabled_scrapers"] || raw["sites"] || DEFAULTS[:sites]).dup
+      @enabled_scrapers = @enabled_scrapers.map(&:to_s) unless @enabled_scrapers.is_a?(Array)
       @log_level = (raw["log_level"] || DEFAULTS[:log_level]).to_s.upcase
       @date_range_days = (raw["date_range_days"] || DEFAULTS[:date_range_days]).to_i
       @request_timeout = (raw["request_timeout"] || DEFAULTS[:request_timeout]).to_i
