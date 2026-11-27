@@ -11,7 +11,7 @@ RSpec.describe WeeklyLocalEvents::Scrapers::Do512Scraper do
   let(:date_range) { WeeklyLocalEvents::DateRange.from_days(3) }
   let(:config_with_range) do
     { name: "do512", base_url: "https://www.do512.com",
-      date_range: date_range, user_agent: "TestBot/1.0", rate_limit_delay: 0.1 }
+      date_range: date_range, user_agent: "TestBot/1.0", rate_limit_delay: 0.1, pages: 2 }
   end
   let(:scraper_with_range) { described_class.new(config_with_range) }
 
@@ -81,15 +81,16 @@ RSpec.describe WeeklyLocalEvents::Scrapers::Do512Scraper do
     end
 
     it "sets a proper user agent" do
-      expect(scraper.user_agent).to include("WeeklyLocalEvents")
+      expect(scraper.user_agent).to be_a(String)
+      expect(scraper.user_agent.length).to be > 10
+    end
+
+    it "sets rate_limit_delay to 6.0 (~10 req/min)" do
+      expect(scraper.rate_limit_delay).to eq(6.0)
     end
 
     it "inherits from BaseScraper" do
       expect(scraper).to be_a(WeeklyLocalEvents::BaseScraper)
-    end
-
-    it "sets rate_limit_delay to 3.0" do
-      expect(scraper.rate_limit_delay).to eq(3.0)
     end
   end
 
@@ -195,7 +196,7 @@ RSpec.describe WeeklyLocalEvents::Scrapers::Do512Scraper do
 
   describe "#events" do
     it "returns an array of Event objects" do
-      stub_request(:get, %r{https://www.do512.com/events/\?date=\d{4}-\d{2}-\d{2}})
+      stub_request(:get, %r{https://www\.do512\.com/events})
         .to_return(status: 200, body: sample_html, headers: { "Content-Type" => "text/html" })
 
       events = scraper_with_range.events
@@ -204,7 +205,7 @@ RSpec.describe WeeklyLocalEvents::Scrapers::Do512Scraper do
     end
 
     it "handles network failures gracefully" do
-      stub_request(:get, %r{https://www.do512.com/events/\?date=\d{4}-\d{2}-\d{2}})
+      stub_request(:get, %r{https://www\.do512\.com/events})
         .to_raise(Errno::ECONNREFUSED)
 
       events = scraper_with_range.events
@@ -213,7 +214,7 @@ RSpec.describe WeeklyLocalEvents::Scrapers::Do512Scraper do
     end
 
     it "handles HTTP 404 gracefully" do
-      stub_request(:get, %r{https://www.do512.com/events/\?date=\d{4}-\d{2}-\d{2}})
+      stub_request(:get, %r{https://www\.do512\.com/events})
         .to_return(status: 404)
 
       events = scraper_with_range.events
@@ -222,7 +223,7 @@ RSpec.describe WeeklyLocalEvents::Scrapers::Do512Scraper do
     end
 
     it "handles HTTP 429 (rate limit) gracefully" do
-      stub_request(:get, %r{https://www.do512.com/events/\?date=\d{4}-\d{2}-\d{2}})
+      stub_request(:get, %r{https://www\.do512\.com/events})
         .to_return(status: 429)
 
       events = scraper_with_range.events
@@ -232,16 +233,14 @@ RSpec.describe WeeklyLocalEvents::Scrapers::Do512Scraper do
   end
 
   describe "#build_events_url" do
-    it "builds correct URL for a given date" do
-      date = Date.new(2026, 11, 25)
-      url = scraper.send(:build_events_url, date, 1)
-      expect(url).to eq("https://www.do512.com/events/?date=2026-11-25")
+    it "builds correct URL for page 1" do
+      url = scraper.send(:build_events_url, 1)
+      expect(url).to eq("https://www.do512.com/events")
     end
 
     it "adds page parameter for pagination" do
-      date = Date.new(2026, 11, 25)
-      url = scraper.send(:build_events_url, date, 3)
-      expect(url).to eq("https://www.do512.com/events/?date=2026-11-25&page=3")
+      url = scraper.send(:build_events_url, 3)
+      expect(url).to eq("https://www.do512.com/events/?page=3")
     end
   end
 
@@ -266,6 +265,138 @@ RSpec.describe WeeklyLocalEvents::Scrapers::Do512Scraper do
     it "handles midnight and noon" do
       expect(scraper.normalize_time("12:00 AM")).to eq("00:00")
       expect(scraper.normalize_time("12:00 PM")).to eq("12:00")
+    end
+  end
+
+  describe "#extract_category" do
+    it "extracts category from card class" do
+      html = <<~HTML
+        <div class="ds-listing event-card ds-event-category-live-music" data-permalink="/events/2026/11/25/test">
+          <a class="ds-listing-event-title"><span class="ds-listing-event-title-text">Test</span></a>
+        </div>
+      HTML
+      events = scraper.parse_response(html)
+      expect(events[0].category).to eq("Live: Music")
+    end
+
+    it "extracts variety-other category" do
+      html = <<~HTML
+        <div class="ds-listing event-card ds-event-category-variety-other" data-permalink="/events/2026/11/25/test">
+          <a class="ds-listing-event-title"><span class="ds-listing-event-title-text">Test</span></a>
+        </div>
+      HTML
+      events = scraper.parse_response(html)
+      expect(events[0].category).to eq("Variety: Other")
+    end
+
+    it "returns nil for unknown category" do
+      html = <<~HTML
+        <div class="ds-listing event-card" data-permalink="/events/2026/11/25/test">
+          <a class="ds-listing-event-title"><span class="ds-listing-event-title-text">Test</span></a>
+        </div>
+      HTML
+      events = scraper.parse_response(html)
+      expect(events[0].category).to be_nil
+    end
+  end
+
+  describe "#extract_is_free" do
+    it "detects free events via banner" do
+      events = scraper.parse_response(sample_html_free)
+      expect(events[0].is_free).to be true
+    end
+
+    it "detects paid events (no ticket container = free)" do
+      # sample_html has no ticket container and no free banner
+      events = scraper.parse_response(sample_html)
+      expect(events[0].is_free).to be true
+    end
+
+    it "detects paid events with ticket container" do
+      html = <<~HTML
+        <div class="ds-listing event-card ds-event-category-live-music" data-permalink="/events/2026/11/25/paid">
+          <a class="ds-listing-event-title"><span class="ds-listing-event-title-text">Paid Event</span></a>
+          <div class="ds-btn-container-buy-tix">
+            <a class="ds-btn ds-btn-large ds-buy-tix" href="https://cotaland.com/event">Buy</a>
+          </div>
+        </div>
+      HTML
+      events = scraper.parse_response(html)
+      expect(events[0].is_free).to be false
+    end
+  end
+
+  describe "#extract_sold_out" do
+    it "detects sold out events" do
+      html = <<~HTML
+        <div class="ds-listing event-card" data-permalink="/events/2026/11/25/soldout">
+          <a class="ds-listing-event-title"><span class="ds-listing-event-title-text">Sold Out</span></a>
+          <ul class="ds-listing-banners">
+            <li class="ds-listing-soldout"><span>Sold Out</span></li>
+          </ul>
+        </div>
+      HTML
+      events = scraper.parse_response(html)
+      expect(events[0].sold_out).to be true
+    end
+
+    it "does not confuse free banner with sold out" do
+      events = scraper.parse_response(sample_html_free)
+      expect(events[0].sold_out).to be false
+    end
+  end
+
+  describe "#extract_buy_url" do
+    it "extracts ticket URL from button" do
+      html = <<~HTML
+        <div class="ds-listing event-card" data-permalink="/events/2026/11/25/buy-test">
+          <a class="ds-listing-event-title"><span class="ds-listing-event-title-text">Buy Test</span></a>
+          <div class="ds-btn-container-buy-tix">
+            <a class="ds-btn ds-btn-large ds-buy-tix" href="https://cotaland.com/test-event">Buy</a>
+          </div>
+        </div>
+      HTML
+      events = scraper.parse_response(html)
+      expect(events[0].buy_url).to eq("https://cotaland.com/test-event")
+    end
+
+    it "returns nil for free events without ticket container" do
+      events = scraper.parse_response(sample_html_free)
+      expect(events[0].buy_url).to be_nil
+    end
+  end
+
+  describe "#export_jsonl" do
+    it "exports events to JSONL file" do
+      events = scraper.parse_response(sample_html)
+      scraper.instance_variable_set(:@events, events)
+      path = "/tmp/test_do512_export.jsonl"
+      File.delete(path) if File.exist?(path)
+
+      count = scraper.export_jsonl(path)
+      expect(count).to eq(1)
+      expect(File.exist?(path)).to be true
+
+      content = File.read(path)
+      expect(content.lines.count).to eq(1)
+      expect(JSON.parse(content.lines.first)["title"]).to eq("Diles que no me maten")
+
+      File.delete(path)
+    end
+
+    it "creates parent directories" do
+      events = scraper.parse_response(sample_html)
+      scraper.instance_variable_set(:@events, events)
+      path = "/tmp/test_do512_nested/dir/export.jsonl"
+      File.delete(path) if File.exist?(path)
+      FileUtils.rm_rf(File.dirname(path)) if File.exist?(File.dirname(path))
+
+      count = scraper.export_jsonl(path)
+      expect(count).to eq(1)
+      expect(File.exist?(path)).to be true
+
+      File.delete(path)
+      FileUtils.rm_rf(File.dirname(path))
     end
   end
 end

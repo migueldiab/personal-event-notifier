@@ -2,6 +2,7 @@
 
 require "active_model"
 require "date"
+require "json"
 require "weekly_local_events/version"
 
 module WeeklyLocalEvents
@@ -20,9 +21,10 @@ module WeeklyLocalEvents
   class Event
     include ActiveModel::Validations
 
-    attr_reader :title, :description, :date, :time, :venue, :price,
-                :currency, :url, :source, :image_url,
-                :category, :tags, :created_at, :updated_at
+    attr_reader :title, :description, :date, :time, :begin_time, :end_time,
+                :venue, :artists, :price, :currency, :url, :source, :image_url,
+                :category, :is_free, :sold_out, :buy_url, :tags,
+                :created_at, :updated_at
 
     # Returns price in cents. Computed from `price` string if not explicitly set.
     #
@@ -44,7 +46,10 @@ module WeeklyLocalEvents
     # @param description [String, nil]
     # @param date [Date, String]
     # @param time [String, nil]
+    # @param begin_time [String, nil] - start time in 24h format
+    # @param end_time [String, nil] - end time in 24h format
     # @param venue [Venue]
+    # @param artists [Array<String>, nil]
     # @param price [String, nil] - raw price string
     # @param price_cents [Integer, nil] - normalized price in cents
     # @param currency [String]
@@ -52,26 +57,35 @@ module WeeklyLocalEvents
     # @param source [String]
     # @param image_url [String, nil]
     # @param category [String, nil]
+    # @param is_free [Boolean, nil]
+    # @param sold_out [Boolean, nil]
+    # @param buy_url [String, nil]
     # @param tags [Array<String>, nil]
     # @param created_at [Time]
     # @param updated_at [Time]
     def initialize(title:, date:, venue:, url:, source:,
-                   description: nil, time: nil, price: nil,
-                   price_cents: nil, currency: "USD",
-                   image_url: nil, category: nil, tags: nil,
-                   created_at: nil, updated_at: nil)
+                   description: nil, time: nil, begin_time: nil, end_time: nil,
+                   artists: nil, price: nil, price_cents: nil, currency: "USD",
+                   image_url: nil, category: nil, is_free: nil, sold_out: nil,
+                   buy_url: nil, tags: nil, created_at: nil, updated_at: nil)
       @title = title.to_s
       @description = description.to_s
       @date = parse_date(date)
       @time = time.to_s
+      @begin_time = begin_time
+      @end_time = end_time
       @venue = venue
+      @artists = artists.is_a?(Array) ? artists : nil
       @price = price.to_s
       @price_cents = price_cents
       @currency = currency.to_s
       @url = url.to_s
       @source = source.to_s
       @image_url = image_url.to_s
-      @category = category.to_s
+      @category = category
+      @is_free = is_free
+      @sold_out = sold_out
+      @buy_url = buy_url
       @tags = tags.is_a?(Array) ? tags : (tags.to_s.split(",").map(&:strip) if tags && !tags.to_s.strip.empty?)
       @created_at = created_at || Time.now
       @updated_at = updated_at || Time.now
@@ -96,11 +110,17 @@ module WeeklyLocalEvents
         source: hash[:source],
         description: hash[:description],
         time: hash[:time],
+        begin_time: hash[:begin_time],
+        end_time: hash[:end_time],
+        artists: hash[:artists],
         price: hash[:price],
         price_cents: hash[:price_cents],
         currency: hash[:currency] || "USD",
         image_url: hash[:image_url],
         category: hash[:category],
+        is_free: hash[:is_free],
+        sold_out: hash[:sold_out],
+        buy_url: hash[:buy_url],
         tags: hash[:tags],
       )
     end
@@ -114,7 +134,10 @@ module WeeklyLocalEvents
         description: description,
         date: date,
         time: time,
+        begin_time: begin_time,
+        end_time: end_time,
         venue: venue&.to_h,
+        artists: artists,
         price: price,
         price_cents: price_cents,
         currency: currency,
@@ -122,6 +145,9 @@ module WeeklyLocalEvents
         source: source,
         image_url: image_url,
         category: category,
+        is_free: is_free,
+        sold_out: sold_out,
+        buy_url: buy_url,
         tags: tags,
         created_at: created_at,
         updated_at: updated_at,
@@ -163,6 +189,13 @@ module WeeklyLocalEvents
       else
         format_price(parse_price_to_cents(raw) || 0)
       end
+    end
+
+    # Serialize the event as a single JSONL line.
+    #
+    # @return [String]
+    def to_jsonl
+      JSON.generate(to_hash)
     end
 
     # Check if the event falls within the given date range (inclusive).

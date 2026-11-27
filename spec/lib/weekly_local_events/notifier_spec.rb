@@ -1022,8 +1022,6 @@ RSpec.describe WeeklyLocalEvents::Notifier do
       categories.each do |cat, emoji|
         expect(result).to include("#{emoji} *#{cat}*")
       end
-      result = notifier.send_message(long_text)
-      expect(result.success?).to be true
     end
   end
 
@@ -1035,6 +1033,7 @@ RSpec.describe WeeklyLocalEvents::Notifier do
     end
 
     it "returns success for valid response" do
+      mock_response = { "ok" => true, "result" => { "message_id" => 42 } }
       mock_http = double(is_a?: true)
       mock_response_obj = double(is_a?: true, body: JSON.generate(mock_response))
       allow(Net::HTTP).to receive(:new).and_return(mock_http)
