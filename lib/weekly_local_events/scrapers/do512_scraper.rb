@@ -147,7 +147,8 @@ module WeeklyLocalEvents
 
         File.open(path, "w") do |f|
           events_to_export.each do |event|
-            f.write(event.to_jsonl)
+            # JSONL requires exactly one JSON object per line.
+            f.puts(event.to_jsonl)
           end
         end
 
@@ -157,8 +158,8 @@ module WeeklyLocalEvents
       # @return [Integer] number of pages successfully scraped
       attr_reader :pages_scraped
 
-      # @return [Array<Event>] all events collected during scraping
-      attr_reader :events
+      # NOTE: no attr_reader for @events here — it would override the #events
+      # scraping method defined above and make scraping a no-op.
 
       # @return [String] the last User-Agent used
       attr_reader :last_user_agent
