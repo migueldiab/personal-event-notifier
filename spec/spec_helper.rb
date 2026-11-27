@@ -2,6 +2,7 @@
 
 # SimpleCov coverage reporting
 require "simplecov"
+
 SimpleCov.start do
   skip "/spec/"
   skip "/.bundle/"
