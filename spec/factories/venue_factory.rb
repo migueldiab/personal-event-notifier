@@ -27,6 +27,8 @@ FactoryBot.define do
       )
     end
 
+    to_create { |instance, attrs| instance.initialize(**attrs) }
+
     factory :austin_venue do
       city { "Austin" }
       state { "TX" }
