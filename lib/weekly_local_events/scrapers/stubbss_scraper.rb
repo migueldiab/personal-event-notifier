@@ -221,6 +221,7 @@ module WeeklyLocalEvents
           title: title,
           date: extract_date(node),
           time: time,
+          begin_time: time,
           venue: extract_venue(node),
           price: extract_price(node),
           url: extract_url(node),

@@ -1,0 +1,163 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# CLI entry point for the Do512.com event scraper.
+#
+# Usage:
+#   bin/scraper-do512 [--pages N] [--output FILE] [--dry-run] [--help]
+#
+# Examples:
+#   bin/scraper-do512 --pages 5
+#   bin/scraper-do512 --pages 3 --output data/do512_raw.jsonl
+#   bin/scraper-do512 --dry-run --pages 2
+#   bin/scraper-do512 --help
+
+require "optparse"
+require "json"
+require "pathname"
+require "logger"
+require "fileutils"
+
+# Resolve paths relative to this script's parent directory
+SCRIPT_DIR = File.expand_path("..", __dir__)
+GEM_LIB_DIR = File.join(SCRIPT_DIR, "lib")
+
+# Prepend lib to $LOAD_PATH so `require 'weekly_local_events'` works
+$LOAD_PATH.unshift(GEM_LIB_DIR) unless $LOAD_PATH.include?(GEM_LIB_DIR)
+
+require "weekly_local_events"
+require "weekly_local_events/scrapers/do512_scraper"
+
+# ─── Defaults ─────────────────────────────────────────────────────────────────
+
+DEFAULT_PAGES = 3
+DEFAULT_OUTPUT = File.join(SCRIPT_DIR, "data", "do512_raw.jsonl")
+
+# ─── Argument parsing ─────────────────────────────────────────────────────────
+
+options = {
+  pages: DEFAULT_PAGES,
+  output: DEFAULT_OUTPUT,
+  dry_run: false,
+  help: false,
+  log_level: "WARN",
+}
+
+parser = OptionParser.new do |opts|
+  opts.banner = <<~BANNER
+    Usage: scraper-do512 [options]
+
+    Do512.com event scraper — fetches event listings and exports to JSONL.
+
+    Options:
+        --pages N              Number of pages to scrape (default: #{DEFAULT_PAGES})
+        --output FILE          Output JSONL file path (default: #{DEFAULT_OUTPUT})
+        --dry-run              Simulate scraping without writing output
+        --log-level LEVEL      Log level: DEBUG, INFO, WARN, ERROR (default: WARN)
+        --help                 Show this help message and exit
+
+    Examples:
+        scraper-do512 --pages 5
+        scraper-do512 --pages 3 --output data/do512_raw.jsonl
+        scraper-do512 --dry-run --pages 2
+  BANNER
+
+  opts.on("--pages N", Integer, "Number of pages to scrape (default: #{DEFAULT_PAGES})") do |n|
+    options[:pages] = n
+  end
+
+  opts.on("--output FILE", "Output JSONL file path") do |f|
+    options[:output] = f
+  end
+
+  opts.on("--dry-run", "Simulate scraping without writing output") do
+    options[:dry_run] = true
+  end
+
+  opts.on("--log-level LEVEL", "Log level: DEBUG, INFO, WARN, ERROR") do |level|
+    options[:log_level] = level.upcase
+  end
+
+  opts.on("--help", "-h", "Show this help message and exit") do
+    options[:help] = true
+  end
+end
+
+begin
+  parser.parse!(ARGV)
+rescue OptionParser::InvalidOption => e
+  $stderr.puts "Error: #{e.message}"
+  $stderr.puts "Run 'scraper-do512 --help' for usage information."
+  exit 1
+end
+
+if options[:help]
+  puts parser.help
+  exit 0
+end
+
+# ─── Validate ─────────────────────────────────────────────────────────────────
+
+if options[:pages] <= 0
+  $stderr.puts "Error: --pages must be a positive integer, got #{options[:pages]}"
+  exit 1
+end
+
+if options[:pages] > 50
+  $stderr.puts "Error: --pages must be <= 50, got #{options[:pages]}"
+  exit 1
+end
+
+# ─── Build logger ─────────────────────────────────────────────────────────────
+
+logger = Logger.new($stdout).tap { |l| l.level = Logger.const_get(options[:log_level]) }
+
+# ─── Run scraper ──────────────────────────────────────────────────────────────
+
+begin
+  logger.info "Starting Do512.com scraper (#{options[:pages]} pages)..."
+
+  scraper = WeeklyLocalEvents::Scrapers::Do512Scraper.new(
+    pages: options[:pages],
+    rate_limit_delay: 6.0,  # ~10 req/min
+    max_retries: 3,
+  )
+
+  events = scraper.events
+  pages_scraped = scraper.pages_scraped
+
+  logger.info "Scraped #{pages_scraped} page(s), found #{events.size} event(s)"
+
+  if events.any?
+    puts "Found #{events.size} events across #{pages_scraped} page(s):"
+    events.first(5).each do |e|
+      puts "  • #{e.title} — #{e.venue&.name} — #{e.date}"
+    end
+    puts "  ... and #{events.size - 5} more" if events.size > 5
+  else
+    puts "No events found."
+  end
+
+  # Export JSONL (unless dry-run)
+  unless options[:dry_run]
+    FileUtils.mkdir_p(File.dirname(options[:output])) if File.dirname(options[:output]) != "."
+
+    File.open(options[:output], "w") do |f|
+      events.each do |event|
+        f.write(event.to_jsonl)
+      end
+    end
+
+    logger.info "Exported #{events.size} events to #{options[:output]}"
+    puts "Output written to: #{options[:output]}"
+  else
+    logger.info "Dry run — skipping file output"
+  end
+
+  exit 0
+
+rescue StandardError => e
+  logger.error "Scraper failed: #{e.class} - #{e.message}"
+  logger.error e.backtrace.first(5).join("\n")
+  exit 1
+end
