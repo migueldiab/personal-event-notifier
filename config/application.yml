@@ -1,26 +1,26 @@
-# Application-wide configuration
-# Loaded via Rails.application.config_for(:application)
+defaults: &defaults
+  date_range_days: 7
+  request_timeout: 30
+  request_delay: 2
+  max_retries: 3
+  log_level: INFO
+  enabled_scrapers:
+    - austin_chronicle
+    - do512
+    - community_impact
+    - eventbrite_austin
+    - acl_live
+    - stubbss
+    - paramount_austin
 
-app:
-  name: "Weekly Local Events"
-  version: "0.1.0"
+development:
+  <<: *defaults
+  log_level: DEBUG
 
-# Scraper settings
-scrapers:
-  default_timeout: 30
-  retry_attempts: 2
-  retry_delay: 2
-  user_agent: "WeeklyLocalEvents/0.1.0 (+https://github.com/madrax/WeeklyLocalEvents)"
+production:
+  <<: *defaults
+  log_level: WARN
 
-# Event aggregation
-aggregation:
-  min_price_threshold: 0.00
-  max_events_per_batch: 50
-
-# Notification settings
-notifications:
-  enabled: true
-  digest_time: "18:00"  # 6PM CST
-  digest_timezone: "America/Chicago"
-  daily_alert_enabled: false
-  daily_alert_time: "07:00"
+test:
+  <<: *defaults
+  log_level: WARN
