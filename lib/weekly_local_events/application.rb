@@ -60,7 +60,7 @@ module WeeklyLocalEvents
     #
     # @return [Array<Event>]
     def run_all_scrapers
-      scraper_registry.all.flat_map do |scraper|
+      scraper_registry.active.flat_map do |scraper|
         run_scraper(scraper)
       end
     end

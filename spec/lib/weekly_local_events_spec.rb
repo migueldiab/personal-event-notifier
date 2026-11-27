@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require "spec_helper"
+require "tempfile"
+require "yaml"
 
 RSpec.describe WeeklyLocalEvents do
   describe ".config" do
@@ -76,6 +78,36 @@ RSpec.describe WeeklyLocalEvents do
       expect(described_class::RateLimitError.ancestors).to include(described_class::ScraperError)
       expect(described_class::RateLimitError.ancestors).to include(described_class::Error)
       expect(described_class::RateLimitError.ancestors).to include(StandardError)
+    end
+  end
+
+  describe "scraper registration and active selection" do
+    let(:configured) do
+      %w[
+        austin_chronicle do512 community_impact eventbrite_austin
+        acl_live stubbss paramount_austin
+      ]
+    end
+    let(:config_file) { Tempfile.new(["config", ".yml"]) }
+
+    after { config_file.close! }
+
+    it "registers every known scraper and activates only the configured sources" do
+      File.write(config_file.path, {
+        "notification_channel_id" => "-1004330304115",
+        "telegram_bot_token" => "123456:ABC-DEF",
+        "enabled_scrapers" => configured,
+      }.to_yaml)
+      allow(File).to receive(:expand_path).and_call_original
+      allow(File).to receive(:expand_path)
+        .with("~/.hermes/weekly_local_events/config.yml")
+        .and_return(config_file.path)
+
+      config = WeeklyLocalEvents::Config.new
+      registry = WeeklyLocalEvents::ScraperRegistry.new(config)
+
+      expect(registry.all.size).to be >= 7
+      expect(registry.active.map(&:name)).to contain_exactly(*configured)
     end
   end
 end
