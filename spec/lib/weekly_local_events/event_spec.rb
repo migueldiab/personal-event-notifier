@@ -186,7 +186,7 @@ RSpec.describe WeeklyLocalEvents::Event do
     it "returns a hash with all expected keys" do
       event = described_class.new(**valid_attributes)
       hash = event.to_hash
-      expected_keys = %i[title description date time venue price price_cents currency url source image_url category tags created_at updated_at]
+      expected_keys = %i[title description date time begin_time end_time venue artists price price_cents currency url source image_url category is_free sold_out buy_url tags created_at updated_at]
       expect(hash.keys).to contain_exactly(*expected_keys)
     end
 

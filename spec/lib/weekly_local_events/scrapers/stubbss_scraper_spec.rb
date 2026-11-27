@@ -95,6 +95,7 @@ RSpec.describe WeeklyLocalEvents::Scrapers::StubbssScraper do
       expect(event.title).to eq("Jazz Night")
       expect(event.date).to eq(Date.new(2026, 12, 1))
       expect(event.time).to eq("19:30")
+      expect(event.begin_time).to eq("19:30")
       expect(event.venue.name).to eq("Stubb's Bar-B-Q")
       expect(event.price).to eq("$25")
       expect(event.price_cents).to eq(2500)
@@ -129,6 +130,7 @@ RSpec.describe WeeklyLocalEvents::Scrapers::StubbssScraper do
       expect(event.title).to eq("Mystery Show")
       expect(event.date).to be_nil
       expect(event.venue).to be_nil
+      expect(event.begin_time).to be_nil
       expect(event.price_cents).to be_nil
       # Event#initialize coerces nil price/time/description to empty strings.
       expect(event.price).to eq("")
