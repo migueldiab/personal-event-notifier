@@ -36,7 +36,7 @@ module WeeklyLocalEvents
       aggregated = aggregate(events)
       result = notification_result(aggregated, dry_run: dry_run, notify: notify)
       log_info "Run complete. Found #{aggregated.size} events, notification #{result.to_s.downcase}."
-      Summary.new(total: aggregated.size, sources: aggregated.map(&:source).tally)
+      Summary.new(total: aggregated.size, sources: aggregated.map(&:source).tally, events: aggregated)
     end
 
     # Run a single scraper and return its events.

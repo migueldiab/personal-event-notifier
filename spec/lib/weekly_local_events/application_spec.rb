@@ -82,6 +82,28 @@ RSpec.describe WeeklyLocalEvents::Application do
       expect(summary.total).to eq(summary.sources.values.sum)
       expect(summary.to_h[:total]).to eq(summary.to_h[:sources].values.sum)
     end
+
+    it "returns a summary carrying the aggregated events" do
+      config = instance_double(WeeklyLocalEvents::Config, logger: nil)
+      events = Array.new(2) { instance_double(WeeklyLocalEvents::Event, source: "alpha") }
+      stub_scraper = Class.new(WeeklyLocalEvents::BaseScraper) do
+        define_method(:name) { "alpha" }
+        define_method(:events) { events }
+      end.new({})
+
+      registry = instance_double(
+        WeeklyLocalEvents::ScraperRegistry,
+        active: [stub_scraper]
+      )
+      aggregator = instance_double(WeeklyLocalEvents::Aggregator, aggregate: events)
+      allow(WeeklyLocalEvents::ScraperRegistry).to receive(:new).and_return(registry)
+      allow(WeeklyLocalEvents::Aggregator).to receive(:new).and_return(aggregator)
+      allow(WeeklyLocalEvents::Notifier).to receive(:new)
+
+      summary = described_class.new(config).run(dry_run: true)
+
+      expect(summary.events).to eq(events)
+    end
   end
 
   describe "notification and config wiring" do
