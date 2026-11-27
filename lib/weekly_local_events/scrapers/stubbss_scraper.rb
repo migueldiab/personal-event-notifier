@@ -150,6 +150,11 @@ module WeeklyLocalEvents
 
       private
 
+      # main's BaseScraper has no warn helper; keep warning logs scoped here.
+      def log_warn(msg)
+        config.logger&.warn("[#{name}] #{msg}")
+      end
+
       # Build a normalized options hash for BaseScraper without mutating the
       # caller's configuration.
       #
