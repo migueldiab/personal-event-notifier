@@ -32,7 +32,13 @@ module WeeklyLocalEvents
 
     def to_s
       return "TelegramResponse(OK: message_id=#{message_id})" if success?
-      "TelegramResponse(FAILED: #{error || api_error})"
+      if error
+        "TelegramResponse(FAILED: #{error})"
+      elsif api_error && api_error.is_a?(Hash)
+        "TelegramResponse(FAILED: #{api_error['description'] || api_error['error_code'] || 'API error'})"
+      else
+        "TelegramResponse(FAILED: #{api_error})"
+      end
     end
   end
 
@@ -160,7 +166,7 @@ module WeeklyLocalEvents
 
       total = summary[:total] || summary["total"] || 0
       free_count = summary[:free_count] || summary["free_count"] || 0
-      paid_count = summary[:paid_count] || summary["paid_count"] || 0
+      paid_count = summary[:paid_count] || summary["paid_count"] || (total - free_count)
       categories = summary[:categories] || summary["categories"] || []
       sources = summary[:sources] || summary["sources"] || []
 
@@ -332,13 +338,11 @@ module WeeklyLocalEvents
         "Festival"
       when /sport|game|match|tournament|athletic/
         "Sports"
-      when /art|exhibition|gallery|museum|painting|sculpture/
-        "Art"
-      when /food|culinary|dining|restaurant|tasting|cook/
+      when /food|culinary|dining|restaurant|tasting|cook|food & drink/
         "Food & Drink"
       when /market|bazaar|craft|vendor/
         "Market"
-      when /conference|workshop|seminar|lecture|class|training/
+      when /conference|workshop|seminar|lecture|class|training|education/
         "Education"
       when /theater|play|drama|musical|broadway/
         "Theater"
@@ -354,6 +358,8 @@ module WeeklyLocalEvents
         "Politics"
       when /tech|startup|hackathon|developer|coding/
         "Technology"
+      when /art|exhibition|gallery|museum|painting|sculpture/
+        "Art"
       else
         "Other"
       end
