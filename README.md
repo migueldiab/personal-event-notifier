@@ -45,7 +45,30 @@ cp .env.example .env
 | `AUSTIN_EVENT_SITES` | Comma-separated list of event sites to scrape |
 | `NOTIFICATION_CHANNEL_ID` | Telegram channel ID (get from @getmyid_bot) |
 | `TELEGRAM_BOT_TOKEN` | Telegram bot token (get from @BotFather) |
+| `EVENTBRITE_PRIVATE_TOKEN` | Eventbrite private token (get from the API Keys page, optional) |
+| `EVENTBRITE_CLIENT_ID` | Eventbrite API key / OAuth client ID (optional) |
+| `EVENTBRITE_CLIENT_SECRET` | Eventbrite OAuth client secret (optional) |
+| `EVENTBRITE_REDIRECT_URI` | Registered OAuth redirect URI (default: `http://localhost:8080/oauth/redirect`) |
+| `EVENTBRITE_TEST_EVENT_ID` | Known event ID used by the smoke test |
 | `LOG_LEVEL` | `debug`, `info`, `warn`, `error`, or `fatal` (default: `info`) |
+
+### Eventbrite API credentials
+
+The Eventbrite API requires an authenticated request on every call. To enable it:
+
+1. Log in at <https://www.eventbrite.com/platform/> and choose **Get a Free API Key**.
+2. On the [API Keys page](https://www.eventbrite.com/platform/api-keys/), copy the private token into `EVENTBRITE_PRIVATE_TOKEN` in `.env`. This is the simplest option for a single account.
+3. For multi-user OAuth, register an app to obtain `EVENTBRITE_CLIENT_ID`, `EVENTBRITE_CLIENT_SECRET` and a redirect URI. Start the server-side flow with `WeeklyLocalEvents::EventbriteClient#authorization_url` and exchange the returned `code` with `#exchange_code`, then store the resulting private token securely.
+
+Eventbrite does not support the `client_credentials` grant; use a private token or the authorization-code flow.
+
+Verify the credentials with a real API call:
+
+```bash
+bin/eventbrite_smoke_test <known_event_id>
+```
+
+Never commit `.env`; only `.env.example` belongs in source control.
 
 ## Usage
 
