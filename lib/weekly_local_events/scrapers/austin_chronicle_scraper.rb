@@ -6,23 +6,44 @@ require "weekly_local_events/venue"
 
 module WeeklyLocalEvents
   module Scrapers
-    # Scraper for austinchronicle.com/calendar.
+    # Scraper for calendar.austinchronicle.com/austin/EventSearch.
     #
     # Fetches the calendar page for each date in the configured date range,
     # parses event listings from the HTML, and returns Event instances.
     #
-    # HTML structure (Austin Chronicle Calendar):
-    #   <div class="event-listing">
-    #     <h3 class="event-title"><a href="...">Event Title</a></h3>
-    #     <time class="event-date">2026-12-01</time>
-    #     <span class="event-time">7:00 PM</span>
-    #     <span class="event-venue">Venue Name</span>
-    #     <span class="event-price">$15</span>
-    #     <a class="event-link" href="...">More info</a>
-    #     <div class="event-description">...</div>
-    #   </div>
+    # HTML structure (Austin Chronicle Calendar - NEW):
+    #   <li class="fdn-pres-item">
+    #     <div class="fdn-pres-item-content">
+    #       <div class="fdn-event-search-image-block">
+    #         <a href="/event/12345"><img src="..." alt="Image: Event Name"></a>
+    #       </div>
+    #       <div class="fdn-pres-content fdn-event-search-text-block">
+    #         <p class="fdn-teaser-headline">
+    #           <a href="/event/12345">Event Title</a>
+    #           <span class="fdn-features-icon-block">...</span>
+    #         </p>
+    #         <p class="fdn-teaser-subheadline">Fri., Nov. 27, 10-11:30 p.m.</p>
+    #         <div class="fdn-event-teaser-location-block">
+    #           <p class="fdn-event-teaser-location">
+    #             <a class="fdn-event-teaser-location-link" href="/location/...">Venue Name</a>
+    #           </p>
+    #         </div>
+    #         <div class="fdn-teaser-description">...</div>
+    #         <p class="fdn-teaser-tag-link-block">
+    #           <a class="fdn-teaser-tag-link" href="...">Comedy</a>
+    #         </p>
+    #         <div class="fdn-teaser-ticket-block">
+    #           <a class="fdn-teaser-ticket-link" href="...">Get Tickets</a>
+    #         </div>
+    #       </div>
+    #     </div>
+    #   </li>
     #
     # Pagination: append &page=N to the URL for additional pages.
+    #
+    # NOTE: The old /events/music/ URLs redirect (301) to the new calendar system.
+    # The old selectors (.event-title, .event-date, .venue, .price, .event-link)
+    # are deprecated and no longer match any elements.
     class AustinChronicleScraper < BaseScraper
       BASE_URL = "https://www.austinchronicle.com".freeze
       CALENDAR_PATH = "/calendar".freeze
@@ -41,7 +62,7 @@ module WeeklyLocalEvents
       # @return [Array<Event>]
       def events
         all_events = []
-        date_range.start_date.to_date.downto(date_range.end_date.to_date) do |date|
+        date_range.start_date.to_date.upto(date_range.end_date.to_date) do |date|
           # Skip past dates (future events are not yet listed)
           next if date > Date.today
 
@@ -103,21 +124,27 @@ module WeeklyLocalEvents
       # @param doc [Nokogiri::HTML::Document]
       # @return [Array<Event>]
       def events_from_doc(doc)
-        # Austin Chronicle uses multiple selector patterns across different
-        # layouts. Try each pattern and collect all results.
+        # Austin Chronicle uses the new calendar system with .fdn-pres-item elements.
+        # The old .event-listing / .event-card selectors are deprecated.
         # Use direct child selectors to avoid matching nested elements.
         event_nodes = []
 
-        # Primary selector: .event-listing (direct children only)
+        # Primary selector: .fdn-pres-item (new calendar system, 44+ items)
+        event_nodes.concat(doc.css("li.fdn-pres-item").reject { |n| n.css("> li.fdn-pres-item").any? })
+
+        # Fallback: .fdn-event-promo-wrapper (promoted events slider)
+        event_nodes.concat(doc.css("li.fdn-promo-teaser-link").reject { |n| n.css("> li.fdn-promo-teaser-link").any? })
+
+        # Legacy fallback: .event-listing (old layout, may still exist)
         event_nodes.concat(doc.css("body > .event-listing, .event-listing > .event-listing").reject { |n| n.css("> .event-listing").any? })
 
-        # Fallback: .event-card (older layouts) - direct children only
+        # Legacy fallback: .event-card (older layouts) - direct children only
         event_nodes.concat(doc.css("body > .event-card, .event-card > .event-card").reject { |n| n.css("> .event-card").any? })
 
-        # Fallback: divs with data-event-id that don't contain other event nodes
+        # Legacy fallback: divs with data-event-id that don't contain other event nodes
         event_nodes.concat(doc.css("[data-event-id]").reject { |n| n.css("> [data-event-id]").any? })
 
-        # Fallback: .listing-item
+        # Legacy fallback: .listing-item
         event_nodes.concat(doc.css(".listing-item").reject { |n| n.css("> .listing-item").any? })
 
         # Deduplicate by node object identity
@@ -169,12 +196,20 @@ module WeeklyLocalEvents
       # @param node [Nokogiri::XML::Element]
       # @return [String]
       def extract_title(node)
-        # Try .event-title first
+        # New calendar system: .fdn-teaser-headline > a
+        title_el = node.at_css(".fdn-teaser-headline > a")
+        return title_el.text.strip if title_el
+
+        # Legacy: .event-title
         title_el = node.at_css(".event-title, h3.event-title, h3 a.event-title")
         return title_el.text.strip if title_el
 
-        # Try .event-card-title
+        # Legacy: .event-card-title
         title_el = node.at_css(".event-card-title")
+        return title_el.text.strip if title_el
+
+        # Legacy: .fdn-promo-headline (promoted events)
+        title_el = node.at_css(".fdn-promo-headline")
         return title_el.text.strip if title_el
 
         # Try any <a> tag within the listing that isn't a venue/price link
@@ -193,7 +228,11 @@ module WeeklyLocalEvents
       # @param node [Nokogiri::XML::Element]
       # @return [Date, nil]
       def extract_date(node)
-        # Try <time> element
+        # New calendar system: .fdn-teaser-subheadline (e.g. "Fri., Nov. 27, 10-11:30 p.m.")
+        date_el = node.at_css(".fdn-teaser-subheadline")
+        return normalize_date(date_el.text.strip) if date_el
+
+        # Legacy: <time> element
         time_el = node.at_css("time, .event-date, .event-card-date")
         return normalize_date(time_el.text.strip) if time_el
 
@@ -201,7 +240,7 @@ module WeeklyLocalEvents
         date_attr = node["data-date"] || node["data-event-date"]
         return normalize_date(date_attr) if date_attr
 
-        # Try date span
+        # Legacy: date span
         date_el = node.at_css(".event-date, .date, .event-card-date")
         return normalize_date(date_el.text.strip) if date_el
 
@@ -213,7 +252,21 @@ module WeeklyLocalEvents
       # @param node [Nokogiri::XML::Element]
       # @return [String, nil]
       def extract_time(node)
-        # Only look for .event-time or .event-card-time (not <time> which holds the date)
+        # New calendar system: .fdn-teaser-subheadline (e.g. "Fri., Nov. 27, 10-11:30 p.m.")
+        subheadline = node.at_css(".fdn-teaser-subheadline")
+        if subheadline
+          text = subheadline.text.strip
+          # Try to extract time from subheadline like "Fri., Nov. 27, 10-11:30 p.m."
+          if text =~ /\d{1,2}:\d{2}\s*(?:am|pm)/i
+            return normalize_time($&)
+          end
+          # Try to extract time range like "10-11:30 p.m."
+          if text =~ /(\d{1,2}(?:-\d{1,2})?:\d{2}\s*[ap]m)/i
+            return normalize_time($1)
+          end
+        end
+
+        # Legacy: .event-time or .event-card-time
         time_el = node.at_css(".event-time, .event-card-time")
         return normalize_time(time_el.text.strip) if time_el
 
@@ -244,6 +297,11 @@ module WeeklyLocalEvents
       # @param node [Nokogiri::XML::Element]
       # @return [String]
       def extract_venue_text(node)
+        # New calendar system: .fdn-event-teaser-location-link
+        venue_el = node.at_css(".fdn-event-teaser-location-link")
+        return venue_el.text.strip if venue_el
+
+        # Legacy: .event-venue, .venue, .event-card-venue, .venue-name
         venue_el = node.at_css(".event-venue, .venue, .event-card-venue, .venue-name")
         return venue_el.text.strip if venue_el
 
@@ -263,6 +321,21 @@ module WeeklyLocalEvents
       # @param node [Nokogiri::XML::Element]
       # @return [String, nil]
       def extract_price(node)
+        # New calendar system: .fdn-teaser-ticket-link text (e.g. "Get Tickets $15" or "Buy tickets $25 - $75")
+        ticket_el = node.at_css(".fdn-teaser-ticket-link")
+        if ticket_el
+          text = ticket_el.text.strip
+          # Match "$25 - $75" or "$15" — capture full price string
+          if text =~ /\$(\d+(?:\s*-\s*\$\s*\d+)?)/
+            return "$" + $1
+          end
+          # Fallback: just get the first dollar amount
+          if text =~ /\$(\d+)/
+            return "#{$1}"
+          end
+        end
+
+        # Legacy: .event-price, .price, .event-card-price, .ticket-price
         price_el = node.at_css(".event-price, .price, .event-card-price, .ticket-price")
         return price_el.text.strip if price_el
 
@@ -282,7 +355,11 @@ module WeeklyLocalEvents
       # @param node [Nokogiri::XML::Element]
       # @return [String, nil]
       def extract_url(node)
-        # Try .event-link or .event-card-link
+        # New calendar system: .fdn-teaser-headline > a
+        link_el = node.at_css(".fdn-teaser-headline > a")
+        return resolve_link(link_el["href"]) if link_el
+
+        # Legacy: .event-link, .event-card-link, .read-more
         link_el = node.at_css(".event-link, .event-card-link, .read-more")
         return resolve_link(link_el["href"]) if link_el
 
@@ -316,6 +393,11 @@ module WeeklyLocalEvents
       # @param node [Nokogiri::XML::Element]
       # @return [String, nil]
       def extract_description(node)
+        # New calendar system: .fdn-teaser-description
+        desc_el = node.at_css(".fdn-teaser-description")
+        return desc_el.text.strip if desc_el
+
+        # Legacy: .event-description, .description, .event-card-description, .event-summary
         desc_el = node.at_css(".event-description, .description, .event-card-description, .event-summary")
         return desc_el.text.strip if desc_el
 

@@ -2,15 +2,30 @@
 
 FactoryBot.define do
   factory :venue, class: "WeeklyLocalEvents::Venue" do
-    name { Faker::Config.locale = "en"; Faker::Lorem.sentence(word_count: 3).chomp(".") }
-    address { Faker::Address.street_address }
+    name { "Test Venue" }
+    address { "123 Main St" }
     city { "Austin" }
     state { "TX" }
-    zip { Faker::Address.zip_code }
+    zip { "78701" }
     lat { 30.2672 }
     lng { -97.7431 }
-    website { Faker::Internet.url }
-    phone { Faker::PhoneNumber.phone_number }
+    website { "https://example.com" }
+    phone { "555-1234" }
+
+    initialize_with do
+      WeeklyLocalEvents::Venue.new(
+        name: name,
+        address: address,
+        city: city,
+        state: state,
+        zip: zip,
+        lat: lat,
+        lng: lng,
+        website: website,
+        phone: phone,
+        url: nil,
+      )
+    end
 
     to_create { |instance, attrs| instance.initialize(**attrs) }
 

@@ -27,12 +27,13 @@ module WeeklyLocalEvents
 
     # Run the full pipeline: scrape → aggregate → notify → Summary.
     #
+    # @param dry_run [Boolean] if true, skip notification step
     # @return [Summary] with total event count and per-source breakdown.
-    def run
+    def run(dry_run: false)
       log_info "Starting Weekly Local Events run at #{Time.now}"
       events = run_all_scrapers
       aggregated = aggregate(events)
-      result = notify(aggregated)
+      result = dry_run ? NotificationResult.new(success: true, events_sent: 0, dry_run: true) : notify(aggregated)
       log_info "Run complete. Found #{aggregated.size} events, notification #{result.to_s.downcase}."
       Summary.new(total: aggregated.size, sources: result_counts)
     end

@@ -48,6 +48,7 @@ options = {
   help: false,
   json: false,
   notify: false,
+  dry_run: false,
   days: DEFAULT_DAYS,
   subcommand: nil,
   subcommand_arg: nil,
@@ -64,6 +65,8 @@ parser = OptionParser.new do |opts|
         --json                       Output results as JSON to stdout.
         --notify                     Send Telegram notification (requires
                                      TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID env vars).
+        --dry-run                    Simulate scraping without sending
+                                     notifications or persisting data.
         --days N                     Fetch events for next N days (default: #{DEFAULT_DAYS}).
         --log-level LEVEL            Set log level: DEBUG, INFO, WARN, ERROR (default: INFO).
 
@@ -88,6 +91,10 @@ parser = OptionParser.new do |opts|
 
   opts.on("--notify", "Send Telegram notification (requires TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID)") do
     options[:notify] = true
+  end
+
+  opts.on("--dry-run", "Simulate scraping without sending notifications or persisting data") do
+    options[:dry_run] = true
   end
 
   opts.on("--days N", Integer, "Fetch events for next N days (default: #{DEFAULT_DAYS})") do |days|
@@ -194,8 +201,8 @@ if options[:subcommand] == "weekly_local_sites"
       aggregator = WeeklyLocalEvents::Aggregator.new(config)
       aggregated = aggregator.aggregate(all_events)
 
-      # Telegram notification
-      if options[:notify]
+      # Telegram notification (skipped in dry-run mode)
+      if options[:notify] && !options[:dry_run]
         begin
           notifier = WeeklyLocalEvents::Notifier.new(config)
           notifier.notify(aggregated)
@@ -240,8 +247,8 @@ if options[:subcommand] == "weekly_local_sites"
       aggregator = WeeklyLocalEvents::Aggregator.new(config)
       aggregated = aggregator.aggregate(events)
 
-      # Telegram notification
-      if options[:notify]
+      # Telegram notification (skipped in dry-run mode)
+      if options[:notify] && !options[:dry_run]
         begin
           notifier = WeeklyLocalEvents::Notifier.new(config)
           notifier.notify(aggregated)
@@ -284,13 +291,14 @@ end
 
 begin
   app = WeeklyLocalEvents::Application.new(config)
-  summary = app.run
+  summary = app.run(dry_run: options[:dry_run])
 
   # Output results
   if options[:json]
     output = {
       total: summary.total,
       sources: summary.sources,
+      dry_run: options[:dry_run],
     }
     puts JSON.pretty_generate(output)
   else

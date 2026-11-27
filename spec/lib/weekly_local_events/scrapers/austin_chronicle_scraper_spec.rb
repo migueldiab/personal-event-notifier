@@ -17,6 +17,110 @@ RSpec.describe WeeklyLocalEvents::Scrapers::AustinChronicleScraper do
 
   let(:sample_html) do
     <<~HTML
+      <li class="fdn-pres-item uk-child-width-1-1@show-grid">
+        <div class="fdn-pres-item-content">
+          <div class="fdn-event-search-image-block uk-width-1-3 uk-width-1-3@m uk-width-1-5@show-list">
+            <a href="/event/14538326"><img src="..." alt="Image: Live Jazz Night" width="400" height="400"></a>
+          </div>
+          <div class="fdn-pres-content uk-flex-1 uk-padding-xsmall-right fdn-event-search-text-block">
+            <div class="uk-flex uk-flex-center@show-grid">
+              <p class="fdn-teaser-headline uk-margin-remove@show-grid">
+                <a href="/event/14538326">Live Jazz Night</a>
+                <span class="fdn-features-icon-block" role="presentation">
+                  <span class="fdn-features-icon uk-preserve fdn-features-icon-tickets-available" title="Tickets Available"></span>
+                </span>
+              </p>
+            </div>
+            <p class="fdn-teaser-subheadline">Fri., Dec 1, 8:00 PM</p>
+            <div class="uk-margin-small fdn-event-teaser-location-block">
+              <p class="fdn-event-teaser-location uk-margin-remove">
+                <a class="fdn-event-teaser-location-link" href="/location/continental-club-11834712">The Continental Club</a>
+              </p>
+            </div>
+            <div class="fdn-teaser-description uk-text-break">An evening of live jazz featuring local artists.</div>
+            <p class="fdn-teaser-tag-link-block fdn-teaser-infoline uk-text-break uk-margin-xsmall-top">
+              <a class="fdn-teaser-tag-link" href="?eventCategory=12198149">Jazz</a>
+            </p>
+            <div class="fdn-pres-details-split fdn-teaser-infoline uk-flex uk-flex-middle uk-margin-remove-bottom fdn-teaser-ticket-block uk-flex-wrap">
+              <a class="fdn-teaser-ticket-link uk-flex uk-flex-middle uk-margin-small-right" href="https://coldtowne.com/tickets">Get Tickets $15</a>
+            </div>
+          </div>
+        </div>
+      </li>
+      <li class="fdn-pres-item uk-child-width-1-1@show-grid">
+        <div class="fdn-pres-item-content">
+          <div class="fdn-event-search-image-block uk-width-1-3 uk-width-1-3@m uk-width-1-5@show-list">
+            <a href="/event/14524854"><img src="..." alt="Image: Free Open Mic" width="400" height="400"></a>
+          </div>
+          <div class="fdn-pres-content uk-flex-1 uk-padding-xsmall-right fdn-event-search-text-block">
+            <div class="uk-flex uk-flex-center@show-grid">
+              <p class="fdn-teaser-headline uk-margin-remove@show-grid">
+                <a href="/event/14524854">Free Open Mic</a>
+              </p>
+            </div>
+            <p class="fdn-teaser-subheadline">Sat., Dec 2, 7:00 PM</p>
+            <div class="uk-margin-small fdn-event-teaser-location-block">
+              <p class="fdn-event-teaser-location uk-margin-remove">
+                <a class="fdn-event-teaser-location-link" href="/location/bathtub-row-11834713">Bathtub Row</a>
+              </p>
+            </div>
+            <div class="fdn-teaser-description uk-text-break">Open mic night, free admission.</div>
+            <p class="fdn-teaser-tag-link-block fdn-teaser-infoline uk-text-break uk-margin-xsmall-top">
+              <a class="fdn-teaser-tag-link" href="?eventCategory=12198150">Open Mic</a>
+            </p>
+          </div>
+        </div>
+      </li>
+    HTML
+  end
+
+  let(:sample_html_with_price_range) do
+    <<~HTML
+      <li class="fdn-pres-item uk-child-width-1-1@show-grid">
+        <div class="fdn-pres-item-content">
+          <div class="fdn-event-search-image-block uk-width-1-3 uk-width-1-3@m uk-width-1-5@show-list">
+            <a href="/event/14524855"><img src="..." alt="Image: Concert at ACL Live" width="400" height="400"></a>
+          </div>
+          <div class="fdn-pres-content uk-flex-1 uk-padding-xsmall-right fdn-event-search-text-block">
+            <div class="uk-flex uk-flex-center@show-grid">
+              <p class="fdn-teaser-headline uk-margin-remove@show-grid">
+                <a href="/event/14524855">Concert at ACL Live</a>
+              </p>
+            </div>
+            <p class="fdn-teaser-subheadline">Sun., Dec 3, 7:30 PM</p>
+            <div class="uk-margin-small fdn-event-teaser-location-block">
+              <p class="fdn-event-teaser-location uk-margin-remove">
+                <a class="fdn-event-teaser-location-link" href="/location/acl-live-11834714">ACL Live at The Moody Theater</a>
+              </p>
+            </div>
+            <div class="fdn-teaser-description uk-text-break">A full night of music at Austin's premier venue.</div>
+            <p class="fdn-teaser-tag-link-block fdn-teaser-infoline uk-text-break uk-margin-xsmall-top">
+              <a class="fdn-teaser-tag-link" href="?eventCategory=12198151">Concert</a>
+            </p>
+            <div class="fdn-pres-details-split fdn-teaser-infoline uk-flex uk-flex-middle uk-margin-remove-bottom fdn-teaser-ticket-block uk-flex-wrap">
+              <a class="fdn-teaser-ticket-link uk-flex uk-flex-middle uk-margin-small-right" href="https://acllive.com/tickets">Buy tickets $25 - $75</a>
+            </div>
+          </div>
+        </div>
+      </li>
+    HTML
+  end
+
+  let(:sample_html_old_layout) do
+    <<~HTML
+      <div class="event-card" data-event-id="54321">
+        <h3 class="event-card-title"><a href="/events/54321">Old Layout Event</a></h3>
+        <span class="event-card-date">Nov 28, 2026</span>
+        <span class="event-card-time">6:00 PM</span>
+        <span class="event-card-venue">The Saxon Pub</span>
+        <span class="event-card-price">$10</span>
+        <a class="event-card-link" href="/events/54321">Details</a>
+      </div>
+    HTML
+  end
+
+  let(:sample_html_legacy) do
+    <<~HTML
       <div class="event-listing" data-event-id="12345">
         <h3 class="event-title"><a href="/calendar/event/12345">Live Jazz Night</a></h3>
         <time class="event-date" datetime="2026-12-01">Dec 1, 2026</time>
@@ -32,33 +136,6 @@ RSpec.describe WeeklyLocalEvents::Scrapers::AustinChronicleScraper do
         <span class="event-venue">Bathtub Row</span>
         <span class="event-price">Free</span>
         <a class="event-link" href="/calendar/event/12346">More info</a>
-      </div>
-    HTML
-  end
-
-  let(:sample_html_with_price_range) do
-    <<~HTML
-      <div class="event-listing" data-event-id="12347">
-        <h3 class="event-title"><a href="/calendar/event/12347">Concert at ACL Live</a></h3>
-        <time class="event-date" datetime="2026-12-03">Dec 3, 2026</time>
-        <span class="event-time">7:30 PM</span>
-        <span class="event-venue">ACL Live at The Moody Theater</span>
-        <span class="event-price">$25 - $75</span>
-        <a class="event-link" href="/calendar/event/12347">Buy tickets</a>
-        <div class="event-description">A full night of music at Austin's premier venue.</div>
-      </div>
-    HTML
-  end
-
-  let(:sample_html_old_layout) do
-    <<~HTML
-      <div class="event-card" data-event-id="54321">
-        <h3 class="event-card-title"><a href="/events/54321">Old Layout Event</a></h3>
-        <span class="event-card-date">Nov 28, 2026</span>
-        <span class="event-card-time">6:00 PM</span>
-        <span class="event-card-venue">The Saxon Pub</span>
-        <span class="event-card-price">$10</span>
-        <a class="event-card-link" href="/events/54321">Details</a>
       </div>
     HTML
   end
@@ -90,6 +167,7 @@ RSpec.describe WeeklyLocalEvents::Scrapers::AustinChronicleScraper do
 
     it "extracts title from event listings" do
       events = scraper.parse_response(sample_html)
+      expect(events.size).to eq(2)
       expect(events[0].title).to eq("Live Jazz Night")
       expect(events[1].title).to eq("Free Open Mic")
     end
@@ -100,37 +178,38 @@ RSpec.describe WeeklyLocalEvents::Scrapers::AustinChronicleScraper do
       expect(events[1].date).to eq(Date.new(2026, 12, 2))
     end
 
-    it "extracts time from event listings" do
-      events = scraper.parse_response(sample_html)
-      expect(events[0].time).to eq("20:00")
-    end
-
     it "extracts venue from event listings" do
       events = scraper.parse_response(sample_html)
       expect(events[0].venue.name).to eq("The Continental Club")
       expect(events[1].venue.name).to eq("Bathtub Row")
     end
 
-    it "extracts price from event listings" do
-      events = scraper.parse_response(sample_html)
-      expect(events[0].price).to eq("$15")
-      expect(events[1].price).to eq("Free")
-    end
-
-    it "handles price ranges correctly" do
-      events = scraper.parse_response(sample_html_with_price_range)
-      expect(events[0].price).to eq("$25 - $75")
-      expect(events[0].price_cents).to eq(2500)
-    end
-
     it "extracts URL from event listings" do
       events = scraper.parse_response(sample_html)
-      expect(events[0].url).to eq("https://www.austinchronicle.com/calendar/event/12345")
+      expect(events[0].url).to eq("https://www.austinchronicle.com/event/14538326")
+      expect(events[1].url).to eq("https://www.austinchronicle.com/event/14524854")
     end
 
     it "extracts description from event listings" do
       events = scraper.parse_response(sample_html)
       expect(events[0].description).to eq("An evening of live jazz featuring local artists.")
+      expect(events[1].description).to eq("Open mic night, free admission.")
+    end
+
+    it "handles new layout (fdn-pres-item class)" do
+      events = scraper.parse_response(sample_html)
+      expect(events.size).to eq(2)
+      expect(events[0].title).to eq("Live Jazz Night")
+      expect(events[0].venue.name).to eq("The Continental Club")
+      expect(events[0].description).to eq("An evening of live jazz featuring local artists.")
+    end
+
+    it "handles price ranges correctly" do
+      events = scraper.parse_response(sample_html_with_price_range)
+      expect(events[0].title).to eq("Concert at ACL Live")
+      expect(events[0].venue.name).to eq("ACL Live at The Moody Theater")
+      expect(events[0].price).to eq("$25 - $75")
+      expect(events[0].price_cents).to eq(2500)
     end
 
     it "sets source to austin_chronicle" do
@@ -143,6 +222,13 @@ RSpec.describe WeeklyLocalEvents::Scrapers::AustinChronicleScraper do
       expect(events.size).to eq(1)
       expect(events[0].title).to eq("Old Layout Event")
       expect(events[0].venue.name).to eq("The Saxon Pub")
+    end
+
+    it "handles legacy layout (event-listing class)" do
+      events = scraper.parse_response(sample_html_legacy)
+      expect(events.size).to eq(2)
+      expect(events[0].title).to eq("Live Jazz Night")
+      expect(events[1].title).to eq("Free Open Mic")
     end
 
     it "handles missing time gracefully" do

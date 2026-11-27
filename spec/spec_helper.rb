@@ -13,6 +13,7 @@ require "weekly_local_events/pipeline/normalizer"
 require "weekly_local_events/pipeline/crawler_engine"
 require "weekly_local_events/notifications/dispatcher"
 require "weekly_local_events/utils/date_helper"
+require "weekly_local_events/scrapers/austin_chronicle_rss_scraper"
 
 require "rspec/core"
 require "rspec/expectations"

@@ -1321,5 +1321,195 @@ RSpec.describe WeeklyLocalEvents::Notifier do
     it "creates a mutex" do
       expect(notifier.instance_variable_get(:@mutex)).to be_a(Mutex)
     end
+
+    it "covers unknown category with '📋' emoji" do
+      event = WeeklyLocalEvents::Event.new(
+        title: "Unknown Event", date: Date.today + 1,
+        venue: venue, url: "https://example.com", source: "test", category: "unknown"
+      )
+
+      result = notifier.format_events([event])
+
+      expect(result).to include("📋 *Other*")
+      expect(result).to include("- *Unknown Event* - ACL Live - Free")
+    end
+
+    it "handles events without price" do
+      event = WeeklyLocalEvents::Event.new(
+        title: "No Price Event", date: Date.today + 1,
+        venue: venue, url: "https://example.com", source: "test"
+      )
+
+      result = notifier.format_events([event])
+
+      expect(result).to include("Free")
+    end
+
+    it "handles events without venue" do
+      event = WeeklyLocalEvents::Event.new(
+        title: "No Venue Event", date: Date.today + 1,
+        venue: nil, url: "https://example.com", source: "test"
+      )
+
+      result = notifier.format_events([event])
+
+      expect(result).to include("Unknown")
+    end
+
+    it "groups by normalized category" do
+      music_event = WeeklyLocalEvents::Event.new(
+        title: "Rock Show", date: Date.today + 1,
+        venue: venue, url: "https://example.com", source: "test", category: "concert"
+      )
+      comedy_event = WeeklyLocalEvents::Event.new(
+        title: "Joke Night", date: Date.today + 2,
+        venue: venue, url: "https://example.com", source: "test", category: "comedy"
+      )
+
+      result = notifier.format_events([music_event, comedy_event])
+
+      expect(result).to include("🎵 *Music*")
+      expect(result).to include("🎭 *Comedy*")
+    end
+
+    it "handles multiple events in same category" do
+      events = [
+        WeeklyLocalEvents::Event.new(
+          title: "Event 1", date: Date.today + 1,
+          venue: venue, url: "https://example.com", source: "test", category: "Music"
+        ),
+        WeeklyLocalEvents::Event.new(
+          title: "Event 2", date: Date.today + 2,
+          venue: venue, url: "https://example.com", source: "test", category: "Music"
+        )
+      ]
+
+      result = notifier.format_events(events)
+
+      expect(result).to include("*Event 1*")
+      expect(result).to include("*Event 2*")
+      expect(result).to include("🎵 *Music*")
+    end
+
+    it "handles events with price range" do
+      event = WeeklyLocalEvents::Event.new(
+        title: "Range Event", date: Date.today + 1,
+        venue: venue, url: "https://example.com", source: "test",
+        price: "$10–$50"
+      )
+
+      result = notifier.format_events([event])
+
+      expect(result).to include("$10–$50")
+    end
+  end
+
+  describe ".format_summary" do
+    it "handles categories with symbol keys" do
+      summary = { total: 5, free_count: 2, paid_count: 3,
+                  categories: { :Music => 3, :Comedy => 2 },
+                  sources: { :austin_chronicle => 5 } }
+
+      result = notifier.format_summary(summary)
+
+      expect(result).to include("Music: 3")
+      expect(result).to include("austin_chronicle: 5")
+    end
+
+    it "handles categories with string keys" do
+      summary = { total: 5, free_count: 2, paid_count: 3,
+                  categories: { "Music" => 3, "Comedy" => 2 },
+                  sources: { "austin_chronicle" => 5 } }
+
+      result = notifier.format_summary(summary)
+
+      expect(result).to include("Music: 3")
+    end
+
+    it "handles mixed keys" do
+      summary = { total: 5, free_count: 2, paid_count: 3,
+                  categories: { :Music => 3, "Comedy" => 2 },
+                  sources: { "austin_chronicle" => 5 } }
+
+      result = notifier.format_summary(summary)
+
+      expect(result).to include("Music: 3")
+      expect(result).to include("Comedy: 2")
+    end
+
+    it "handles zero counts" do
+      summary = { total: 0, free_count: 0, paid_count: 0,
+                  categories: [], sources: [] }
+
+      result = notifier.format_summary(summary)
+
+      expect(result).to include("*Total events*: 0")
+      expect(result).to include("*Free events*: 0")
+      expect(result).to include("*Paid events*: 0")
+    end
+
+    it "handles missing keys gracefully" do
+      summary = { total: 5 }
+
+      result = notifier.format_summary(summary)
+
+      expect(result).to include("*Total events*: 5")
+      expect(result).to include("*Free events*: 0")
+      expect(result).to include("*Paid events*: 5")
+    end
+  end
+
+  describe ".notify" do
+    it "returns nil when config notifications_enabled is false" do
+      allow(config).to receive(:notifications_enabled?).and_return(false)
+
+      response = notifier.notify(events)
+
+      expect(response).to be_nil
+    end
+
+    it "returns error when events are empty and notifications enabled" do
+      allow(config).to receive(:notifications_enabled?).and_return(true)
+
+      response = notifier.notify([])
+
+      expect(response.success?).to be false
+      expect(response.error).to eq("No events to send")
+    end
+
+    it "calls send_events and returns response when enabled" do
+      allow(config).to receive(:notifications_enabled?).and_return(true)
+
+      stub_request(:post, "#{api_base}/sendMessage")
+        .to_return(status: 200, body: success_response, headers: { "Content-Type" => "application/json" })
+
+      response = notifier.notify(events)
+
+      expect(response).to be_a(WeeklyLocalEvents::TelegramResponse)
+      expect(response.success?).to be true
+    end
+  end
+
+  describe ".initialize" do
+    it "sets api_base with bot token" do
+      expect(notifier.api_base).to eq("https://api.telegram.org/bot#{bot_token}")
+    end
+
+    it "sets api_base without bot token" do
+      allow(config).to receive(:telegram_bot_token).and_return(nil)
+      notifier2 = described_class.new(config)
+
+      expect(notifier2.api_base).to eq("https://api.telegram.org/bot")
+    end
+
+    it "initializes rate limiting state" do
+      expect(notifier.last_send_at).to be_nil
+      expect(notifier.recent_message_count).to eq(0)
+      expect(notifier.recent_message_times).to be_empty
+    end
+
+    it "creates a mutex" do
+      expect(notifier.instance_variable_get(:@mutex)).to be_a(Mutex)
+    end
   end
 end
