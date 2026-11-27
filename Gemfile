@@ -30,6 +30,7 @@ end
 group :test do
   gem "simplecov", require: false
   gem "webmock"
+  gem "vcr", require: false
   gem "factory_bot_rails"
   gem "faker"
 end

@@ -1,0 +1,39 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Record real HTML responses into VCR cassettes. This is the ONLY path that
+# performs live HTTP; the normal test suite replays with record: :none.
+#
+# Usage: bundle exec ruby bin/record_vcr_cassettes
+
+require "vcr"
+require "webmock"
+require "net/http"
+
+CASSETTE_DIR = "/home/madrax/src/ai/WeeklyLocalEvents/spec/fixtures/vcr_cassettes"
+
+SOURCES = {
+  "community_impact_calendar" => "https://communityimpact.com/austin/calendar/?from=2026-11-27&to=2026-11-27",
+  "acl_live_events" => "https://www.acllive.com/events",
+}.freeze
+
+VCR.configure do |config|
+  config.cassette_library_dir = CASSETTE_DIR
+  config.hook_into :webmock
+  config.default_cassette_options = { record: :once, match_requests_on: %i[method uri] }
+end
+
+SOURCES.each do |name, url|
+  VCR.use_cassette(name) do
+    uri = URI(url)
+    response = Net::HTTP.start(
+      uri.hostname,
+      uri.port,
+      use_ssl: true,
+      open_timeout: 30,
+      read_timeout: 30
+    ) { |http| http.request(Net::HTTP::Get.new(uri)) }
+
+    puts "#{name}: HTTP #{response.code}, #{response.body.to_s.bytesize} bytes"
+  end
+end

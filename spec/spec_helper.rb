@@ -20,9 +20,24 @@ require "rspec/expectations"
 require "rspec/mocks"
 require "factory_bot_rails"
 require "webmock/rspec"
+require "vcr"
+require "fileutils"
 require "faker"
 
 WebMock.disable_net_connect!(allow_localhost: true)
+
+VCR_CASSETTE_DIR = "/home/madrax/src/ai/WeeklyLocalEvents/spec/fixtures/vcr_cassettes"
+FileUtils.mkdir_p(VCR_CASSETTE_DIR)
+
+VCR.configure do |config|
+  config.cassette_library_dir = VCR_CASSETTE_DIR
+  config.hook_into :webmock
+  config.default_cassette_options = {
+    record: :none,
+    match_requests_on: %i[method uri],
+  }
+  config.allow_http_connections_when_no_cassette = false
+end
 
 Faker::Config.locale = "en_US"
 

@@ -119,6 +119,22 @@ Run with SimpleCov coverage:
 COVERAGE=1 rake test
 ```
 
+### Recorded HTTP responses (VCR)
+
+Tests never call live sites. `spec/spec_helper.rb` configures VCR with
+`record: :none`, so any request without a matching cassette raises
+`VCR::Errors::UnhandledHTTPRequestError` instead of reaching the network.
+
+Cassettes are committed under `spec/fixtures/vcr_cassettes/`. To record or
+refresh them — the only command that performs live HTTP — run:
+
+```bash
+bundle exec ruby bin/record_vcr_cassettes
+```
+
+In a spec, wrap the request with `VCR.use_cassette("cassette_name") { ... }` and
+feed the recorded HTML into the scraper's `parse_response`.
+
 ## Architecture
 
 ```
