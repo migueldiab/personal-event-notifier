@@ -150,8 +150,8 @@ RSpec.describe WeeklyLocalEvents::Venue do
 
   describe "#geocode!" do
     before(:each) do
-      # Ensure GOOGLE_MAPS_API_KEY is nil before each test (some tests mutate it)
-      described_class.const_set(:GOOGLE_MAPS_API_KEY, nil)
+      # Stub (rather than reassign) the constant so RSpec restores it cleanly.
+      stub_const("WeeklyLocalEvents::Venue::GOOGLE_MAPS_API_KEY", nil)
     end
 
     context "without API key (fallback)" do
@@ -207,16 +207,13 @@ RSpec.describe WeeklyLocalEvents::Venue do
             "status" => "OK"
           }), headers: { "Content-Type" => "application/json" })
 
-        # Temporarily set the API key constant
-        original_key = described_class::GOOGLE_MAPS_API_KEY
-        described_class.const_set(:GOOGLE_MAPS_API_KEY, "test-key-123")
+        # Stub the API key for this example; RSpec restores the original value.
+        stub_const("WeeklyLocalEvents::Venue::GOOGLE_MAPS_API_KEY", "test-key-123")
 
         venue = described_class.new(name: "Test", address: "310 W 5th St", city: "Austin", state: "TX", zip: "78701")
         venue.geocode!
         expect(venue.lat).to eq(30.2672)
         expect(venue.lng).to eq(-97.7431)
-
-        described_class.const_set(:GOOGLE_MAPS_API_KEY, original_key)
       end
 
       it "raises GeocodeError when Google Maps returns error status" do
@@ -226,13 +223,10 @@ RSpec.describe WeeklyLocalEvents::Venue do
             "status" => "ZERO_RESULTS"
           }), headers: { "Content-Type" => "application/json" })
 
-        original_key = described_class::GOOGLE_MAPS_API_KEY
-        described_class.const_set(:GOOGLE_MAPS_API_KEY, "test-key-123")
+        stub_const("WeeklyLocalEvents::Venue::GOOGLE_MAPS_API_KEY", "test-key-123")
 
         venue = described_class.new(name: "Test", address: "310 W 5th St", city: "Austin", state: "TX", zip: "78701")
         expect { venue.geocode! }.to raise_error(WeeklyLocalEvents::GeocodeError, /Google Maps geocoding failed: ZERO_RESULTS/)
-
-        described_class.const_set(:GOOGLE_MAPS_API_KEY, original_key)
       end
     end
   end

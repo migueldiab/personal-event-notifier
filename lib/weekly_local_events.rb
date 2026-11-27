@@ -26,8 +26,6 @@ require "weekly_local_events/summary"
 require "weekly_local_events/notification_result"
 
 module WeeklyLocalEvents
-  VERSION = '0.1.0'
-
   class Error < StandardError; end
   class ScraperError < Error; end
   class NotFoundError < ScraperError; end
