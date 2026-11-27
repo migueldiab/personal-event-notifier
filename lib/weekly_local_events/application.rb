@@ -31,11 +31,11 @@ module WeeklyLocalEvents
     # @return [Summary] with total event count and per-source breakdown.
     def run(dry_run: false)
       log_info "Starting Weekly Local Events run at #{Time.now}"
-      events = run_all_scrapers
+      events, counts = scrape_all
       aggregated = aggregate(events)
       result = dry_run ? NotificationResult.new(success: true, events_sent: 0, dry_run: true) : notify(aggregated)
       log_info "Run complete. Found #{aggregated.size} events, notification #{result.to_s.downcase}."
-      Summary.new(total: aggregated.size, sources: result_counts)
+      Summary.new(total: aggregated.size, sources: counts)
     end
 
     # Run a single scraper and return its events.
@@ -60,9 +60,8 @@ module WeeklyLocalEvents
     #
     # @return [Array<Event>]
     def run_all_scrapers
-      scraper_registry.active.flat_map do |scraper|
-        run_scraper(scraper)
-      end
+      events, = scrape_all
+      events
     end
 
     # Delegate to the aggregator to deduplicate and sort events.
@@ -87,18 +86,18 @@ module WeeklyLocalEvents
 
     private
 
-    # Build a per-source event count hash from the raw scrape results.
-    def result_counts
+    # Scrape every active source once, collecting events and per-source counts.
+    #
+    # @return [Array(Array<Event>, Hash{String=>Integer})] events and counts
+    def scrape_all
       counts = Hash.new(0)
-      scraper_registry.all.each do |scraper|
-        begin
-          events = scraper.scrape
-          counts[scraper.name] = events.size
-        rescue StandardError
-          counts[scraper.name] = 0
-        end
+      events = scraper_registry.active.flat_map do |scraper|
+        scraper_events = run_scraper(scraper)
+        counts[scraper.name] = scraper_events.size
+        scraper_events
       end
-      counts
+
+      [events, counts]
     end
 
     def log_info(msg)
