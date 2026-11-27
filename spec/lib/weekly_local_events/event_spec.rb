@@ -262,6 +262,23 @@ RSpec.describe WeeklyLocalEvents::Event do
     end
   end
 
+  describe "#to_cli_line" do
+    it "includes the event link so CLI output is actionable" do
+      event = described_class.new(**valid_attributes.merge(date: "2026-11-27"))
+
+      line = event.to_cli_line
+
+      expect(line).to eq("[test] Test Concert - Test Venue - 2026-11-27 - https://example.com/event")
+    end
+
+    it "keeps the line usable when the venue is missing" do
+      attributes = valid_attributes.merge(date: "2026-11-27", venue: nil)
+      event = described_class.new(**attributes)
+
+      expect(event.to_cli_line).to include("https://example.com/event")
+    end
+  end
+
   describe "#hash" do
     it "returns the same hash for equal events" do
       event1 = described_class.new(**valid_attributes)

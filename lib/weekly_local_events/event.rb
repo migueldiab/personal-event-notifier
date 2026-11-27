@@ -198,6 +198,13 @@ module WeeklyLocalEvents
       JSON.generate(to_hash)
     end
 
+    # Format a single line for CLI output, including the event link.
+    #
+    # @return [String]
+    def to_cli_line
+      "[#{source}] #{title} - #{venue&.name} - #{date} - #{url}"
+    end
+
     # Check if the event falls within the given date range (inclusive).
     #
     # @param start_date [Date]
