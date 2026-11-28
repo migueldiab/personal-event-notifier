@@ -16,13 +16,13 @@ module WeeklyLocalEvents
   # Access via: WeeklyLocalEvents.config
   class Config
     DEFAULTS = {
-      sites: %w[austin_chronicle do512 community_impact],
+      sites: %w[austin_chronicle do512 community_impact eventbrite_austin visit_cedar_park cedar_park],
       log_level: "INFO",
       date_range_days: 7,
       request_timeout: 30,
       request_delay: 2,
       max_retries: 3,
-      max_events_per_batch: 50,
+      max_events_per_batch: 10,
       # The live Cedar Park calendar/API host is Cloudflare-blocked; only a
       # dated Wayback snapshot is fetchable. Opt in explicitly so stale
       # archived events are never presented as live in the Sunday digest.

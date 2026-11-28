@@ -58,11 +58,11 @@ module WeeklyLocalEvents
     MAX_MESSAGE_LENGTH = 4096
 
     # Rate limit: Telegram allows ~30 messages/second for bots.
-    # We use a conservative 2-second minimum between sends.
-    MIN_SEND_INTERVAL = 2.0
+    # We use a conservative 30-second minimum between sends.
+    MIN_SEND_INTERVAL = 30.0
 
     # Rate limit: Telegram allows ~20 messages per minute for groups.
-    MAX_MESSAGES_PER_MINUTE = 20
+    MAX_MESSAGES_PER_MINUTE = 2 
 
     attr_reader :config, :api_base, :last_send_at, :recent_message_count, :recent_message_times
 

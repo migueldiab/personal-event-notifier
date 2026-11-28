@@ -15,13 +15,13 @@ defaults: &defaults
     - do512
     - community_impact
     - eventbrite_austin
-    - acl_live
-    - stubbss
-    - paramount_austin
+    - visit_cedar_park
     # Simpleview JSON API behind an Akamai wall; a 200 may be a JS shell with no
     # "docs" data. Set cached_fixture_path to a VCR cassette to replay captures.
-    - visit_cedar_park
     - cedar_park
+    # - acl_live
+    # - stubbss
+    # - paramount_austin
 
 development:
   <<: *defaults
