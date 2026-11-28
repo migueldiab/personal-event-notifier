@@ -1,39 +1,162 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-# Record real HTML responses into VCR cassettes. This is the ONLY path that
+# Record real HTTP responses into VCR cassettes. This is the ONLY path that
 # performs live HTTP; the normal test suite replays with record: :none.
+#
+# For sources backed by the Simpleview REST API, the runtime token is fetched
+# outside the cassette and redacted before the interaction is written, so the
+# committed cassette never contains a credential or a session cookie.
 #
 # Usage: bundle exec ruby bin/record_vcr_cassettes
 
+require "json"
+require "net/http"
+require "time"
+require "uri"
 require "vcr"
 require "webmock"
-require "net/http"
 
 CASSETTE_DIR = "/home/madrax/src/ai/WeeklyLocalEvents/spec/fixtures/vcr_cassettes"
+TOKEN_PLACEHOLDER = "TOKEN_REDACTED"
+BROWSER_USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 " \
+                     "(KHTML, like Gecko) Chrome/124.0 Safari/537.36"
 
 SOURCES = {
   "community_impact_calendar" => "https://communityimpact.com/austin/calendar/?from=2026-11-27&to=2026-11-27",
   "acl_live_events" => "https://www.acllive.com/events",
+  "visit_cedar_park_events" => {
+    url: "https://visitcedarparktexas.com/includes/rest_v2/plugins_events_events_by_date/find/",
+    token_url: "https://visitcedarparktexas.com/plugins/core/get_simple_token/",
+    headers: {
+      "User-Agent" => BROWSER_USER_AGENT,
+      "Referer" => "https://visitcedarparktexas.com/events/",
+      "Accept" => "application/json, text/plain, */*"
+    }
+  }
 }.freeze
+
+# Set only while the Simpleview cassette is being recorded, so the before_record
+# hook can replace the live token everywhere in the interaction.
+$vcp_recording_token = nil # rubocop:disable Style/GlobalVars
+
+# Remove credential-bearing headers from a captured request or response.
+def strip_credentials!(headers)
+  headers.each_key do |key|
+    headers.delete(key) if key.downcase.match?(/cookie|authorization|api[-_]?key|x-auth/)
+  end
+end
 
 VCR.configure do |config|
   config.cassette_library_dir = CASSETTE_DIR
   config.hook_into :webmock
   config.default_cassette_options = { record: :once, match_requests_on: %i[method uri] }
+  # The Simpleview token is fetched before the cassette is inserted.
+  config.allow_http_connections_when_no_cassette = true
+
+  config.before_record do |interaction|
+    token = $vcp_recording_token # rubocop:disable Style/GlobalVars
+    interaction.filter!(token, TOKEN_PLACEHOLDER) if token && !token.empty?
+    strip_credentials!(interaction.request.headers)
+    strip_credentials!(interaction.response.headers)
+  end
 end
 
-SOURCES.each do |name, url|
-  VCR.use_cassette(name) do
-    uri = URI(url)
-    response = Net::HTTP.start(
-      uri.hostname,
-      uri.port,
-      use_ssl: true,
-      open_timeout: 30,
-      read_timeout: 30
-    ) { |http| http.request(Net::HTTP::Get.new(uri)) }
+def http_get(url, headers = {})
+  uri = URI(url)
+  options = { use_ssl: uri.scheme == "https", open_timeout: 30, read_timeout: 30 }
+  Net::HTTP.start(uri.hostname, uri.port, **options) do |http|
+    request = Net::HTTP::Get.new(uri)
+    headers.each { |name, value| request[name] = value }
+    http.request(request)
+  end
+end
 
+def record_simple(name, url)
+  VCR.use_cassette(name) do
+    response = http_get(url)
     puts "#{name}: HTTP #{response.code}, #{response.body.to_s.bytesize} bytes"
+  end
+end
+
+def fetch_simple_token(name, source)
+  response = http_get(source[:token_url], source[:headers].merge("Accept" => "text/plain"))
+  token = response.body.to_s.strip
+  return token if response.is_a?(Net::HTTPSuccess) && token.match?(/\A[0-9a-f]{32}\z/)
+
+  raise "#{name}: token endpoint returned no usable token (HTTP #{response.code})"
+end
+
+def events_filter
+  {
+    "filter" => { "active" => true },
+    "options" => {
+      "limit" => 30,
+      "skip" => 0,
+      "count" => true,
+      "sort" => { "date" => 1, "rank" => 1, "title_sort" => 1 }
+    }
+  }
+end
+
+def events_url(source, token)
+  query = URI.encode_www_form("json" => JSON.generate(events_filter), "token" => token)
+  "#{source[:url]}?#{query}"
+end
+
+def validate_events_body!(name, body)
+  if body.match?(/Access Denied|errors\.edgesuite\.net|Invalid credentials|Just a moment/i)
+    raise "#{name}: source returned an access-denied/interstitial body; refusing to record it"
+  end
+
+  docs = JSON.parse(body).dig("docs", "docs")
+  return docs if docs.is_a?(Array) && docs.length >= 3
+
+  raise "#{name}: expected at least three events, got #{docs.is_a?(Array) ? docs.length : 'none'}"
+end
+
+def record_simpleview(name, source)
+  token = fetch_simple_token(name, source)
+  url = events_url(source, token)
+
+  $vcp_recording_token = token # rubocop:disable Style/GlobalVars
+  # The recorded URI carries the redaction placeholder, while a live request
+  # carries the real token; match on path so re-runs replay the same cassette.
+  VCR.use_cassette(name, match_requests_on: %i[method path]) do
+    response = http_get(url, source[:headers])
+    body = response.body.to_s
+    events = validate_events_body!(name, body)
+    puts "#{name}: HTTP #{response.code}, #{body.bytesize} bytes, #{events.length} events"
+  end
+
+  prepend_provenance(name)
+ensure
+  $vcp_recording_token = nil # rubocop:disable Style/GlobalVars
+end
+
+# VCR writes bare YAML; add a human-readable provenance header so the capture
+# time and redaction policy travel with the cassette.
+def prepend_provenance(name)
+  path = File.join(CASSETTE_DIR, "#{name}.yml")
+  return unless File.exist?(path)
+
+  content = File.read(path)
+  return if content.start_with?("#")
+
+  lines = [
+    "Cassette: #{name}",
+    "Source: Simpleview REST JSON API behind https://visitcedarparktexas.com/events/",
+    "Recorded live: #{Time.now.utc.iso8601} (UTC), America/Chicago time zone.",
+    "Provenance: docs/visit_cedar_park_recon.md (recon 2026-11-27).",
+    "Redaction: runtime token replaced with #{TOKEN_PLACEHOLDER}; no cookies or authorization headers stored."
+  ]
+  File.write(path, "#{lines.map { |line| "# #{line}" }.join("\n")}\n#{content}")
+end
+
+SOURCES.each do |name, source|
+  case source
+  when String then record_simple(name, source)
+  when Hash then record_simpleview(name, source)
+  else raise "Unsupported SOURCES entry for #{name}"
   end
 end
