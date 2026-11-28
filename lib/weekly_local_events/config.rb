@@ -28,7 +28,7 @@ module WeeklyLocalEvents
     REQUIRED_KEYS = %w[notification_channel_id telegram_bot_token].freeze
 
     attr_reader :sites, :enabled_scrapers, :log_level, :date_range_days, :request_timeout,
-                :request_delay, :max_retries, :max_events_per_batch
+                :request_delay, :max_retries, :max_events_per_batch, :cached_fixture_path
 
     def initialize
       @raw = load_from_yaml
@@ -98,6 +98,7 @@ module WeeklyLocalEvents
       @request_delay = (raw["request_delay"] || DEFAULTS[:request_delay]).to_i
       @max_retries = (raw["max_retries"] || DEFAULTS[:max_retries]).to_i
       @max_events_per_batch = (raw["max_events_per_batch"] || DEFAULTS[:max_events_per_batch]).to_i
+      @cached_fixture_path = raw["cached_fixture_path"]
     end
   end
 

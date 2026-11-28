@@ -70,6 +70,27 @@ bin/eventbrite_smoke_test <known_event_id>
 
 Never commit `.env`; only `.env.example` belongs in source control.
 
+### Anti-bot cached fixture fallback
+
+Scrapers that use `AntiBotFetcher` degrade gracefully behind bot walls. A 403,
+429 or an interstitial body (detected by content such as "Just a moment" or
+"Attention Required", even with HTTP 200) is logged as a warning and never
+raises into the pipeline. With no fixture configured the scraper returns no
+events for that page.
+
+To replay a previously captured page instead, set an absolute path in the
+config the loader actually reads — `~/.hermes/weekly_local_events/config.yml`:
+
+```yaml
+cached_fixture_path: /home/madrax/src/ai/WeeklyLocalEvents/spec/fixtures/cached_calendar_with_events.html
+```
+
+When every live route (primary, regional variants and the headless browser)
+is blocked, the fetcher logs a warning and parses that cached HTML. Missing,
+empty or interstitial-looking fixture files are rejected and yield no events.
+Record provenance in the fixture header and cite archived captures with their
+archive date — cached data is never presented as live.
+
 ## Usage
 
 ### Main Entry Point

@@ -552,5 +552,30 @@ RSpec.describe WeeklyLocalEvents::Scrapers::CommunityImpactScraper do
       expect { scraper_with_range.events }.not_to raise_error
       expect(scraper_with_range.events).to be_empty
     end
+
+    it "returns no events and does not raise on HTTP 403" do
+      stub_request(:get, %r{https://(communityimpact\.com/austin|satxevents\.communityimpact\.com|dfwevents\.communityimpact\.com)/calendar/})
+        .to_return(status: 403, body: "<html>Access Denied</html>")
+
+      expect { scraper_with_range.events }.not_to raise_error
+      expect(scraper_with_range.events).to be_empty
+    end
+
+    it "uses the configured cached fixture when the live page is a 403" do
+      logger = instance_double(Logger, info: nil, warn: nil, error: nil)
+      cfg = config_with_range.merge(
+        date_range: WeeklyLocalEvents::DateRange.new(start: Date.today, end_date: Date.today),
+        fixture_path: File.expand_path("../../../fixtures/cached_calendar_with_events.html", __dir__),
+        logger: logger
+      )
+      blocked_scraper = described_class.new(cfg)
+      stub_request(:get, %r{https://(communityimpact\.com/austin|satxevents\.communityimpact\.com|dfwevents\.communityimpact\.com)/calendar/})
+        .to_return(status: 403, body: "<html>Attention Required! | Cloudflare</html>")
+
+      events = blocked_scraper.events
+
+      expect(events.map(&:title)).to include("Cached Holiday Market")
+      expect(logger).to have_received(:warn).with(/cached fixture/i)
+    end
   end
 end

@@ -116,4 +116,19 @@ RSpec.describe WeeklyLocalEvents::Config do
       expect(config.telegram_bot_token).to eq("env_token")
     end
   end
+
+  describe "cached fixture path" do
+    it "reads cached_fixture_path from YAML" do
+      File.write(config_path, yaml_content.merge(
+        "cached_fixture_path" => "/home/madrax/src/ai/WeeklyLocalEvents/spec/fixtures/cached_calendar.html"
+      ).to_yaml)
+
+      expect(described_class.new.cached_fixture_path)
+        .to eq("/home/madrax/src/ai/WeeklyLocalEvents/spec/fixtures/cached_calendar.html")
+    end
+
+    it "defaults to nil when no cached fixture is configured" do
+      expect(described_class.new.cached_fixture_path).to be_nil
+    end
+  end
 end

@@ -126,7 +126,8 @@ module WeeklyLocalEvents
       # Build the anti-bot fetching pipeline from scraper configuration.
       #
       # Test-friendly overrides: :request, :rate_limiter, :headless_fetcher,
-      # :backoff_base and :jitter may be supplied in a Hash config.
+      # :backoff_base, :jitter, :fixture_path and :logger may be supplied in a
+      # Hash config.
       #
       # @param cfg [Hash] effective scraper configuration
       # @return [AntiBotFetcher]
@@ -134,6 +135,7 @@ module WeeklyLocalEvents
         request = cfg[:request] || ->(url, headers:) { http_get(url, headers) }
         limiter = cfg[:rate_limiter] || build_rate_limiter(cfg)
         headless = cfg[:headless_fetcher] || HeadlessBrowserFetcher.new(logger: config.logger)
+        logger = cfg[:logger] || config.logger
 
         AntiBotFetcher.new(
           request: request,
@@ -141,9 +143,17 @@ module WeeklyLocalEvents
           max_retries: max_retries,
           backoff_base: cfg.fetch(:backoff_base, 2.0),
           jitter: cfg.fetch(:jitter, RateLimiter::DEFAULT_JITTER),
-          logger: config.logger,
-          headless_fetcher: headless
+          logger: logger,
+          headless_fetcher: headless,
+          fixture_path: cfg[:fixture_path] || configured_fixture_path
         )
+      end
+
+      # Cached HTML to replay when every live route is bot-blocked.
+      def configured_fixture_path
+        return nil unless config.respond_to?(:cached_fixture_path)
+
+        config.cached_fixture_path
       end
 
       def build_rate_limiter(cfg)

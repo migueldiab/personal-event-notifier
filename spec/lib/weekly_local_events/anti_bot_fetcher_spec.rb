@@ -131,4 +131,85 @@ RSpec.describe WeeklyLocalEvents::AntiBotFetcher do
       expect(fetcher.fetch("https://example.com/calendar")).to be_nil
     end
   end
+
+  describe "cached fixture fallback" do
+    subject(:fetcher_with_fixture) do
+      described_class.new(
+        request: request,
+        rate_limiter: rate_limiter,
+        max_retries: 2,
+        backoff_base: 1.0,
+        jitter: 0,
+        logger: logger,
+        sleeper: ->(seconds) { slept << seconds },
+        headless_fetcher: headless_fetcher,
+        fixture_path: fixture_path
+      )
+    end
+
+    let(:fixture_path) { File.expand_path("../../fixtures/cached_calendar.html", __dir__) }
+
+    before { allow(headless_fetcher).to receive(:call).and_return(nil) }
+
+    it "returns the cached fixture after a 403 and logs a warning" do
+      allow(request).to receive(:call).and_return(response(403, "Forbidden"))
+
+      expect(fetcher_with_fixture.fetch("https://cedarparktexas.gov/calendar.aspx"))
+        .to include("Cached events")
+      expect(logger).to have_received(:warn).with(/cached fixture/i)
+    end
+
+    it "returns the cached fixture after repeated 429 responses" do
+      allow(request).to receive(:call).and_return(response(429, ""), response(429, ""))
+
+      expect(fetcher_with_fixture.fetch("https://cedarparktexas.gov/calendar.aspx"))
+        .to include("Cached events")
+      expect(request).to have_received(:call).twice
+    end
+
+    it "returns the cached fixture for a 200 Cloudflare interstitial body" do
+      interstitial = "<title>Attention Required! | Cloudflare</title>"
+      allow(request).to receive(:call).and_return(response(200, interstitial))
+
+      expect(fetcher_with_fixture.fetch("https://cedarparktexas.gov/calendar.aspx"))
+        .to include("Cached events")
+      expect(logger).to have_received(:warn).with(/bot protection/i)
+    end
+
+    it "returns nil without a configured fixture after a 403" do
+      allow(request).to receive(:call).and_return(response(403, "Forbidden"))
+
+      expect(fetcher.fetch("https://cedarparktexas.gov/calendar.aspx")).to be_nil
+    end
+
+    it "returns nil and logs a warning when the configured fixture file is missing" do
+      allow(request).to receive(:call).and_return(response(403, "Forbidden"))
+      missing = described_class.new(
+        request: request,
+        rate_limiter: rate_limiter,
+        max_retries: 1,
+        logger: logger,
+        headless_fetcher: headless_fetcher,
+        fixture_path: "/nonexistent/cached.html"
+      )
+
+      expect(missing.fetch("https://cedarparktexas.gov/calendar.aspx")).to be_nil
+      expect(logger).to have_received(:warn).with(/not found/i)
+    end
+
+    it "rejects a cached fixture that is itself an interstitial" do
+      allow(request).to receive(:call).and_return(response(403, "Forbidden"))
+      blocked_fixture = described_class.new(
+        request: request,
+        rate_limiter: rate_limiter,
+        max_retries: 1,
+        logger: logger,
+        headless_fetcher: headless_fetcher,
+        fixture_path: File.expand_path("../../fixtures/cached_interstitial.html", __dir__)
+      )
+
+      expect(blocked_fixture.fetch("https://cedarparktexas.gov/calendar.aspx")).to be_nil
+      expect(logger).to have_received(:warn).with(/bot challenge/i)
+    end
+  end
 end
