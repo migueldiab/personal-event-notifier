@@ -9,7 +9,10 @@
 # committed cassette never contains a credential or a session cookie.
 #
 # Usage: bundle exec ruby bin/record_vcr_cassettes
+#   VCR_RECORD_ONLY=cedar_park_events  record just one source (comma-separated)
+#   VCR_CASSETTE_DIR=/abs/path         override the cassette output directory
 
+require "date"
 require "json"
 require "net/http"
 require "time"
@@ -17,7 +20,10 @@ require "uri"
 require "vcr"
 require "webmock"
 
-CASSETTE_DIR = "/home/madrax/src/ai/WeeklyLocalEvents/spec/fixtures/vcr_cassettes"
+$LOAD_PATH.unshift(File.expand_path("../lib", __dir__))
+require "weekly_local_events/archived_snapshot_fetcher"
+
+CASSETTE_DIR = ENV.fetch("VCR_CASSETTE_DIR", "/home/madrax/src/ai/WeeklyLocalEvents/spec/fixtures/vcr_cassettes")
 TOKEN_PLACEHOLDER = "TOKEN_REDACTED"
 BROWSER_USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 " \
                      "(KHTML, like Gecko) Chrome/124.0 Safari/537.36"
@@ -33,6 +39,13 @@ SOURCES = {
       "Referer" => "https://visitcedarparktexas.com/events/",
       "Accept" => "application/json, text/plain, */*"
     }
+  },
+  "cedar_park_events" => {
+    archived_snapshot: true,
+    url: "https://web.archive.org/web/20260207030455id_/https://www.cedarparktexas.gov/calendar.aspx",
+    original_url: "https://www.cedarparktexas.gov/calendar.aspx",
+    snapshot_timestamp: "20260207030455",
+    min_events: 3
   }
 }.freeze
 
@@ -153,10 +166,79 @@ def prepend_provenance(name)
   File.write(path, "#{lines.map { |line| "# #{line}" }.join("\n")}\n#{content}")
 end
 
-SOURCES.each do |name, source|
+# Reject fake-200/interstitial bodies and require a real event count before a
+# snapshot is committed. Reuses the same guard the fallback scraper applies at
+# runtime so a cassette can never smuggle a Cloudflare/CAPTCHA page into tests.
+def validate_archived_body!(name, body, source)
+  unless WeeklyLocalEvents::ArchivedSnapshotFetcher.valid_body?(body, original_url: source[:original_url])
+    raise "#{name}: archived body failed interstitial/redirect validation; refusing to record it"
+  end
+
+  count = body.scan('itemtype="http://schema.org/Event"').length
+  raise "#{name}: expected at least #{source[:min_events]} events, got #{count}" if count < source[:min_events].to_i
+
+  count
+end
+
+def record_archived_snapshot(name, source)
+  VCR.use_cassette(name) do
+    response = http_get(source[:url])
+    body = response.body.to_s
+    count = validate_archived_body!(name, body, source)
+    puts "#{name}: HTTP #{response.code}, #{body.bytesize} bytes, #{count} events"
+  end
+
+  prepend_archived_provenance(name, source)
+end
+
+# Attach a human-readable provenance header so the Wayback capture timestamp
+# and the fact that this is a historical snapshot travel with the cassette.
+def archived_provenance_header(name, source)
+  stamp = source[:snapshot_timestamp].to_s
+  [
+    "Cassette: #{name}",
+    "Source: #{source[:original_url]} (CivicEngage public calendar; historical fallback only)",
+    "Snapshot: #{source[:url]}",
+    "Snapshot timestamp: #{stamp} (as archived #{captured_date(stamp)}); this is a Wayback capture, NOT the live page.",
+    "Recorded live: #{Time.now.utc.iso8601} (UTC).",
+    validation_line(source),
+    "Redaction: no cookies, authorization headers or tokens stored."
+  ].map { |line| "# #{line}" }.join("\n")
+end
+
+def captured_date(stamp)
+  Date.strptime(stamp[0, 8], "%Y%m%d").strftime("%Y-%m-%d")
+rescue ArgumentError
+  raise "invalid snapshot timestamp #{stamp.inspect}"
+end
+
+def validation_line(source)
+  "Validation: HTTP 200; body passed interstitial/redirect guards " \
+    "and held at least #{source[:min_events]} schema.org Event entries."
+end
+
+def prepend_archived_provenance(name, source)
+  path = File.join(CASSETTE_DIR, "#{name}.yml")
+  return unless File.exist?(path)
+
+  content = File.read(path)
+  return if content.start_with?("#")
+
+  File.write(path, "#{archived_provenance_header(name, source)}\n#{content}")
+end
+
+record_only = ENV.fetch("VCR_RECORD_ONLY", "").split(",").map(&:strip).reject(&:empty?)
+sources_to_record = record_only.empty? ? SOURCES : SOURCES.slice(*record_only)
+
+sources_to_record.each do |name, source|
   case source
   when String then record_simple(name, source)
-  when Hash then record_simpleview(name, source)
+  when Hash
+    if source[:archived_snapshot]
+      record_archived_snapshot(name, source)
+    else
+      record_simpleview(name, source)
+    end
   else raise "Unsupported SOURCES entry for #{name}"
   end
 end
