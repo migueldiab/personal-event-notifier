@@ -28,6 +28,13 @@ module WeeklyLocalEvents
       cedar_park
     ].freeze
 
+    # Sources whose live fetch path is not proven and which must never reach
+    # the digest without an explicit opt-in. Maps the source name to the
+    # config predicate that gates registration.
+    OPT_IN_SCRAPERS = {
+      "cedar_park_calendar" => :enable_cedar_park_calendar?,
+    }.freeze
+
     # Map of scraper names to their class constants.
     KNOWN_SCRAPERS = {
       "austin_chronicle"           => "WeeklyLocalEvents::Scrapers::AustinChronicleScraper",
@@ -42,6 +49,9 @@ module WeeklyLocalEvents
       "visit_cedar_park"     => "WeeklyLocalEvents::Scrapers::VisitCedarParkScraper",
       "cedar_park_rss"       => "WeeklyLocalEvents::Scrapers::CedarParkRssScraper",
       "cedar_park"           => "WeeklyLocalEvents::Scrapers::CedarParkScraper",
+      # Archived Wayback snapshot only — opt-in, never a live source:
+      # the live calendar/API host is Cloudflare-blocked.
+      "cedar_park_calendar"  => "WeeklyLocalEvents::Scrapers::CedarParkCalendarScraper",
     }.freeze
 
     def initialize(config = nil)
@@ -68,10 +78,13 @@ module WeeklyLocalEvents
     # Auto-register all known scrapers from KNOWN_SCRAPERS.
     #
     # Only registers classes that exist (resolves NameError gracefully).
+    # Opt-in sources are skipped unless their config flag is enabled.
     #
     # @return [nil]
     def register_all
       KNOWN_SCRAPERS.each do |name, class_name|
+        next if opt_in_scraper?(name) && !opt_in_enabled?(name)
+
         begin
           klass = Object.const_get(class_name)
           register(name, klass)
@@ -160,6 +173,15 @@ module WeeklyLocalEvents
     end
 
     private
+
+    def opt_in_scraper?(name)
+      OPT_IN_SCRAPERS.key?(name)
+    end
+
+    def opt_in_enabled?(name)
+      flag = OPT_IN_SCRAPERS.fetch(name)
+      @config.respond_to?(flag) && @config.public_send(flag) == true
+    end
 
     # Determine which scraper names are enabled based on config.
     #

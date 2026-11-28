@@ -273,4 +273,59 @@ RSpec.describe WeeklyLocalEvents::ScraperRegistry do
       expect(registered_names).to eq(registered_names.uniq)
     end
   end
+
+  describe "Cedar Park calendar opt-in registration" do
+    let(:registered_names) { described_class::KNOWN_SCRAPERS.keys }
+
+    it "maps cedar_park_calendar to the CedarParkCalendarScraper class" do
+      expect(described_class::KNOWN_SCRAPERS["cedar_park_calendar"])
+        .to eq("WeeklyLocalEvents::Scrapers::CedarParkCalendarScraper")
+    end
+
+    it "does not list cedar_park_calendar in DEFAULT_SCRAPERS" do
+      expect(described_class::DEFAULT_SCRAPERS).not_to include("cedar_park_calendar")
+    end
+
+    it "keeps cedar_park and cedar_park_calendar as distinct, unique names" do
+      expect(registered_names).to eq(registered_names.uniq)
+      expect(registered_names).to include("cedar_park", "cedar_park_calendar")
+    end
+
+    context "when the opt-in flag is absent or false" do
+      it "skips cedar_park_calendar even when config lists it" do
+        config = double("config", sites: [], enabled_scrapers: %w[cedar_park_calendar], logger: logger)
+
+        expect(described_class.new(config).all.map(&:name)).not_to include("cedar_park_calendar")
+      end
+
+      it "skips cedar_park_calendar when the flag is explicitly false" do
+        config = double("config", sites: [], enabled_scrapers: %w[cedar_park_calendar],
+                                  enable_cedar_park_calendar?: false, logger: logger)
+        registry = described_class.new(config)
+
+        expect(registry.all.map(&:name)).not_to include("cedar_park_calendar")
+        expect(registry.active.map(&:name)).not_to include("cedar_park_calendar")
+      end
+    end
+
+    context "when the opt-in flag is true" do
+      let(:config) do
+        double(
+          "config",
+          sites: [],
+          enabled_scrapers: %w[cedar_park_calendar],
+          enable_cedar_park_calendar?: true,
+          logger: logger
+        )
+      end
+
+      it "registers cedar_park_calendar in #all" do
+        expect(described_class.new(config).all.map(&:name)).to include("cedar_park_calendar")
+      end
+
+      it "includes cedar_park_calendar in #active when config lists it" do
+        expect(described_class.new(config).active.map(&:name)).to include("cedar_park_calendar")
+      end
+    end
+  end
 end

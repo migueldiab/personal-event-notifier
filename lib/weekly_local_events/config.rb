@@ -23,6 +23,10 @@ module WeeklyLocalEvents
       request_delay: 2,
       max_retries: 3,
       max_events_per_batch: 50,
+      # The live Cedar Park calendar/API host is Cloudflare-blocked; only a
+      # dated Wayback snapshot is fetchable. Opt in explicitly so stale
+      # archived events are never presented as live in the Sunday digest.
+      enable_cedar_park_calendar: false,
     }.freeze
 
     REQUIRED_KEYS = %w[notification_channel_id telegram_bot_token].freeze
@@ -47,6 +51,15 @@ module WeeklyLocalEvents
 
     def notifications_enabled?
       !telegram_bot_token.to_s.strip.empty? && !notification_channel_id.to_s.strip.empty?
+    end
+
+    # Opt-in gate for the archived-snapshot Cedar Park calendar source.
+    # The live calendar/API paths are Cloudflare-blocked, so this scraper can
+    # only return historical Wayback data. Defaults to false (off).
+    #
+    # @return [Boolean]
+    def enable_cedar_park_calendar?
+      @enable_cedar_park_calendar
     end
 
     def logger
@@ -99,6 +112,13 @@ module WeeklyLocalEvents
       @max_retries = (raw["max_retries"] || DEFAULTS[:max_retries]).to_i
       @max_events_per_batch = (raw["max_events_per_batch"] || DEFAULTS[:max_events_per_batch]).to_i
       @cached_fixture_path = raw["cached_fixture_path"]
+      @enable_cedar_park_calendar = truthy?(
+        raw.fetch("enable_cedar_park_calendar", DEFAULTS[:enable_cedar_park_calendar])
+      )
+    end
+
+    def truthy?(value)
+      value == true || value.to_s.strip.casecmp?("true")
     end
   end
 
