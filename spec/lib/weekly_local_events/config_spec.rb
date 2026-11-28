@@ -52,7 +52,7 @@ RSpec.describe WeeklyLocalEvents::Config do
       }.to_yaml)
 
       config = described_class.new
-      expect(config.sites).to eq(%w[austin_chronicle do512 community_impact])
+      expect(config.sites).to eq(%w[austin_chronicle do512 community_impact eventbrite_austin visit_cedar_park cedar_park])
       expect(config.log_level).to eq("INFO")
       expect(config.date_range_days).to eq(7)
       expect(config.request_timeout).to eq(30)

@@ -335,7 +335,7 @@ RSpec.describe WeeklyLocalEvents::Notifier do
 
       # Simulate hitting the rate limit by directly setting the internal state
       notifier.instance_variable_set(:@recent_message_times,
-        Array.new(20) { Time.at(1_700_000_000) })
+        Array.new(2) { Time.at(1_700_000_000) })
 
       expect(notifier.rate_limit_check).to be true
     end
@@ -343,9 +343,9 @@ RSpec.describe WeeklyLocalEvents::Notifier do
     it "returns false when old messages are outside the 60-second window" do
       allow(Time).to receive(:now).and_return(Time.at(1_700_000_061))
 
-      # Set 19 times that are more than 60 seconds old (under the 20-message limit)
+      # Set 1 time that is more than 60 seconds old (under the 2-message limit)
       notifier.instance_variable_set(:@recent_message_times,
-        Array.new(19) { Time.at(1_700_000_000) })
+        Array.new(1) { Time.at(1_700_000_000) })
 
       expect(notifier.rate_limit_check).to be false
     end
@@ -779,7 +779,7 @@ RSpec.describe WeeklyLocalEvents::Notifier do
     it "raises when rate limit is reached" do
       allow(Time).to receive(:now).and_return(Time.at(1_700_000_000))
       notifier.instance_variable_set(:@recent_message_times,
-        Array.new(20) { Time.at(1_700_000_000) })
+        Array.new(2) { Time.at(1_700_000_000) })
 
       expect { notifier.send(:check_rate_limit!) }.to raise_error(StandardError, /Rate limit exceeded/)
     end
@@ -795,10 +795,12 @@ RSpec.describe WeeklyLocalEvents::Notifier do
       notifier.instance_variable_set(:@last_send_at, nil)
 
       expect { notifier.send(:check_rate_limit!) }.not_to raise_error
+      :1
+
     end
 
     it "does not sleep when enough time has passed" do
-      allow(Time).to receive(:now).and_return(Time.at(1_700_000_002))
+      allow(Time).to receive(:now).and_return(Time.at(1_700_000_032))
       notifier.instance_variable_set(:@last_send_at, Time.at(1_700_000_000))
 
       expect { notifier.send(:check_rate_limit!) }.not_to raise_error
@@ -920,7 +922,7 @@ RSpec.describe WeeklyLocalEvents::Notifier do
     it "rejects old messages outside 60-second window" do
       allow(Time).to receive(:now).and_return(Time.at(1_700_000_061))
       notifier.instance_variable_set(:@recent_message_times,
-        Array.new(19) { Time.at(1_700_000_000) })
+        Array.new(1) { Time.at(1_700_000_000) })
 
       expect(notifier.rate_limit_check).to be false
     end
@@ -928,7 +930,7 @@ RSpec.describe WeeklyLocalEvents::Notifier do
     it "rejects messages within 60-second window" do
       allow(Time).to receive(:now).and_return(Time.at(1_700_000_030))
       notifier.instance_variable_set(:@recent_message_times,
-        Array.new(20) { Time.at(1_700_000_000) })
+        Array.new(2) { Time.at(1_700_000_000) })
 
       expect(notifier.rate_limit_check).to be true
     end
