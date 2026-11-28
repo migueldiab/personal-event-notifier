@@ -79,6 +79,17 @@ module WeeklyLocalEvents
         "#{SOURCE_NAME}:#{eid}" if eid
       end
 
+      # Build the crawlable month-grid URL. CivicEngage month navigation is
+      # JS-only, so adjacent months must be constructed from the month/year
+      # params observed in the archived detail links (docs/cedar_park_recon.md).
+      #
+      # @param month [Integer] 1..12
+      # @param year [Integer] four-digit year
+      # @return [String] absolute calendar URL for that month
+      def calendar_page_url(month, year)
+        "#{CALENDAR_URL}?month=#{month.to_i}&year=#{year.to_i}"
+      end
+
       # The fixture's naive start as written on the page (no offset).
       #
       # @param event [Event, nil]
@@ -118,6 +129,7 @@ module WeeklyLocalEvents
         eid = href[/[?&]EID=(\d+)/i, 1]
         tags = []
         tags << "eid:#{eid}" if eid
+        tags << "cancelled" if title.start_with?("CANCELLED:")
 
         Event.from_hash(
           title: title,
