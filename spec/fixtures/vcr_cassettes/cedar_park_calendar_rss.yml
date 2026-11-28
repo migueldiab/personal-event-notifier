@@ -1,0 +1,203 @@
+# Cassette: cedar_park_calendar_rss
+# Source: https://www.cedarparktexas.gov/RSSFeed.aspx?ModID=58&CID=All-calendar.xml (official City of Cedar Park CivicEngage public RSS feed)
+# Recorded live: 2026-11-28T01:31:11Z (UTC).
+# Decision: docs/cedar_park_live_route_decision.md (recon 2026-11-27).
+# Authorization: public, no credentials, cookies, or API keys used or stored.
+# Validation: HTTP 200, text/xml, 15 <item> elements; no interstitial body.
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://www.cedarparktexas.gov/RSSFeed.aspx?CID=All-calendar.xml&ModID=58
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Host:
+      - www.cedarparktexas.gov
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Sat, 28 Nov 2026 01:31:17 GMT
+      Content-Type:
+      - text/xml; charset=utf-8
+      Content-Length:
+      - '12278'
+      Connection:
+      - keep-alive
+      Cache-Control:
+      - public, max-age=30
+      Vary:
+      - Accept-Encoding
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      Referrer-Policy:
+      - strict-origin-when-cross-origin
+      Permissions-Policy:
+      - camera=(), microphone=()
+      Content-Security-Policy:
+      - 'frame-ancestors ''self'' https://*.granicus.com https://*.civicplus.com;
+        img-src * data: blob:; worker-src * data: blob: ''unsafe-eval'' ''unsafe-inline'';
+        script-src * about: ''unsafe-inline'' ''unsafe-eval''; style-src * ''unsafe-inline'';
+        media-src * blob:; font-src * data:; default-src *'
+      Age:
+      - '90'
+      Accept-Ranges:
+      - bytes
+      Last-Modified:
+      - Sat, 28 Nov 2026 01:29:47 GMT
+      Expires:
+      - Sat, 28 Nov 2026 01:31:47 GMT
+      Cf-Cache-Status:
+      - HIT
+      Set-Cookie:
+      - __cf_bm=sTyvT6QGbY0505n79fvc61mo2E16ZreAILN8J_Q4w0U-1795829477.7721965-1.0.1.1-__hl2e_rER_PDbUZcQpwcgTiF4R26dYuTMjUSqVArrITgJuIqMDDoWVAlmYiHESaD6EgQu3zFP1hQyCFPJEwWEuS7Crhel.WiCviYcsfrXnETw0BJSSpNvPxkkALo286;
+        HttpOnly; SameSite=None; Partitioned; Secure; Path=/; Domain=www.cedarparktexas.gov;
+        Expires=Sat, 28 Nov 2026 02:01:17 GMT
+      Server:
+      - cloudflare
+      Cf-Ray:
+      - a6159cbc1c72eaa0-DFW
+    body:
+      encoding: ASCII-8BIT
+      string: "<?xml version=\"1.0\"?><rss version=\"2.0\" xmlns:calendarEvent=\"https://www.cedarparktexas.gov/Calendar.aspx\"><channel>\r\n\t<title>Cedar
+        Park, TX - Calendar</title>\r\n\t<link>https://www.cedarparktexas.gov/Calendar.aspx</link>\r\n\t<lastBuildDate>Fri,
+        27 Nov 2026 19:29:47 -0600</lastBuildDate>\r\n\t<description>Cedar Park, TX
+        - Get the latest events</description>\r\n\t<language>en-us</language>\r\n\t<item>\r\n\t\t<title>Courts
+        and Track Closed for Resurfacing</title>\r\n\t\t<link>https://www.cedarparktexas.gov/Calendar.aspx?EID=4323</link>\r\n\t\t<pubDate>Mon,
+        02 Nov 2026 16:24:24 -0600</pubDate>\r\n\t\t<description>&lt;strong&gt;Event
+        dates:&lt;/strong&gt; November 23, 2026 - November 29, 2026&lt;br&gt;&lt;strong&gt;Event
+        Time: &lt;/strong&gt;12:00 AM - 11:59 PM&lt;br&gt;&lt;strong&gt;Location:&lt;/strong&gt;
+        &lt;br&gt;Cedar Park, TX 78613</description>\r\n\t\t<calendarEvent:EventDates>November
+        23, 2026 - November 29, 2026</calendarEvent:EventDates>\r\n\t\t<calendarEvent:EventTimes>12:00
+        AM - 11:59 PM</calendarEvent:EventTimes>\r\n\t\t<calendarEvent:Location>Cedar
+        Park, TX 78613</calendarEvent:Location>\r\n\t\t\r\n\t\t<guid isPermaLink=\"false\">https://www.cedarparktexas.gov/Calendar.aspx?EID=4323/639292334640000000</guid>\r\n\t</item>\r\n\t<item>\r\n\t\t<title>Thanksgiving
+        </title>\r\n\t\t<link>https://www.cedarparktexas.gov/Calendar.aspx?EID=4322</link>\r\n\t\t<pubDate>Mon,
+        02 Nov 2026 14:49:41 -0600</pubDate>\r\n\t\t<description>&lt;strong&gt;Event
+        dates:&lt;/strong&gt; November 26, 2026 - November 27, 2026&lt;br&gt;&lt;strong&gt;Event
+        Time: &lt;/strong&gt;12:00 AM - 11:59 PM&lt;br&gt;&lt;strong&gt;Location:&lt;/strong&gt;
+        &lt;br&gt;Cedar Park, TX 78613</description>\r\n\t\t<calendarEvent:EventDates>November
+        26, 2026 - November 27, 2026</calendarEvent:EventDates>\r\n\t\t<calendarEvent:EventTimes>12:00
+        AM - 11:59 PM</calendarEvent:EventTimes>\r\n\t\t<calendarEvent:Location>Cedar
+        Park, TX 78613</calendarEvent:Location>\r\n\t\t\r\n\t\t<guid isPermaLink=\"false\">https://www.cedarparktexas.gov/Calendar.aspx?EID=4322/639292277810000000</guid>\r\n\t</item>\r\n\t<item>\r\n\t\t<title>Thanksgiving
+        - City Offices Closed</title>\r\n\t\t<link>https://www.cedarparktexas.gov/Calendar.aspx?EID=2895</link>\r\n\t\t<pubDate>Wed,
+        14 Jan 2026 11:12:20 -0600</pubDate>\r\n\t\t<description>&lt;strong&gt;Event
+        dates:&lt;/strong&gt; November 26, 2026 - November 27, 2026&lt;br&gt;&lt;strong&gt;Event
+        Time: &lt;/strong&gt;12:00 AM - 11:59 PM&lt;br&gt;&lt;strong&gt;Location:&lt;/strong&gt;
+        &lt;br&gt;Cedar Park, TX 78613</description>\r\n\t\t<calendarEvent:EventDates>November
+        26, 2026 - November 27, 2026</calendarEvent:EventDates>\r\n\t\t<calendarEvent:EventTimes>12:00
+        AM - 11:59 PM</calendarEvent:EventTimes>\r\n\t\t<calendarEvent:Location>Cedar
+        Park, TX 78613</calendarEvent:Location>\r\n\t\t\r\n\t\t<guid isPermaLink=\"false\">https://www.cedarparktexas.gov/Calendar.aspx?EID=2895/639039859400000000</guid>\r\n\t</item>\r\n\t<item>\r\n\t\t<title>Basketball</title>\r\n\t\t<link>https://www.cedarparktexas.gov/Calendar.aspx?EID=4418</link>\r\n\t\t<pubDate>Tue,
+        03 Nov 2026 08:57:15 -0600</pubDate>\r\n\t\t<description>&lt;strong&gt;Event
+        date:&lt;/strong&gt; November 30, 2026 &lt;br&gt;&lt;strong&gt;Event Time:
+        &lt;/strong&gt;05:00 AM - 08:00 AM&lt;br&gt;&lt;strong&gt;Location:&lt;/strong&gt;
+        &lt;br&gt;Cedar Park, TX 78613</description>\r\n\t\t<calendarEvent:EventDates>
+        November 30, 2026 </calendarEvent:EventDates>\r\n\t\t<calendarEvent:EventTimes>05:00
+        AM - 08:00 AM</calendarEvent:EventTimes>\r\n\t\t<calendarEvent:Location>Cedar
+        Park, TX 78613</calendarEvent:Location>\r\n\t\t\r\n\t\t<guid isPermaLink=\"false\">https://www.cedarparktexas.gov/Calendar.aspx?EID=4418/639292930350000000</guid>\r\n\t</item>\r\n\t<item>\r\n\t\t<title>Flex
+        Time Court 2</title>\r\n\t\t<link>https://www.cedarparktexas.gov/Calendar.aspx?EID=4422</link>\r\n\t\t<pubDate>Tue,
+        03 Nov 2026 09:05:58 -0600</pubDate>\r\n\t\t<description>&lt;strong&gt;Event
+        date:&lt;/strong&gt; November 30, 2026 &lt;br&gt;&lt;strong&gt;Event Time:
+        &lt;/strong&gt;05:00 AM - 08:00 AM&lt;br&gt;&lt;strong&gt;Location:&lt;/strong&gt;
+        &lt;br&gt;Cedar Park, TX 78613</description>\r\n\t\t<calendarEvent:EventDates>
+        November 30, 2026 </calendarEvent:EventDates>\r\n\t\t<calendarEvent:EventTimes>05:00
+        AM - 08:00 AM</calendarEvent:EventTimes>\r\n\t\t<calendarEvent:Location>Cedar
+        Park, TX 78613</calendarEvent:Location>\r\n\t\t\r\n\t\t<guid isPermaLink=\"false\">https://www.cedarparktexas.gov/Calendar.aspx?EID=4422/639292935580000000</guid>\r\n\t</item>\r\n\t<item>\r\n\t\t<title>Pickleball
+        Court 2</title>\r\n\t\t<link>https://www.cedarparktexas.gov/Calendar.aspx?EID=4423</link>\r\n\t\t<pubDate>Tue,
+        03 Nov 2026 09:06:54 -0600</pubDate>\r\n\t\t<description>&lt;strong&gt;Event
+        date:&lt;/strong&gt; November 30, 2026 &lt;br&gt;&lt;strong&gt;Event Time:
+        &lt;/strong&gt;08:00 AM - 12:00 PM&lt;br&gt;&lt;strong&gt;Location:&lt;/strong&gt;
+        &lt;br&gt;Cedar Park, TX 78613</description>\r\n\t\t<calendarEvent:EventDates>
+        November 30, 2026 </calendarEvent:EventDates>\r\n\t\t<calendarEvent:EventTimes>08:00
+        AM - 12:00 PM</calendarEvent:EventTimes>\r\n\t\t<calendarEvent:Location>Cedar
+        Park, TX 78613</calendarEvent:Location>\r\n\t\t\r\n\t\t<guid isPermaLink=\"false\">https://www.cedarparktexas.gov/Calendar.aspx?EID=4423/639292936140000000</guid>\r\n\t</item>\r\n\t<item>\r\n\t\t<title>Pickleball
+        Court 1</title>\r\n\t\t<link>https://www.cedarparktexas.gov/Calendar.aspx?EID=4419</link>\r\n\t\t<pubDate>Tue,
+        03 Nov 2026 09:03:15 -0600</pubDate>\r\n\t\t<description>&lt;strong&gt;Event
+        date:&lt;/strong&gt; November 30, 2026 &lt;br&gt;&lt;strong&gt;Event Time:
+        &lt;/strong&gt;08:00 AM - 12:00 PM&lt;br&gt;&lt;strong&gt;Location:&lt;/strong&gt;
+        &lt;br&gt;Cedar Park, TX 78613</description>\r\n\t\t<calendarEvent:EventDates>
+        November 30, 2026 </calendarEvent:EventDates>\r\n\t\t<calendarEvent:EventTimes>08:00
+        AM - 12:00 PM</calendarEvent:EventTimes>\r\n\t\t<calendarEvent:Location>Cedar
+        Park, TX 78613</calendarEvent:Location>\r\n\t\t\r\n\t\t<guid isPermaLink=\"false\">https://www.cedarparktexas.gov/Calendar.aspx?EID=4419/639292933950000000</guid>\r\n\t</item>\r\n\t<item>\r\n\t\t<title>Basketball
+        Court 1</title>\r\n\t\t<link>https://www.cedarparktexas.gov/Calendar.aspx?EID=4420</link>\r\n\t\t<pubDate>Tue,
+        03 Nov 2026 09:04:07 -0600</pubDate>\r\n\t\t<description>&lt;strong&gt;Event
+        date:&lt;/strong&gt; November 30, 2026 &lt;br&gt;&lt;strong&gt;Event Time:
+        &lt;/strong&gt;12:00 PM - 05:00 PM&lt;br&gt;&lt;strong&gt;Location:&lt;/strong&gt;
+        &lt;br&gt;Cedar Park, TX 78613</description>\r\n\t\t<calendarEvent:EventDates>
+        November 30, 2026 </calendarEvent:EventDates>\r\n\t\t<calendarEvent:EventTimes>12:00
+        PM - 05:00 PM</calendarEvent:EventTimes>\r\n\t\t<calendarEvent:Location>Cedar
+        Park, TX 78613</calendarEvent:Location>\r\n\t\t\r\n\t\t<guid isPermaLink=\"false\">https://www.cedarparktexas.gov/Calendar.aspx?EID=4420/639292934470000000</guid>\r\n\t</item>\r\n\t<item>\r\n\t\t<title>Flex
+        Time Court 2</title>\r\n\t\t<link>https://www.cedarparktexas.gov/Calendar.aspx?EID=4424</link>\r\n\t\t<pubDate>Tue,
+        03 Nov 2026 09:09:00 -0600</pubDate>\r\n\t\t<description>&lt;strong&gt;Event
+        date:&lt;/strong&gt; November 30, 2026 &lt;br&gt;&lt;strong&gt;Event Time:
+        &lt;/strong&gt;12:00 PM - 03:00 PM&lt;br&gt;&lt;strong&gt;Location:&lt;/strong&gt;
+        &lt;br&gt;Cedar Park, TX 78613</description>\r\n\t\t<calendarEvent:EventDates>
+        November 30, 2026 </calendarEvent:EventDates>\r\n\t\t<calendarEvent:EventTimes>12:00
+        PM - 03:00 PM</calendarEvent:EventTimes>\r\n\t\t<calendarEvent:Location>Cedar
+        Park, TX 78613</calendarEvent:Location>\r\n\t\t\r\n\t\t<guid isPermaLink=\"false\">https://www.cedarparktexas.gov/Calendar.aspx?EID=4424/639292937400000000</guid>\r\n\t</item>\r\n\t<item>\r\n\t\t<title>Basketball
+        Half Court</title>\r\n\t\t<link>https://www.cedarparktexas.gov/Calendar.aspx?EID=4425</link>\r\n\t\t<pubDate>Tue,
+        03 Nov 2026 09:09:56 -0600</pubDate>\r\n\t\t<description>&lt;strong&gt;Event
+        date:&lt;/strong&gt; November 30, 2026 &lt;br&gt;&lt;strong&gt;Event Time:
+        &lt;/strong&gt;03:00 PM - 10:00 PM&lt;br&gt;&lt;strong&gt;Location:&lt;/strong&gt;
+        &lt;br&gt;Cedar Park, TX 78613</description>\r\n\t\t<calendarEvent:EventDates>
+        November 30, 2026 </calendarEvent:EventDates>\r\n\t\t<calendarEvent:EventTimes>03:00
+        PM - 10:00 PM</calendarEvent:EventTimes>\r\n\t\t<calendarEvent:Location>Cedar
+        Park, TX 78613</calendarEvent:Location>\r\n\t\t\r\n\t\t<guid isPermaLink=\"false\">https://www.cedarparktexas.gov/Calendar.aspx?EID=4425/639292937960000000</guid>\r\n\t</item>\r\n\t<item>\r\n\t\t<title>Volleyball
+        Half Court</title>\r\n\t\t<link>https://www.cedarparktexas.gov/Calendar.aspx?EID=4426</link>\r\n\t\t<pubDate>Tue,
+        03 Nov 2026 09:10:42 -0600</pubDate>\r\n\t\t<description>&lt;strong&gt;Event
+        date:&lt;/strong&gt; November 30, 2026 &lt;br&gt;&lt;strong&gt;Event Time:
+        &lt;/strong&gt;03:00 PM - 10:00 PM&lt;br&gt;&lt;strong&gt;Location:&lt;/strong&gt;
+        &lt;br&gt;Cedar Park, TX 78613</description>\r\n\t\t<calendarEvent:EventDates>
+        November 30, 2026 </calendarEvent:EventDates>\r\n\t\t<calendarEvent:EventTimes>03:00
+        PM - 10:00 PM</calendarEvent:EventTimes>\r\n\t\t<calendarEvent:Location>Cedar
+        Park, TX 78613</calendarEvent:Location>\r\n\t\t\r\n\t\t<guid isPermaLink=\"false\">https://www.cedarparktexas.gov/Calendar.aspx?EID=4426/639292938420000000</guid>\r\n\t</item>\r\n\t<item>\r\n\t\t<title>Full
+        Court Basketball Court 1</title>\r\n\t\t<link>https://www.cedarparktexas.gov/Calendar.aspx?EID=4421</link>\r\n\t\t<pubDate>Tue,
+        03 Nov 2026 09:04:57 -0600</pubDate>\r\n\t\t<description>&lt;strong&gt;Event
+        date:&lt;/strong&gt; November 30, 2026 &lt;br&gt;&lt;strong&gt;Event Time:
+        &lt;/strong&gt;05:00 PM - 10:00 PM&lt;br&gt;&lt;strong&gt;Location:&lt;/strong&gt;
+        &lt;br&gt;Cedar Park, TX 78613</description>\r\n\t\t<calendarEvent:EventDates>
+        November 30, 2026 </calendarEvent:EventDates>\r\n\t\t<calendarEvent:EventTimes>05:00
+        PM - 10:00 PM</calendarEvent:EventTimes>\r\n\t\t<calendarEvent:Location>Cedar
+        Park, TX 78613</calendarEvent:Location>\r\n\t\t\r\n\t\t<guid isPermaLink=\"false\">https://www.cedarparktexas.gov/Calendar.aspx?EID=4421/639292934970000000</guid>\r\n\t</item>\r\n\t<item>\r\n\t\t<title>Bond
+        Advisory Task Force - Open House (In-Person &amp; Virtual)</title>\r\n\t\t<link>https://www.cedarparktexas.gov/Calendar.aspx?EID=4321</link>\r\n\t\t<pubDate>Fri,
+        30 Oct 2026 16:51:52 -0600</pubDate>\r\n\t\t<description>&lt;strong&gt;Event
+        date:&lt;/strong&gt; November 30, 2026 &lt;br&gt;&lt;strong&gt;Event Time:
+        &lt;/strong&gt;05:30 PM - 07:30 PM&lt;br&gt;&lt;strong&gt;Location:&lt;/strong&gt;
+        &lt;br&gt;450 Cypress Creek Road&lt;br&gt;Building 3, Multipurpose Room&lt;br&gt;Cedar
+        Park, TX 78613</description>\r\n\t\t<calendarEvent:EventDates> November 30,
+        2026 </calendarEvent:EventDates>\r\n\t\t<calendarEvent:EventTimes>05:30 PM
+        - 07:30 PM</calendarEvent:EventTimes>\r\n\t\t<calendarEvent:Location>450 Cypress
+        Creek Road&lt;br&gt;Building 3, Multipurpose RoomCedar Park, TX 78613</calendarEvent:Location>\r\n\t\t\r\n\t\t<guid
+        isPermaLink=\"false\">https://www.cedarparktexas.gov/Calendar.aspx?EID=4321/639289795120000000</guid>\r\n\t</item>\r\n\t<item>\r\n\t\t<title>Type
+        B Board (Community Development)</title>\r\n\t\t<link>https://www.cedarparktexas.gov/Calendar.aspx?EID=3403</link>\r\n\t\t<pubDate>Wed,
+        31 Dec 2025 11:45:04 -0600</pubDate>\r\n\t\t<description>&lt;strong&gt;Event
+        date:&lt;/strong&gt; December 8, 2026 &lt;br&gt;&lt;strong&gt;Event Time:
+        &lt;/strong&gt;06:30 PM - 11:59 PM&lt;br&gt;&lt;strong&gt;Location:&lt;/strong&gt;
+        &lt;br&gt;450 Cypress Road&lt;br&gt;Building 4&lt;br&gt;Cedar Park, TX 78613</description>\r\n\t\t<calendarEvent:EventDates>
+        December 8, 2026 </calendarEvent:EventDates>\r\n\t\t<calendarEvent:EventTimes>06:30
+        PM - 11:59 PM</calendarEvent:EventTimes>\r\n\t\t<calendarEvent:Location>450
+        Cypress Road&lt;br&gt;Building 4Cedar Park, TX 78613</calendarEvent:Location>\r\n\t\t\r\n\t\t<guid
+        isPermaLink=\"false\">https://www.cedarparktexas.gov/Calendar.aspx?EID=3403/639027783040000000</guid>\r\n\t</item>\r\n\t<item>\r\n\t\t<title>City
+        Council Meeting</title>\r\n\t\t<link>https://www.cedarparktexas.gov/Calendar.aspx?EID=3407</link>\r\n\t\t<pubDate>Wed,
+        31 Dec 2025 14:47:52 -0600</pubDate>\r\n\t\t<description>&lt;strong&gt;Event
+        date:&lt;/strong&gt; December 10, 2026 &lt;br&gt;&lt;strong&gt;Event Time:
+        &lt;/strong&gt;06:00 PM - 11:59 PM&lt;br&gt;&lt;strong&gt;Location:&lt;/strong&gt;
+        &lt;br&gt;450 Cypress Creek Road&lt;br&gt;Building 4&lt;br&gt;Cedar Park,
+        TX 78613</description>\r\n\t\t<calendarEvent:EventDates> December 10, 2026
+        </calendarEvent:EventDates>\r\n\t\t<calendarEvent:EventTimes>06:00 PM - 11:59
+        PM</calendarEvent:EventTimes>\r\n\t\t<calendarEvent:Location>450 Cypress Creek
+        Road&lt;br&gt;Building 4Cedar Park, TX 78613</calendarEvent:Location>\r\n\t\t\r\n\t\t<guid
+        isPermaLink=\"false\">https://www.cedarparktexas.gov/Calendar.aspx?EID=3407/639027892720000000</guid>\r\n\t</item>\r\n</channel></rss>"
+  recorded_at: Sat, 28 Nov 2026 01:31:11 GMT
+recorded_with: VCR 6.4.1

@@ -3,21 +3,35 @@
 **Task:** find a reliably fetchable source for <https://www.cedarparktexas.gov/177/Events> and
 capture a real fixture.
 
+> **Correction (2026-11-27, t_ca2d089e):** the live public CivicEngage RSS feed
+> at <https://www.cedarparktexas.gov/RSSFeed.aspx?ModID=58&CID=All-calendar.xml>
+> is HTTP 200 `text/xml` with **15 items** and no credentials. The "0 `<item>`
+> elements" finding recorded below applies **only to the 2023 archived copy**
+> of that feed. The HTML/API findings below remain valid for those paths, but
+> the Wayback HTML fixture is now **fallback only**, not the primary source.
+> The primary implementation is `CedarParkRssScraper` plus the recorded cassette
+> `spec/fixtures/vcr_cassettes/cedar_park_calendar_rss.yml`.
+
 ## Decision
 
-The requested page is **not a data source**. Its only archived copy (as archived 2025-10-25)
+The `/177/Events` page is **not a data source**. Its only archived copy (as archived 2025-10-25)
 contains an intro paragraph, a "4th of July" graphic link and a Parks sponsorship form —
-**zero event records**. The data-bearing page is the CivicEngage city calendar at
-<https://www.cedarparktexas.gov/calendar.aspx>, which renders a month grid of real events with
-schema.org microdata.
+**zero event records**. The primary live route is the city's public RSS feed above;
+the CivicEngage city calendar at <https://www.cedarparktexas.gov/calendar.aspx>
+(not fetchable live) remains a stale-snapshot fallback.
 
-The live host is 100% behind Cloudflare. The only reliably fetchable source found is a
-Wayback **raw (`id_`) snapshot** of the calendar page, as archived **2026-02-07**.
+The HTML and API paths on the live host are Cloudflare-blocked. The archived
+Wayback **raw (`id_`) snapshot** of the calendar page (archived **2026-02-07**)
+is retained as a fallback for historical coverage:
 
 - Fixture: `spec/fixtures/cedar_park_events.html`
 - Snapshot provenance: **archived snapshot, as archived 2026-02-07 — not the live page.**
 - The fixture's 107 events are February 2026 events relative to that capture date. Do not
   present them as current/upcoming as of today.
+- Primary live feed: 15 rolling items, lastBuildDate `Fri, 27 Nov 2026 19:29:47 -0600`;
+  event dates/times are local `America/Chicago` strings and `<pubDate>` is
+  publication time, not the event start. There is no price field; cancellations
+  are signalled by a `CANCELLED:` title prefix.
 
 ## Recovery ladder — what was tried
 
@@ -28,12 +42,25 @@ Wayback **raw (`id_`) snapshot** of the calendar page, as archived **2026-02-07*
 | Wayback availability API | `/177/Events` | one snapshot, `20251025171036` | fetched; no events in body |
 | Wayback `id_` snapshot | `/calendar.aspx` `20260207030455` | HTTP 200, 343,638-byte HTML, 107 event entries | **accepted** |
 | Wayback `id_` snapshot | `calendar.aspx?CID=24` `20251024145945` | HTTP 200, one event (NightMarket.Fun) | usable but too thin |
-| Wayback RSS feed | `RSSFeed.aspx?ModID=58&CID=All-calendar.xml` `20230204052436` | valid RSS but **0 `<item>` elements** | rejected |
+| Wayback RSS feed | `RSSFeed.aspx?ModID=58&CID=All-calendar.xml` `20230204052436` | valid RSS but **0 `<item>` elements** | rejected as stale evidence; the **live** feed now returns 15 items |
 | archive.today rotation (`archive.ph/.md/.li/.is`) | `/177/Events` | HTTP 200 + ~59 KB each, but title `archive.ph`, body "One more step / security check / CAPTCHA" | **rejected — fake 200** |
 | Jina Reader | — | skipped, `JINA_API_KEY` is unset | not attempted |
 | CDX enumeration | several queries | 2 of 4 returned Internet Archive "Temporarily Offline" | not retried (per skill) |
 
-## Exact fetchable URL
+## Exact fetchable URLs
+
+Primary, live (no credentials required):
+
+```bash
+curl -sL --max-time 30 \
+  'https://www.cedarparktexas.gov/RSSFeed.aspx?ModID=58&CID=All-calendar.xml'
+```
+
+Recorded for network-free tests at
+`spec/fixtures/vcr_cassettes/cedar_park_calendar_rss.yml` (HTTP 200, 12,278-byte
+body, 15 items, provenance header; replay spec uses `record: :none`).
+
+Fallback only, archived snapshot:
 
 ```bash
 curl -sL --compressed --max-time 90 \
@@ -73,8 +100,10 @@ the `id_` body contains **zero** `web.archive.org` references.
 | Description | `p[itemprop="description"]` | **empty in all 107 entries**; only the detail page carries prose |
 | Price | *absent* | no price field anywhere in the markup; treat as `nil`/unknown |
 
-JSON paths: none — the reliable source is HTML microdata, not JSON. The archived RSS feed is
-empty; no JSON endpoint was found (all `/api/...` probes were Cloudflare-blocked).
+JSON paths: none — the reliable primary route is the XML RSS feed above. The
+archived RSS feed is empty; no JSON endpoint was found (all `/api/...` probes
+were Cloudflare-blocked). The Wayback HTML fixture is retained as a fallback
+for historical coverage only.
 
 ## Pagination rule
 
@@ -99,31 +128,33 @@ empty; no JSON endpoint was found (all `/api/...` probes were Cloudflare-blocked
 
 ## Anti-bot posture
 
-- Cloudflare challenge on **every** path of `www.cedarparktexas.gov` and the apex domain,
-  including static assets/feeds, for plain curl, browser automation and API-looking paths.
-  Browser automation is not a workaround.
-- Archive copies are the practical route. Wayback `id_` is the only one that yielded a
-  content-bearing body; archive.today returns a CAPTCHA page with HTTP 200 — validate the
+- The Cloudflare challenge covers the HTML calendar, iCalendar subscription and
+  all API-looking paths; it does **not** cover the public RSS feed, which returns
+  HTTP 200 to anonymous requests and is cached for 30 seconds. Browser automation
+  is not a workaround for the blocked paths.
+- Archive copies are the fallback route. Wayback `id_` is the only one that yielded a
+  content-bearing HTML body; archive.today returns a CAPTCHA page with HTTP 200 — validate the
   body, never the status code.
 - Wayback availability and CDX are intermittently rate-limited ("Temporarily Offline"); do
   not retry-hammer. Fetch the specific timestamp URL once.
-- Snapshots are stale by construction. For production, either arrange authorized access to
-  the live CivicEngage calendar or use a different fetchable source; **do not** point the
-  scheduled digest at a snapshot as if it were live.
+- Snapshots are stale by construction. Use the live RSS feed for the scheduled digest;
+  keep the Wayback HTML fixture only as historical fallback, never as a live source.
 
 ## Follow-up stories (explicitly named)
 
-1. **Implement `CedarParkCalendarScraper` that parses the CivicEngage month grid**
-   — use the selectors above; emit one `Event` per `EID` with category, venue and absolute URL;
-   skip `CANCELLED:` prefixed events or flag them explicitly.
-2. **Add a fixture-based spec for the Cedar Park scraper**
+1. **Implement the CivicEngage month-grid scraper from the archived HTML**
+   — fallback only; use the selectors above; emit one `Event` per `EID` with category, venue and
+   absolute URL; skip `CANCELLED:` prefixed events or flag them explicitly.
+2. **Add a fixture-based spec for that fallback scraper**
    — assert ≥3 parsed events, ISO date parsing in `America/Chicago`, dedupe by `EID`, and that
    an interstitial/rate-limit body yields zero events (rejection test).
-3. **Add a shared archived-snapshot fetch helper with body validation**
+3. **Add a shared archived-snapshot fetch helper with body validation** (fallback only)
    — reuse the recovery ladder; reject HTTP-200 CAPTCHA/interstitial/redirect-stub bodies;
    record source URL + snapshot timestamp in a header comment for every captured fixture.
-4. **Register the Cedar Park source in config and the scraper registry, gated behind an opt-in**
-   — default off until a live fetch path is proven; document the Cloudflare block in config.
+4. **Register the Cedar Park RSS source in config and the scraper registry**
+   — **done:** `cedar_park_rss` is in `KNOWN_SCRAPERS`/`DEFAULT_SCRAPERS`; `visit_cedar_park`
+   remains separately enabled.
 5. **Investigate an authorized live route for Cedar Park events**
-   — City's CivicEngage iCalendar subscription (`/iCalendar.aspx`) or an official API key;
-   replace the archived fixture with a recorded live cassette when available.
+   — **done (t_ca2d089e):** the public RSS feed is the authorized live route; a recorded
+   cassette replaces the archived fixture for primary-source tests. `/iCalendar.aspx` and
+   `/api/...` remain blocked and must not be retried or bypassed.
