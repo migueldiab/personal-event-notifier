@@ -7,7 +7,7 @@ Automated monitoring system for high-interest cultural and social events (Oscars
 - **Detection:** Identifies when major events are occurring.
 - **Smart Info:** Fetches broadcast (TV) and streaming information.
 - **Telegram Alerts:** Sends formatted notifications to your Telegram channel.
-- **Multi-source:** Aggregates from Austin Chronicle, Do512, and Community Impact.
+- **Multi-source:** Aggregates from Austin Chronicle, Do512, Community Impact, Eventbrite, ACL Live, Stubbs's, Paramount Austin, and Visit Cedar Park.
 - **Weekly Digest:** Sunday 6PM CST as primary schedule; optional daily new-event alert (7AM CST) as secondary.
 
 ## Pipeline
@@ -51,6 +51,61 @@ cp .env.example .env
 | `EVENTBRITE_REDIRECT_URI` | Registered OAuth redirect URI (default: `http://localhost:8080/oauth/redirect`) |
 | `EVENTBRITE_TEST_EVENT_ID` | Known event ID used by the smoke test |
 | `LOG_LEVEL` | `debug`, `info`, `warn`, `error`, or `fatal` (default: `info`) |
+
+### Scraper sources
+
+The active source names are configured in the config file the loader actually reads,
+`~/.hermes/weekly_local_events/config.yml` (the YAML files under `config/` are examples
+and are not loaded):
+
+```yaml
+notification_channel_id: "-1004330304115"
+telegram_bot_token: "123456:ABC-DEF"
+enabled_scrapers:
+  - austin_chronicle
+  - do512
+  - community_impact
+  - eventbrite_austin
+  - acl_live
+  - stubbss
+  - paramount_austin
+  - visit_cedar_park
+# Optional offline fallback for Akamai-blocked sources:
+cached_fixture_path: /home/madrax/src/ai/WeeklyLocalEvents/spec/fixtures/vcr_cassettes/visit_cedar_park_events.yml
+```
+
+| Source name | Site | Notes |
+|-------------|------|-------|
+| `austin_chronicle` | austinchronicle.com | HTML calendar |
+| `do512` | do512.com | HTML listings |
+| `community_impact` | communityimpact.com | Recorded HTML cassette |
+| `eventbrite_austin` | eventbrite.com | Requires `EVENTBRITE_PRIVATE_TOKEN` |
+| `acl_live` | acllive.com | PDF/HTML calendar |
+| `stubbss` | stubbs.net | HTML listings |
+| `paramount_austin` | paramountaustin.com | HTML listings |
+| `visit_cedar_park` | visitcedarparktexas.com | Simpleview JSON API; see caveat below |
+
+`cedar_park` (the City of Cedar Park CivicEngage calendar) is **not** a registered
+source: every path on `cedarparktexas.gov` is Cloudflare-blocked and the only
+captured copy is a stale Wayback snapshot. See `docs/cedar_park_recon.md` before
+enabling it. `visit_cedar_park` is the practical Cedar Park source.
+
+### Visit Cedar Park: Akamai and JS-shell caveat
+
+The public Visit Cedar Park HTML sits behind an Akamai wall. Events are read from
+the Simpleview REST JSON endpoint instead, using a short-lived runtime token that
+is never committed. A denial can arrive with HTTP 200 as a client-side widget shell
+containing `layoutjsContainer` but no `"docs"` payload; the fetcher treats that
+as a block, never retries a 403, applies bounded `Retry-After` backoff to 429/503,
+and falls back to a configured cached JSON file or VCR cassette rather than raising
+into the digest.
+
+To refresh the recorded response (the only command that performs live HTTP; the
+runtime token is fetched outside the cassette and redacted to `TOKEN_REDACTED`):
+
+```bash
+bundle exec ruby bin/record_vcr_cassettes
+```
 
 ### Eventbrite API credentials
 
