@@ -1,0 +1,3102 @@
+{
+  "_meta": {
+    "source_page": "https://visitcedarparktexas.com/events/",
+    "api_url": "https://visitcedarparktexas.com/includes/rest_v2/plugins_events_events_by_date/find/",
+    "token_url": "https://visitcedarparktexas.com/plugins/core/get_simple_token/",
+    "captured_at_utc": "2026-11-28T00:22:26+00:00",
+    "archived_recon_page": "https://web.archive.org/web/20260713162908id_/https://visitcedarparktexas.com/events/",
+    "archived_recon_date": "2026-07-13",
+    "request_filter": {
+      "active": true
+    },
+    "request_options": {
+      "limit": 30,
+      "skip": 0,
+      "count": true,
+      "sort": {
+        "date": 1,
+        "rank": 1,
+        "title_sort": 1
+      }
+    },
+    "provenance": "live API response (client-side Simpleview events widget); archived HTML used only to reverse-engineer the endpoint"
+  },
+  "docs": {
+    "count": 5772,
+    "docs": [
+      {
+        "_id": "6b014c78034761047695971b",
+        "date": "2026-11-28T05:59:59.000Z",
+        "recid": "2230",
+        "_media": [
+          {
+            "mediafile": "kiddie-open-gym_4D0032D2-9C3D-5E91-4F92147465518EEF.png",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/kiddie-open-gym_4D0032D2-9C3D-5E91-4F92147465518EEF_4d01fb95-d76e-d756-5302d492cfd352dd.png",
+            "sortorder": 1
+          },
+          {
+            "mediafile": "little-land_F8E7B86C-F807-71C8-DA937ABCBEC86D8D.jpg",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/little-land_F8E7B86C-F807-71C8-DA937ABCBEC86D8D_ffbc1bd8-a7ba-7f05-678c0b2e6187ce8c.jpg",
+            "sortorder": 2
+          }
+        ],
+        "accountId": 690,
+        "active": true,
+        "address1": "200 Buttercup Creek Blvd",
+        "address2": "Suite 104",
+        "admission": "15$ per child, children under 1 get in for free with paying sibling",
+        "calendarid": "1",
+        "categories": [
+          {
+            "catName": "Fun For The Whole Family",
+            "catId": "17"
+          }
+        ],
+        "city": "Cedar Park",
+        "cms_title": "Kiddie Gym - Open Play (2230)",
+        "cms_title_sort": "kiddie gym - open play (2230)",
+        "dates": {
+          "eventDate": "2026-11-28T05:59:59.000Z"
+        },
+        "day": 0,
+        "dayMask": 0,
+        "description": "<p>Our play gym is filled with climbers, slides, sensory bins, art stations, ball pits, and imagination zones — all designed by pediatric therapists. Open Play is unstructured time for children to explore, regulate, and grow at their own pace, with friendly staff nearby and parents welcome to relax and connect</p>",
+        "email": "connor@mylittleland.com",
+        "endType": 1,
+        "eventTypeId": 1,
+        "expired": false,
+        "featured": false,
+        "filter_tags": [
+          "site_primary"
+        ],
+        "hostname": "Little Land",
+        "interval": 1,
+        "linkUrl": "https://mylittleland.com/services/open-play",
+        "listing_id": 730,
+        "loc": {
+          "type": "Point",
+          "coordinates": [
+            -97.8219236,
+            30.5023048
+          ]
+        },
+        "location": "Little Land",
+        "media_raw": [
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/kiddie-open-gym_4D0032D2-9C3D-5E91-4F92147465518EEF_4d01fb95-d76e-d756-5302d492cfd352dd.png",
+            "sortorder": 1,
+            "mediatype": "Image"
+          },
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/little-land_F8E7B86C-F807-71C8-DA937ABCBEC86D8D_ffbc1bd8-a7ba-7f05-678c0b2e6187ce8c.jpg",
+            "sortorder": 2,
+            "mediatype": "Image"
+          }
+        ],
+        "month": 0,
+        "never_expire": false,
+        "nextDate": "2026-11-22T05:59:59.000Z",
+        "occurrences": 0,
+        "past": false,
+        "primary_site": "primary",
+        "primarycatid": "17",
+        "rank": 1,
+        "recId": "2230",
+        "recurType": 1,
+        "recurrence": "Recurring daily",
+        "sites": [
+          "primary"
+        ],
+        "startDate": "2026-07-02T05:00:00.000Z",
+        "state": "TX",
+        "title": "Kiddie Gym - Open Play",
+        "title_sort": "kiddie gym - open play",
+        "typeName": "One Time Event",
+        "updated": "2026-11-21T07:47:02.151Z",
+        "week": 0,
+        "weekday": 0,
+        "zip": "78613",
+        "id": "6b014c78034761047695971b",
+        "slug": "kiddie-gym-open-play",
+        "url": "/event/kiddie-gym-open-play/2230/",
+        "genericUrl": "/event/kiddie-gym-open-play/2230/",
+        "absoluteUrl": "https://visitcedarparktexas.com/event/kiddie-gym-open-play/2230/",
+        "absolute_primary_url": "https://visitcedarparktexas.com/event/kiddie-gym-open-play/2230/",
+        "teaser": "<p>Our play gym is filled with climbers, slides, sensory bins, art stations, ball pits, and imagination zones &#x2014; all designed by pediatric therapists. Open Play is unstructured time for children to</p>",
+        "longitude": -97.8219236,
+        "latitude": 30.5023048
+      },
+      {
+        "_id": "6b08ef45f11255df480f45f4",
+        "date": "2026-11-28T05:59:59.000Z",
+        "recid": "3369",
+        "_media": [
+          {
+            "mediafile": "The-Biggest-Rivalry-in-Texas-Watch-Party_1578E555-BA09-7756-2DC8DBE78EA5DCBC.png",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/The-Biggest-Rivalry-in-Texas-Watch-Party_1578E555-BA09-7756-2DC8DBE78EA5DCBC_15799c04-f1c6-19c9-ea14421d9beb6bf7.png",
+            "sortorder": 1
+          },
+          {
+            "mediafile": "The-Biggest-Rivalry-in-Texas-Watch-Party-at-Haute-Spot-visit_E620CFF4-AE59-599A-184D3B3FD7BAD4EF.jpg",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/The-Biggest-Rivalry-in-Texas-Watch-Party-at-Haute-Spot-visit_E620CFF4-AE59-599A-184D3B3FD7BAD4EF_e6254a92-926e-dc6b-6c68b830bae539b6.jpg",
+            "sortorder": 2
+          }
+        ],
+        "accountId": 22,
+        "active": true,
+        "address1": "1501 East New Hope Drive",
+        "admission": "$34.26",
+        "calendarid": "1",
+        "categories": [
+          {
+            "catName": "Concerts/Live Music/Live Entertainment",
+            "catId": "5"
+          }
+        ],
+        "city": "Cedar Park",
+        "cms_title": "The Biggest Rivalry in Texas Watch Party at Haute Spot (3369)",
+        "cms_title_sort": "the biggest rivalry in texas watch party at haute spot (3369)",
+        "dates": {
+          "eventDate": "2026-11-28T05:59:59.000Z"
+        },
+        "day": 0,
+        "dayMask": 0,
+        "description": "<p>Don't miss The Biggest Rivalry In Texas on November 27, 2026 at Haute Spot in Cedar Park, TX!<br><br>EVENT DETAILS<br>DATE: Saturday, November 27, 2026<br>TIME: Doors at 4:30pm | Kickoff at 6:30pm<br>LOCATION: Haute Spot - 1501 E New Hope Dr. Cedar Park, Tx 78641<br>*Times Subject to Change<br><br>About Haute Spot:<br>Haute Spot is Cedar Park's premier outdoor music venue - along with heaters, food, drinks and live music under the stars!<br><br>Limited Tables and Seats available - so act fast!<br>Tables come with food and drink delivery service as well through our QR codes.<br><br>For full details on the show, visit: https://hautespot.live/calendar/universityco-opwatchparty<br><br></p>",
+        "email": "info@lightstreampresents.com",
+        "endDate": "2026-11-28T05:59:59.000Z",
+        "endTime": "23:00:00",
+        "endType": 0,
+        "eventTypeId": 1,
+        "expired": false,
+        "featured": false,
+        "filter_tags": [
+          "site_primary"
+        ],
+        "host_id": 23,
+        "interval": 0,
+        "linkUrl": "https://eventvesta.com/events/161173/t/tickets",
+        "listing_id": 23,
+        "loc": {
+          "type": "Point",
+          "coordinates": [
+            -97.8131391,
+            30.5363795
+          ]
+        },
+        "location": "Haute Spot",
+        "media_raw": [
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/The-Biggest-Rivalry-in-Texas-Watch-Party_1578E555-BA09-7756-2DC8DBE78EA5DCBC_15799c04-f1c6-19c9-ea14421d9beb6bf7.png",
+            "sortorder": 1,
+            "mediatype": "Image"
+          },
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/The-Biggest-Rivalry-in-Texas-Watch-Party-at-Haute-Spot-visit_E620CFF4-AE59-599A-184D3B3FD7BAD4EF_e6254a92-926e-dc6b-6c68b830bae539b6.jpg",
+            "sortorder": 2,
+            "mediatype": "Image"
+          }
+        ],
+        "month": 0,
+        "never_expire": false,
+        "nextDate": "2026-11-28T05:59:59.000Z",
+        "occurrences": 0,
+        "past": false,
+        "primary_site": "primary",
+        "primarycatid": "5",
+        "rank": 1,
+        "recId": "3369",
+        "recurType": 0,
+        "sites": [
+          "primary"
+        ],
+        "startDate": "2026-11-27T06:00:00.000Z",
+        "startTime": "16:30:00",
+        "state": "TX",
+        "title": "The Biggest Rivalry in Texas Watch Party at Haute Spot",
+        "title_sort": "the biggest rivalry in texas watch party at haute spot",
+        "typeName": "One Time Event",
+        "updated": "2026-11-27T02:47:31.743Z",
+        "week": 0,
+        "weekday": 0,
+        "zip": "78641",
+        "id": "6b08ef45f11255df480f45f4",
+        "slug": "the-biggest-rivalry-in-texas-watch-party-at-haute-spot",
+        "url": "/event/the-biggest-rivalry-in-texas-watch-party-at-haute-spot/3369/",
+        "genericUrl": "/event/the-biggest-rivalry-in-texas-watch-party-at-haute-spot/3369/",
+        "absoluteUrl": "https://visitcedarparktexas.com/event/the-biggest-rivalry-in-texas-watch-party-at-haute-spot/3369/",
+        "absolute_primary_url": "https://visitcedarparktexas.com/event/the-biggest-rivalry-in-texas-watch-party-at-haute-spot/3369/",
+        "teaser": "<p>Don&apos;t miss The Biggest Rivalry In Texas on November 27, 2026 at Haute Spot in Cedar Park, TX!<br><br>EVENT DETAILS<br>DATE: Saturday, November 27, 2026<br>TIME: Doors at 4:30pm | Kickoff at 6:30pm<br>LOCATION: Haute Spot</p>",
+        "longitude": -97.8131391,
+        "latitude": 30.5363795
+      },
+      {
+        "_id": "6b07b96ff11255df48d08ef9",
+        "date": "2026-11-28T05:59:59.000Z",
+        "recid": "2143",
+        "_media": [
+          {
+            "mediafile": "PATTY-CHALLENGE_4E026335-9298-A00D-1EC421953F319FEB.png",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/PATTY-CHALLENGE_4E026335-9298-A00D-1EC421953F319FEB_4e03c12f-ce08-aa5a-aa9832cb0a15033f.png",
+            "sortorder": 1
+          },
+          {
+            "mediafile": "burger-bar-burger-champion_8ED12C1C-A94A-D43E-022BE6BB4B6BCCD4.png",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/burger-bar-burger-champion_8ED12C1C-A94A-D43E-022BE6BB4B6BCCD4_8ed1a555-9a13-8951-03115c5a1a15f27b.png",
+            "sortorder": 2
+          }
+        ],
+        "accountId": 560,
+        "active": true,
+        "address1": "2005 Little Elm Trl",
+        "address2": "BLDG A STE 100",
+        "calendarid": "1",
+        "categories": [
+          {
+            "catName": "Social/Other/Miscellaneous",
+            "catId": "12"
+          },
+          {
+            "catName": "Free",
+            "catId": "14"
+          }
+        ],
+        "city": "Cedar Park",
+        "cms_title": "Burger Eating Challenge (2143)",
+        "cms_title_sort": "burger eating challenge (2143)",
+        "dates": {
+          "eventDate": "2026-11-28T05:59:59.000Z"
+        },
+        "day": 0,
+        "dayMask": 0,
+        "description": "<p>Think you can eat a minimum of 6 patties in patty matching minutes? Let your server know if you want to try!</p>\r\n<p>But be careful; if you fail, you will end up on the wall of shame!</p>\r\n<p>Choose your patty amount and take your place on the leaderboard (Burger Bar Hall of Fame)!</p>\r\n<p> </p>",
+        "endType": 1,
+        "eventTypeId": 2,
+        "expired": false,
+        "featured": false,
+        "filter_tags": [
+          "site_primary"
+        ],
+        "interval": 1,
+        "listing_id": 594,
+        "loc": {
+          "type": "Point",
+          "coordinates": [
+            -97.8300685,
+            30.4798406
+          ]
+        },
+        "location": "The Burger Bar",
+        "media_raw": [
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/PATTY-CHALLENGE_4E026335-9298-A00D-1EC421953F319FEB_4e03c12f-ce08-aa5a-aa9832cb0a15033f.png",
+            "sortorder": 1,
+            "mediatype": "Image"
+          },
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/burger-bar-burger-champion_8ED12C1C-A94A-D43E-022BE6BB4B6BCCD4_8ed1a555-9a13-8951-03115c5a1a15f27b.png",
+            "sortorder": 2,
+            "mediatype": "Image"
+          }
+        ],
+        "month": 0,
+        "never_expire": true,
+        "nextDate": "2026-11-26T05:59:59.000Z",
+        "occurrences": 0,
+        "past": false,
+        "primary_site": "primary",
+        "primarycatid": "12",
+        "rank": 2,
+        "recId": "2143",
+        "recurType": 1,
+        "recurrence": "Recurring daily",
+        "sites": [
+          "primary"
+        ],
+        "startDate": "2026-04-29T05:00:00.000Z",
+        "state": "TX",
+        "title": "Burger Eating Challenge",
+        "title_sort": "burger eating challenge",
+        "typeName": "Ongoing Event",
+        "updated": "2026-11-26T04:45:33.327Z",
+        "week": 0,
+        "weekday": 0,
+        "zip": "78613",
+        "id": "6b07b96ff11255df48d08ef9",
+        "slug": "burger-eating-challenge",
+        "url": "/event/burger-eating-challenge/2143/",
+        "genericUrl": "/event/burger-eating-challenge/2143/",
+        "absoluteUrl": "https://visitcedarparktexas.com/event/burger-eating-challenge/2143/",
+        "absolute_primary_url": "https://visitcedarparktexas.com/event/burger-eating-challenge/2143/",
+        "teaser": "<p>Think you can eat a minimum of 6 patties in patty matching minutes? Let your server know if you want to try!</p> <p>But be careful; if you fail, you will end up on the wall of shame!</p> <p>Choose your patty amount</p>",
+        "longitude": -97.8300685,
+        "latitude": 30.4798406
+      },
+      {
+        "_id": "6b09433ef11255df48216517",
+        "recid": "2242",
+        "date": "2026-11-28T05:59:59.000Z",
+        "_media": [
+          {
+            "mediafile": "weekday-dance-lessons_5012434A-D9AB-94E2-50E900194FC0BFC1.png",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/weekday-dance-lessons_5012434A-D9AB-94E2-50E900194FC0BFC1_50131163-0470-9125-448d93c1404a4000.png",
+            "sortorder": 1
+          },
+          {
+            "mediafile": "AdobeStock_930750306_C79388F7-C39E-3E43-78881319B6F7D7F3.jpeg",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/AdobeStock_930750306_C79388F7-C39E-3E43-78881319B6F7D7F3_c7970b6a-d4ca-7eb4-e16d7815c29f10f0.jpg",
+            "sortorder": 2
+          }
+        ],
+        "accountId": 28,
+        "active": true,
+        "address1": "401 East Whitestone Blvd.",
+        "admission": "18+ establishment. Patrons age 18 to 20 are subject to additional cover fees at the door.",
+        "calendarid": "1",
+        "categories": [
+          {
+            "catName": "Pub Fun/Nightlife",
+            "catId": "16"
+          }
+        ],
+        "city": "Cedar Park",
+        "cms_title": "Dance Lessons at Wild West (2242)",
+        "cms_title_sort": "dance lessons at wild west (2242)",
+        "dates": {
+          "eventDate": "2026-11-28T05:59:59.000Z"
+        },
+        "day": 0,
+        "dayMask": 208,
+        "description": "<div class=\"elementor-element elementor-element-8d3ae15 elementor-widget elementor-widget-heading\" data-id=\"8d3ae15\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"heading.default\">\r\n<div class=\"elementor-widget-container\">\r\n<h2 class=\"elementor-heading-title elementor-size-default\">Wednesday</h2>\r\n</div>\r\n</div>\r\n<div class=\"elementor-element elementor-element-7ee1a54 elementor-widget elementor-widget-heading\" data-id=\"7ee1a54\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"heading.default\">\r\n<div class=\"elementor-widget-container\">\r\n<h2 class=\"elementor-heading-title elementor-size-default\">Dance Lessons</h2>\r\n</div>\r\n</div>\r\n<div class=\"elementor-element elementor-element-d5a5379 elementor-widget elementor-widget-text-editor\" data-id=\"d5a5379\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"text-editor.default\">\r\n<div class=\"elementor-widget-container\">\r\n<p><strong>by Ask Me To Dance &#8211; Luke Martz</strong></p>\r\n<p>7:30pm &#8211; 8:30pm</p>\r\n</div>\r\n</div>\r\n<div class=\"elementor-element elementor-element-dccf87b elementor-widget elementor-widget-text-editor\" data-id=\"dccf87b\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"text-editor.default\">\r\n<div class=\"elementor-widget-container\">\r\n<p>No Cover for Ladies 18+</p>\r\n<p>$5 for Men 21+</p>\r\n<p>Men age 18 to 20 pay additional fee at the door</p>\r\n</div>\r\n</div>\r\n<div class=\"elementor-element elementor-element-c65d8c1 elementor-widget elementor-widget-text-editor\" data-id=\"c65d8c1\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"text-editor.default\">\r\n<div class=\"elementor-widget-container\"> </div>\r\n</div>\r\n<div class=\"elementor-element elementor-element-bc3ddf6 elementor-widget-divider--view-line_icon elementor-view-default elementor-widget-divider--element-align-center elementor-widget elementor-widget-divider\" data-id=\"bc3ddf6\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"divider.default\">\r\n<div class=\"elementor-widget-container\">\r\n<div class=\"elementor-divider\">\r\n<div class=\"elementor-icon elementor-divider__element\"> </div>\r\n</div>\r\n</div>\r\n</div>\r\n<div class=\"elementor-element elementor-element-566777d elementor-widget elementor-widget-heading\" data-id=\"566777d\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"heading.default\">\r\n<div class=\"elementor-widget-container\">\r\n<h2 class=\"elementor-heading-title elementor-size-default\">Friday</h2>\r\n</div>\r\n</div>\r\n<div class=\"elementor-element elementor-element-5a5ba2a elementor-widget elementor-widget-text-editor\" data-id=\"5a5ba2a\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"text-editor.default\">\r\n<div class=\"elementor-widget-container\">\r\n<h3>Dance Lessons</h3>\r\n<p>7:30pm &#8211; 8:30pm</p>\r\n<p>with David Miller</p>\r\n</div>\r\n</div>\r\n<div class=\"elementor-element elementor-element-78f01a0 elementor-widget elementor-widget-text-editor\" data-id=\"78f01a0\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"text-editor.default\">\r\n<div class=\"elementor-widget-container\">\r\n<p><strong>Cover:</strong></p>\r\n<p>$6 Everyone 21+</p>\r\n<p>Patrons age 18 to 20 pay additional fee at the door</p>\r\n</div>\r\n</div>\r\n<div class=\"elementor-element elementor-element-7912835 elementor-widget elementor-widget-menu-anchor\" data-id=\"7912835\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"menu-anchor.default\">\r\n<div class=\"elementor-widget-container\">\r\n<div id=\"saturday\" class=\"elementor-menu-anchor\"></div>\r\n</div>\r\n</div>\r\n<div class=\"elementor-element elementor-element-4df6b94 elementor-widget-divider--view-line_icon elementor-view-default elementor-widget-divider--element-align-center elementor-widget elementor-widget-divider\" data-id=\"4df6b94\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"divider.default\">\r\n<div class=\"elementor-widget-container\">\r\n<div class=\"elementor-divider\">\r\n<div class=\"elementor-icon elementor-divider__element\"> </div>\r\n</div>\r\n</div>\r\n</div>\r\n<div class=\"elementor-element elementor-element-1572b73 elementor-widget elementor-widget-heading\" data-id=\"1572b73\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"heading.default\">\r\n<div class=\"elementor-widget-container\">\r\n<h2 class=\"elementor-heading-title elementor-size-default\">Saturday</h2>\r\n</div>\r\n</div>\r\n<div class=\"elementor-element elementor-element-2786f38 elementor-widget elementor-widget-text-editor\" data-id=\"2786f38\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"text-editor.default\">\r\n<div class=\"elementor-widget-container\">\r\n<h3>21+ Ladies Night!</h3>\r\n<h3>Line Dance Lessons</h3>\r\n<p>9:15pm &#8211; 10:00pm</p>\r\n<p> </p>\r\n<p><strong>Cover:</strong></p>\r\n<p>No Cover for Ladies 21+</p>\r\n<p>Patrons age 18 to 20 pay additional fee at the door</p>\r\n</div>\r\n</div>",
+        "endType": 1,
+        "eventTypeId": 2,
+        "expired": false,
+        "featured": false,
+        "filter_tags": [
+          "site_primary"
+        ],
+        "interval": 1,
+        "linkUrl": "https://wildwestcedarpark.com/specials/",
+        "listing_id": 267,
+        "loc": {
+          "type": "Point",
+          "coordinates": [
+            -97.8270646,
+            30.5225119
+          ]
+        },
+        "location": "Wild West",
+        "media_raw": [
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/weekday-dance-lessons_5012434A-D9AB-94E2-50E900194FC0BFC1_50131163-0470-9125-448d93c1404a4000.png",
+            "sortorder": 1,
+            "mediatype": "Image"
+          },
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/AdobeStock_930750306_C79388F7-C39E-3E43-78881319B6F7D7F3_c7970b6a-d4ca-7eb4-e16d7815c29f10f0.jpg",
+            "sortorder": 2,
+            "mediatype": "Image"
+          }
+        ],
+        "month": 0,
+        "never_expire": false,
+        "nextDate": "2026-11-28T05:59:59.000Z",
+        "occurrences": 0,
+        "past": false,
+        "primary_site": "primary",
+        "primarycatid": "16",
+        "rank": 2,
+        "recId": "2242",
+        "recurType": 3,
+        "recurrence": "Recurring weekly on Wednesday, Friday, Saturday",
+        "sites": [
+          "primary"
+        ],
+        "startDate": "2026-07-10T05:00:00.000Z",
+        "state": "TX",
+        "title": "Dance Lessons at Wild West",
+        "title_sort": "dance lessons at wild west",
+        "typeName": "Ongoing Event",
+        "updated": "2026-11-27T08:45:48.751Z",
+        "week": 0,
+        "weekday": 0,
+        "zip": "78613",
+        "id": "6b09433ef11255df48216517",
+        "slug": "dance-lessons-at-wild-west",
+        "url": "/event/dance-lessons-at-wild-west/2242/",
+        "genericUrl": "/event/dance-lessons-at-wild-west/2242/",
+        "absoluteUrl": "https://visitcedarparktexas.com/event/dance-lessons-at-wild-west/2242/",
+        "absolute_primary_url": "https://visitcedarparktexas.com/event/dance-lessons-at-wild-west/2242/",
+        "teaser": "<div class=\"elementor-element elementor-element-8d3ae15 elementor-widget elementor-widget-heading\" data-id=\"8d3ae15\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"heading.default\"> <div class=\"elementor-widget-container\"> <h2 class=\"elementor-heading-title elementor-size-default\">Wednesday</h2> </div> </div> <div class=\"elementor-element elementor-element-7ee1a54 elementor-widget elementor-widget-heading\" data-id=\"7ee1a54\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"heading.default\"> <div class=\"elementor-widget-container\"> <h2 class=\"elementor-heading-title elementor-size-default\">Dance Lessons</h2> </div> </div> <div class=\"elementor-element elementor-element-d5a5379 elementor-widget elementor-widget-text-editor\" data-id=\"d5a5379\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"text-editor.default\"> <div class=\"elementor-widget-container\"> <p><strong>by Ask Me To Dance &#x2013; Luke Martz</strong></p> <p>7:30pm &#x2013; 8:30pm</p> </div> </div> <div class=\"elementor-element elementor-element-dccf87b elementor-widget elementor-widget-text-editor\" data-id=\"dccf87b\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"text-editor.default\"> <div class=\"elementor-widget-container\"> <p>No Cover for Ladies 18+</p> <p>$5 for Men 21+</p> <p>Men age 18 to 20 pay additional fee at the door</p> </div> </div> <div class=\"elementor-element elementor-element-c65d8c1 elementor-widget elementor-widget-text-editor\" data-id=\"c65d8c1\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"text-editor.default\"> <div class=\"elementor-widget-container\"> </div> </div> <div class=\"elementor-element elementor-element-bc3ddf6 elementor-widget-divider--view-line_icon elementor-view-default elementor-widget-divider--element-align-center elementor-widget elementor-widget-divider\" data-id=\"bc3ddf6\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"divider.default\"> <div class=\"elementor-widget-container\"> <div class=\"elementor-divider\"> <div class=\"elementor-icon elementor-divider__element\"> </div> </div> </div> </div> <div class=\"elementor-element elementor-element-566777d elementor-widget elementor-widget-heading\" data-id=\"566777d\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"heading.default\"> <div class=\"elementor-widget-container\"> <h2 class=\"elementor-heading-title elementor-size-default\">Friday</h2> </div> </div> <div class=\"elementor-element elementor-element-5a5ba2a elementor-widget elementor-widget-text-editor\" data-id=\"5a5ba2a\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"text-editor.default\"> <div class=\"elementor-widget-container\"></div></div>",
+        "longitude": -97.8270646,
+        "latitude": 30.5225119
+      },
+      {
+        "_id": "6b04c2910347610476491bfa",
+        "date": "2026-11-28T05:59:59.000Z",
+        "recid": "1056",
+        "_media": [
+          {
+            "mediafile": "LIVE-MUSIC-GOOD-LOT_53A7C7C2-A942-6C99-566D0DFEB99EFDAD.png",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/LIVE-MUSIC-GOOD-LOT_53A7C7C2-A942-6C99-566D0DFEB99EFDAD_53a9080c-a0c7-8ec4-53f0860261cccab9.png",
+            "sortorder": 1
+          },
+          {
+            "mediafile": "musician-2943109_1920_AAF7CA4A-0B80-F3B3-0F66E3F7DEE5098C.jpg",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/musician-2943109_1920_AAF7CA4A-0B80-F3B3-0F66E3F7DEE5098C_aaf861a3-f102-ac23-741234d69524be65.jpg",
+            "sortorder": 2
+          }
+        ],
+        "accountId": 21,
+        "active": true,
+        "address1": "2500 West New Hope Drive",
+        "admission": "Free",
+        "calendarid": "1",
+        "categories": [
+          {
+            "catName": "Concerts/Live Music/Live Entertainment",
+            "catId": "5"
+          },
+          {
+            "catName": "Free",
+            "catId": "14"
+          },
+          {
+            "catName": "Pub Fun/Nightlife",
+            "catId": "16"
+          }
+        ],
+        "city": "Cedar Park",
+        "cms_title": "Free Live Music (1056)",
+        "cms_title_sort": "free live music (1056)",
+        "dates": {
+          "eventDate": "2026-11-28T05:59:59.000Z"
+        },
+        "day": 0,
+        "dayMask": 192,
+        "description": "<p>Free live music<strong> </strong>every Friday and Saturday night at The Good Lot in Cedar Park, TX!</p>",
+        "endTime": "21:30:00",
+        "endType": 1,
+        "eventTypeId": 2,
+        "expired": false,
+        "featured": false,
+        "filter_tags": [
+          "site_primary"
+        ],
+        "host_id": 21,
+        "hostname": "The Good Lot",
+        "interval": 1,
+        "linkUrl": "https://www.thegoodlotcp.com/happenings",
+        "listing_id": 21,
+        "loc": {
+          "type": "Point",
+          "coordinates": [
+            -97.8648278,
+            30.5235721
+          ]
+        },
+        "location": "The Good Lot",
+        "media_raw": [
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/LIVE-MUSIC-GOOD-LOT_53A7C7C2-A942-6C99-566D0DFEB99EFDAD_53a9080c-a0c7-8ec4-53f0860261cccab9.png",
+            "sortorder": 1,
+            "mediatype": "Image"
+          },
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/musician-2943109_1920_AAF7CA4A-0B80-F3B3-0F66E3F7DEE5098C_aaf861a3-f102-ac23-741234d69524be65.jpg",
+            "sortorder": 2,
+            "mediatype": "Image"
+          }
+        ],
+        "month": 0,
+        "never_expire": false,
+        "nextDate": "2026-11-28T05:59:59.000Z",
+        "occurrences": 0,
+        "past": false,
+        "primary_site": "primary",
+        "primarycatid": "5",
+        "rank": 2,
+        "recId": "1056",
+        "recurType": 3,
+        "recurrence": "Recurring weekly on Friday, Saturday",
+        "sites": [
+          "primary"
+        ],
+        "startDate": "2023-09-01T05:00:00.000Z",
+        "startTime": "19:00:00",
+        "state": "TX",
+        "times": "From: 07:00 PM to 09:30 PM",
+        "title": "Free Live Music",
+        "title_sort": "free live music",
+        "typeName": "Ongoing Event",
+        "updated": "2026-11-23T22:47:43.153Z",
+        "week": 0,
+        "weekday": 0,
+        "zip": "78613",
+        "id": "6b04c2910347610476491bfa",
+        "slug": "free-live-music",
+        "url": "/event/free-live-music/1056/",
+        "genericUrl": "/event/free-live-music/1056/",
+        "absoluteUrl": "https://visitcedarparktexas.com/event/free-live-music/1056/",
+        "absolute_primary_url": "https://visitcedarparktexas.com/event/free-live-music/1056/",
+        "teaser": "<p>Free live music<strong> </strong>every Friday and Saturday night at The Good Lot in Cedar Park, TX!</p>",
+        "longitude": -97.8648278,
+        "latitude": 30.5235721
+      },
+      {
+        "_id": "6b040b3f03476104761dfbe0",
+        "recid": "2001",
+        "date": "2026-11-28T05:59:59.000Z",
+        "_media": [
+          {
+            "mediafile": "FRIDAY-NIGHTS-WITH-DJ-BASH_1F6DA7F5-9B09-EA71-F07C6930E16BC08D.png",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/FRIDAY-NIGHTS-WITH-DJ-BASH_1F6DA7F5-9B09-EA71-F07C6930E16BC08D_1f6e17d7-99fd-aebf-9cb02a1089a520a9.png",
+            "sortorder": 1
+          },
+          {
+            "mediafile": "TAG-DJ-Bash_178174B8-81D3-4A54-8E0D29DF1D38F21B.jpg",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/TAG-DJ-Bash_178174B8-81D3-4A54-8E0D29DF1D38F21B_6479e61e-9a52-4cf4-947511747d759008.jpg",
+            "sortorder": 2
+          }
+        ],
+        "accountId": 599,
+        "active": true,
+        "address1": "601 E. Whitestone Blvd",
+        "address2": "Suite 500",
+        "calendarid": "1",
+        "categories": [
+          {
+            "catName": "Concerts/Live Music/Live Entertainment",
+            "catId": "5"
+          },
+          {
+            "catName": "Free",
+            "catId": "14"
+          },
+          {
+            "catName": "Pub Fun/Nightlife",
+            "catId": "16"
+          }
+        ],
+        "city": "Cedar Park",
+        "cms_title": "Friday Night DJ (2001)",
+        "cms_title_sort": "friday night dj (2001)",
+        "dates": {
+          "eventDate": "2026-11-28T05:59:59.000Z"
+        },
+        "day": 0,
+        "dayMask": 64,
+        "description": "<p>Friday Nights with DJ Bash</p>\r\n<p>Join us every Friday night for music from DJ Bash, 7-11 PM!</p>",
+        "email": "info@theallgoodbar.com",
+        "endTime": "23:00:00",
+        "endType": 1,
+        "eventTypeId": 2,
+        "expired": false,
+        "featured": false,
+        "filter_tags": [
+          "site_primary"
+        ],
+        "interval": 1,
+        "linkUrl": "https://theallgoodbar.com/calendar-of-events",
+        "listing_id": 625,
+        "loc": {
+          "type": "Point",
+          "coordinates": [
+            -97.8247048,
+            30.5231993
+          ]
+        },
+        "location": "The All Good Bar",
+        "media_raw": [
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/FRIDAY-NIGHTS-WITH-DJ-BASH_1F6DA7F5-9B09-EA71-F07C6930E16BC08D_1f6e17d7-99fd-aebf-9cb02a1089a520a9.png",
+            "sortorder": 1,
+            "mediatype": "Image"
+          },
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/TAG-DJ-Bash_178174B8-81D3-4A54-8E0D29DF1D38F21B_6479e61e-9a52-4cf4-947511747d759008.jpg",
+            "sortorder": 2,
+            "mediatype": "Image"
+          }
+        ],
+        "month": 0,
+        "never_expire": false,
+        "nextDate": "2026-11-28T05:59:59.000Z",
+        "occurrences": 0,
+        "past": false,
+        "primary_site": "primary",
+        "primarycatid": "5",
+        "rank": 2,
+        "recId": "2001",
+        "recurType": 3,
+        "recurrence": "Recurring weekly on Friday",
+        "sites": [
+          "primary"
+        ],
+        "startDate": "2026-06-12T05:00:00.000Z",
+        "startTime": "19:00:00",
+        "state": "TX",
+        "times": "From: 07:00 PM to 11:00 PM",
+        "title": "Friday Night DJ",
+        "title_sort": "friday night dj",
+        "typeName": "Ongoing Event",
+        "updated": "2026-11-23T09:45:33.734Z",
+        "week": 0,
+        "weekday": 0,
+        "zip": "78613",
+        "id": "6b040b3f03476104761dfbe0",
+        "slug": "friday-night-dj",
+        "url": "/event/friday-night-dj/2001/",
+        "genericUrl": "/event/friday-night-dj/2001/",
+        "absoluteUrl": "https://visitcedarparktexas.com/event/friday-night-dj/2001/",
+        "absolute_primary_url": "https://visitcedarparktexas.com/event/friday-night-dj/2001/",
+        "teaser": "<p>Friday Nights with DJ Bash</p>\r\n<p>Join us every Friday night for music from DJ Bash, 7-11 PM!</p>",
+        "longitude": -97.8247048,
+        "latitude": 30.5231993
+      },
+      {
+        "_id": "6b08b68ff11255df48026c0f",
+        "date": "2026-11-28T05:59:59.000Z",
+        "recid": "1992",
+        "_media": [
+          {
+            "mediafile": "karaoke-friday-shooters_1D74506B-F84F-2603-4BEF5645B6CF129E.png",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/karaoke-friday-shooters_1D74506B-F84F-2603-4BEF5645B6CF129E_1d755648-b2e6-7033-cb64e8fb0c165ce0.png",
+            "sortorder": 1
+          },
+          {
+            "mediafile": "shooters-friday-karaoke-1-_FE013BA4-9725-8831-13F5B1D770941CB3.png",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/shooters-friday-karaoke-1-_FE013BA4-9725-8831-13F5B1D770941CB3_fe0536fc-934f-768d-c56c9d6fdf29af33.png",
+            "sortorder": 2
+          }
+        ],
+        "accountId": 80,
+        "active": true,
+        "address1": "601 East Whitestone Blvd.",
+        "calendarid": "1",
+        "categories": [
+          {
+            "catName": "Social/Other/Miscellaneous",
+            "catId": "12"
+          },
+          {
+            "catName": "Pub Fun/Nightlife",
+            "catId": "16"
+          }
+        ],
+        "city": "Cedar Park",
+        "cms_title": "Friday Night Karaoke (1992)",
+        "cms_title_sort": "friday night karaoke (1992)",
+        "dates": {
+          "eventDate": "2026-11-28T05:59:59.000Z"
+        },
+        "day": 0,
+        "dayMask": 64,
+        "description": "<p>Karaoke Every Friday 9 PM!</p>",
+        "endType": 1,
+        "eventTypeId": 2,
+        "expired": false,
+        "featured": false,
+        "filter_tags": [
+          "site_primary"
+        ],
+        "interval": 1,
+        "linkUrl": "https://shootersbilliards.net/cedar-park-events",
+        "listing_id": 74,
+        "loc": {
+          "type": "Point",
+          "coordinates": [
+            -97.8246853,
+            30.5232807
+          ]
+        },
+        "location": "Shooters Billiards & Sports Bar",
+        "media_raw": [
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/karaoke-friday-shooters_1D74506B-F84F-2603-4BEF5645B6CF129E_1d755648-b2e6-7033-cb64e8fb0c165ce0.png",
+            "sortorder": 1,
+            "mediatype": "Image"
+          },
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/shooters-friday-karaoke-1-_FE013BA4-9725-8831-13F5B1D770941CB3_fe0536fc-934f-768d-c56c9d6fdf29af33.png",
+            "sortorder": 2,
+            "mediatype": "Image"
+          }
+        ],
+        "month": 0,
+        "never_expire": false,
+        "nextDate": "2026-11-28T05:59:59.000Z",
+        "occurrences": 0,
+        "past": false,
+        "primary_site": "primary",
+        "primarycatid": "12",
+        "rank": 2,
+        "recId": "1992",
+        "recurType": 3,
+        "recurrence": "Recurring weekly on Friday",
+        "sites": [
+          "primary"
+        ],
+        "startDate": "2025-12-12T06:00:00.000Z",
+        "startTime": "21:00:00",
+        "state": "TX",
+        "times": "Starting: 9:00 PM",
+        "title": "Friday Night Karaoke",
+        "title_sort": "friday night karaoke",
+        "typeName": "Ongoing Event",
+        "updated": "2026-11-26T22:45:33.808Z",
+        "week": 0,
+        "weekday": 0,
+        "zip": "78613",
+        "id": "6b08b68ff11255df48026c0f",
+        "slug": "friday-night-karaoke",
+        "url": "/event/friday-night-karaoke/1992/",
+        "genericUrl": "/event/friday-night-karaoke/1992/",
+        "absoluteUrl": "https://visitcedarparktexas.com/event/friday-night-karaoke/1992/",
+        "absolute_primary_url": "https://visitcedarparktexas.com/event/friday-night-karaoke/1992/",
+        "teaser": "<p>Karaoke Every Friday 9 PM!</p>",
+        "longitude": -97.8246853,
+        "latitude": 30.5232807
+      },
+      {
+        "_id": "6b01307f034761047690a033",
+        "date": "2026-11-28T05:59:59.000Z",
+        "recid": "2021",
+        "_media": [
+          {
+            "mediafile": "jazz-lounge-live-music_EB0E13D7-DCA4-7362-69FE0BEFB4741B34.png",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/jazz-lounge-live-music_EB0E13D7-DCA4-7362-69FE0BEFB4741B34_eb0f23aa-c94a-c01b-1cd387ce7f5091b3.png",
+            "sortorder": 1
+          }
+        ],
+        "accountId": 152,
+        "active": true,
+        "address1": "1525 Cypress Creek Road",
+        "admission": "Cover charge can vary (can even be free!) \r\n\r\nContact Tuscanos for more information. (512) 996-8990",
+        "calendarid": "1",
+        "categories": [
+          {
+            "catName": "Concerts/Live Music/Live Entertainment",
+            "catId": "5"
+          }
+        ],
+        "city": "Cedar Park",
+        "cms_title": "Jazz Lounge (2021)",
+        "cms_title_sort": "jazz lounge (2021)",
+        "dates": {
+          "eventDate": "2026-11-28T05:59:59.000Z"
+        },
+        "day": 0,
+        "dayMask": 0,
+        "description": "<p>Italian kitchen &amp; jazz lounge</p>\r\n<p>Make a night of it.</p>\r\n<p><br>Join us for Italian cuisine, cocktails, and live music in Cedar Park.</p>",
+        "endTime": "22:00:00",
+        "endType": 1,
+        "eventTypeId": 2,
+        "expired": false,
+        "featured": false,
+        "filter_tags": [
+          "site_primary"
+        ],
+        "interval": 1,
+        "linkUrl": "https://www.tuscanoitalian.com/events",
+        "listing_id": 144,
+        "loc": {
+          "type": "Point",
+          "coordinates": [
+            -97.8343732,
+            30.4813053
+          ]
+        },
+        "location": "Tuscano",
+        "media_raw": [
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/jazz-lounge-live-music_EB0E13D7-DCA4-7362-69FE0BEFB4741B34_eb0f23aa-c94a-c01b-1cd387ce7f5091b3.png",
+            "sortorder": 1,
+            "mediatype": "Image"
+          }
+        ],
+        "month": 0,
+        "never_expire": false,
+        "nextDate": "2026-11-21T05:59:59.000Z",
+        "occurrences": 0,
+        "past": false,
+        "phone": "(512) 996-8990",
+        "primary_site": "primary",
+        "primarycatid": "5",
+        "rank": 2,
+        "recId": "2021",
+        "recurType": 1,
+        "recurrence": "Recurring daily",
+        "sites": [
+          "primary"
+        ],
+        "startDate": "2025-12-19T06:00:00.000Z",
+        "startTime": "19:00:00",
+        "state": "TX",
+        "title": "Jazz Lounge",
+        "title_sort": "jazz lounge",
+        "typeName": "Ongoing Event",
+        "updated": "2026-11-21T05:47:41.271Z",
+        "week": 0,
+        "weekday": 0,
+        "zip": "78613",
+        "id": "6b01307f034761047690a033",
+        "slug": "jazz-lounge",
+        "url": "/event/jazz-lounge/2021/",
+        "genericUrl": "/event/jazz-lounge/2021/",
+        "absoluteUrl": "https://visitcedarparktexas.com/event/jazz-lounge/2021/",
+        "absolute_primary_url": "https://visitcedarparktexas.com/event/jazz-lounge/2021/",
+        "teaser": "<p>Italian kitchen &amp; jazz lounge</p>\r\n<p>Make a night of it.</p>\r\n<p><br>Join us for Italian cuisine, cocktails, and live music in Cedar Park.</p>",
+        "longitude": -97.8343732,
+        "latitude": 30.4813053
+      },
+      {
+        "_id": "6b08c4d8f11255df480528e7",
+        "date": "2026-11-28T05:59:59.000Z",
+        "recid": "2240",
+        "_media": [
+          {
+            "mediafile": "chocolate-bar-class_51327315-E69F-A709-B7CF4CD582A5071E.png",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/chocolate-bar-class_51327315-E69F-A709-B7CF4CD582A5071E_5135622e-0ce2-d52c-ceae0e39be11dfd3.png",
+            "sortorder": 1
+          },
+          {
+            "mediafile": "kushi-chocolate-bar_C44EC883-E00E-42E6-49FA6F8DC81C17F3.jpg",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/kushi-chocolate-bar_C44EC883-E00E-42E6-49FA6F8DC81C17F3_c462dc41-f2f6-52b1-021b4f35ae07017d.jpg",
+            "sortorder": 2
+          }
+        ],
+        "accountId": 219,
+        "active": true,
+        "address1": "251 North Bell Blvd., Ste. 110",
+        "admission": " $25 + tax per participant (through August only)\r\nStarting September, pricing goes up to $30 + tax — so don’t wait!\r\n\r\nRecurring every second and last Saturday of the month. ",
+        "calendarid": "1",
+        "categories": [
+          {
+            "catName": "Outdoors",
+            "catId": "7"
+          },
+          {
+            "catName": "Social/Other/Miscellaneous",
+            "catId": "12"
+          },
+          {
+            "catName": "Fun For The Whole Family",
+            "catId": "17"
+          }
+        ],
+        "city": "Cedar Park",
+        "cms_title": "Make Your Own Chocolate Bar Class (2240)",
+        "cms_title_sort": "make your own chocolate bar class (2240)",
+        "contactEmail": "kushichocoec@gmail.com",
+        "contactFirstName": "Business",
+        "contactId": 163,
+        "contactLastName": "Owner",
+        "contactName": "Business Owner",
+        "dates": {
+          "eventDate": "2026-11-28T05:59:59.000Z"
+        },
+        "day": 0,
+        "dayMask": 0,
+        "description": "<div dir=\"auto\">\r\n<p>Chocolate Explorer: Family Edition</p>\r\n<p><br>Chocolate &amp; Cacao: Adult Experience</p>\r\n<p><br>El Viaje del Cacao (Español)</p>\r\n<p><br>Planning Something Bigger?</p>\r\n<p>🎉<br>Private &amp; Group Events</p>\r\n<p>Birthdays, showers, team events</p>\r\n</div>",
+        "email": "info@theecuadorianchocolate.com",
+        "endTime": "17:30:00",
+        "endType": 1,
+        "eventTypeId": 2,
+        "expired": false,
+        "featured": false,
+        "filter_tags": [
+          "site_primary"
+        ],
+        "interval": 1,
+        "linkUrl": "https://kushichocolate.netlify.app/",
+        "listing_id": 211,
+        "loc": {
+          "type": "Point",
+          "coordinates": [
+            -97.8248979,
+            30.5110906
+          ]
+        },
+        "location": "Kushi Ecuadorian Chocolate",
+        "media_raw": [
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/chocolate-bar-class_51327315-E69F-A709-B7CF4CD582A5071E_5135622e-0ce2-d52c-ceae0e39be11dfd3.png",
+            "sortorder": 1,
+            "mediatype": "Image"
+          },
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/kushi-chocolate-bar_C44EC883-E00E-42E6-49FA6F8DC81C17F3_c462dc41-f2f6-52b1-021b4f35ae07017d.jpg",
+            "sortorder": 2,
+            "mediatype": "Image"
+          }
+        ],
+        "month": 0,
+        "never_expire": false,
+        "nextDate": "2026-11-27T05:59:59.000Z",
+        "occurrences": 0,
+        "past": false,
+        "phone": "(737) 802-9651",
+        "primary_site": "primary",
+        "primarycatid": "7",
+        "rank": 2,
+        "recId": "2240",
+        "recurType": 1,
+        "recurrence": "Recurring daily",
+        "sites": [
+          "primary"
+        ],
+        "startDate": "2026-07-11T05:00:00.000Z",
+        "startTime": "16:00:00",
+        "state": "TX",
+        "times": "From: 4:00 PM to 5:30 PM",
+        "title": "Make Your Own Chocolate Bar Class",
+        "title_sort": "make your own chocolate bar class",
+        "typeName": "Ongoing Event",
+        "updated": "2026-11-26T23:46:30.137Z",
+        "week": 0,
+        "weekday": 0,
+        "zip": "78613",
+        "id": "6b08c4d8f11255df480528e7",
+        "slug": "make-your-own-chocolate-bar-class",
+        "url": "/event/make-your-own-chocolate-bar-class/2240/",
+        "genericUrl": "/event/make-your-own-chocolate-bar-class/2240/",
+        "absoluteUrl": "https://visitcedarparktexas.com/event/make-your-own-chocolate-bar-class/2240/",
+        "absolute_primary_url": "https://visitcedarparktexas.com/event/make-your-own-chocolate-bar-class/2240/",
+        "teaser": "<div dir=\"auto\"> <p>Chocolate Explorer: Family Edition</p> <p><br>Chocolate &amp; Cacao: Adult Experience</p> <p><br>El Viaje del Cacao (Espa&#xF1;ol)</p> <p><br>Planning Something Bigger?</p> <p>&#x1F389;<br>Private &amp; Group Events</p> <p>Birthdays, showers, team events</p> </div>",
+        "longitude": -97.8248979,
+        "latitude": 30.5110906
+      },
+      {
+        "_id": "6b01307f034761047690a2dd",
+        "recid": "3463",
+        "date": "2026-11-28T05:59:59.000Z",
+        "_media": [
+          {
+            "mediafile": "Website-Event-Templates-2026-11-1-_57677F5C-CBB2-789C-DA33D09EB3739A29.png",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/Website-Event-Templates-2026-11-1-_57677F5C-CBB2-789C-DA33D09EB3739A29_5779207e-05f8-af9e-f78665f1a297293a.png",
+            "sortorder": 1
+          }
+        ],
+        "accountId": 30,
+        "active": true,
+        "address1": "1717 Scottsdale",
+        "admission": "FREE",
+        "calendarid": "1",
+        "categories": [
+          {
+            "catName": "Holiday Festivities",
+            "catId": "10"
+          }
+        ],
+        "city": "Cedar Park",
+        "cms_title": "Trail of Cheer (3463)",
+        "cms_title_sort": "trail of cheer (3463)",
+        "dates": {
+          "eventDate": "2026-11-28T05:59:59.000Z"
+        },
+        "day": 0,
+        "dayMask": 0,
+        "description": "<p> A little Christmas magic is coming to Cedar Park, Texas!<br><br>Join us at The Fieldhouse at The Crossover for TRAIL OF CHEER, a FREE holiday walk-through for the whole family!<br><br>From November 20th through January 10th, explore a festive trail filled with Christmas decorations, holiday photo ops, and plenty of cheer around every corner. 🎅<br><br>Whether you're looking for a fun outing with the kids, a festive date night, or a place to take some Christmas photos, we'd love to have you!<br><br>🎄 November 20th &#8211; January 10<br>🎟️ FREE admission! No tickets needed.<br>📸 Festive holiday photo ops<br>🍹 Seasonal cocktails &amp; festive drinks<br>🍔 Food trucks on-site<br>👨‍👩‍👧‍👦 Family-friendly fun for all ages<br><br>Make a night of it! Walk through the trail, grab a bite from our food trucks, enjoy a holiday drink, and spend some time with family and friends.<br><br>Times:<br><strong>Monday -Thursday:</strong><br>2PM-12AM</p>\r\n<p><strong>Friday-Sunday:</strong><br>11AM-12AM<br><br>📍 The Fieldhouse at The Crossover | Cedar Park, TX</p>",
+        "endDate": "2027-01-11T05:59:59.000Z",
+        "endType": 3,
+        "eventTypeId": 2,
+        "expired": false,
+        "featured": false,
+        "filter_tags": [
+          "site_primary"
+        ],
+        "host_id": 269,
+        "interval": 1,
+        "linkUrl": "https://www.thefieldhousetexas.com/events/trail-of-cheer-free-holiday-walk-through-at-the-fieldhouse",
+        "listing_id": 269,
+        "loc": {
+          "type": "Point",
+          "coordinates": [
+            -97.8148482,
+            30.5484002
+          ]
+        },
+        "location": "Fieldhouse at The Crossover",
+        "media_raw": [
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/Website-Event-Templates-2026-11-1-_57677F5C-CBB2-789C-DA33D09EB3739A29_5779207e-05f8-af9e-f78665f1a297293a.png",
+            "sortorder": 1,
+            "mediatype": "Image"
+          }
+        ],
+        "month": 0,
+        "never_expire": false,
+        "nextDate": "2026-11-21T05:59:59.000Z",
+        "occurrences": 0,
+        "past": false,
+        "primary_site": "primary",
+        "primarycatid": "10",
+        "rank": 2,
+        "recId": "3463",
+        "recurType": 1,
+        "recurrence": "Recurring daily",
+        "sites": [
+          "primary"
+        ],
+        "startDate": "2026-11-20T06:00:00.000Z",
+        "state": "TX",
+        "times": "Monday -Thursday: 2PM-12AM   Friday-Sunday: 11AM-12AM",
+        "title": "Trail of Cheer",
+        "title_sort": "trail of cheer",
+        "typeName": "Ongoing Event",
+        "updated": "2026-11-21T05:47:41.279Z",
+        "week": 0,
+        "weekday": 0,
+        "zip": "78641",
+        "id": "6b01307f034761047690a2dd",
+        "slug": "trail-of-cheer",
+        "url": "/event/trail-of-cheer/3463/",
+        "genericUrl": "/event/trail-of-cheer/3463/",
+        "absoluteUrl": "https://visitcedarparktexas.com/event/trail-of-cheer/3463/",
+        "absolute_primary_url": "https://visitcedarparktexas.com/event/trail-of-cheer/3463/",
+        "teaser": "<p> A little Christmas magic is coming to Cedar Park, Texas!<br><br>Join us at The Fieldhouse at The Crossover for TRAIL OF CHEER, a FREE holiday walk-through for the whole family!<br><br>From November 20th through</p>",
+        "longitude": -97.8148482,
+        "latitude": 30.5484002
+      },
+      {
+        "_id": "6b0533180347610476613d8a",
+        "recid": "2066",
+        "date": "2026-11-28T05:59:59.000Z",
+        "_media": [
+          {
+            "mediafile": "AdobeStock_220573409_42BF2825-0185-9DB5-F1B898BCB3BB5DBE.jpeg",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/AdobeStock_220573409_42BF2825-0185-9DB5-F1B898BCB3BB5DBE_42c07e9f-aa9e-9348-1197b6450fc00c07.jpg",
+            "sortorder": 1
+          }
+        ],
+        "accountId": 55,
+        "active": true,
+        "address1": "14529 Pocohontas Trail",
+        "admission": "Reservations Required &#8211; Book online or call (512) 614-1996 to secure your spot!\r\n\r\n$138 per person for the 5-Line Zipline Adventure\r\n$88 per person for the Single Line Double Barrel Zipline Adventure",
+        "calendarid": "1",
+        "categories": [
+          {
+            "catName": "Fun For The Whole Family",
+            "catId": "17"
+          }
+        ],
+        "city": "Volente",
+        "cms_title": "Zipline Full Moon Tours (2066)",
+        "cms_title_sort": "zipline full moon tours (2066)",
+        "contactEmail": "rebeccaltza@gmail.com",
+        "contactFirstName": "Rebecca",
+        "contactId": 274,
+        "contactLastName": "Robertson",
+        "contactName": "Rebecca Robertson",
+        "contactTitle": "Vice President",
+        "dates": {
+          "eventDate": "2026-11-28T05:59:59.000Z"
+        },
+        "day": 0,
+        "dayMask": 0,
+        "description": "<p><strong><img src=\"https://CedarParkTX.simpleviewcrm.com/images/tinymce/zipline-moon_414C4FCF-907D-7906-9E4A21DB96AF2ABA.jpg\" alt=\"\" width=\"566\" height=\"283\"></strong></p>\r\n<p><strong>Looking for the perfect date night or unforgettable thrill for the whole family? Lake Travis Zipline Adventures is proud to offer you the “Adventure of a Lifetime!”</strong></p>\r\n<p><strong>Join us for our limited time full moon tours! Soar across five exhilarating ziplines, including the longest and fastest in Texas at over 2,800 feet under the moonlight! Your 3-hour guided tour includes a scenic boat ride, breathtaking views, and heart-pounding thrills!</strong></p>\r\n<p><strong>Reservations Required and spots are limited &#8211; Book online or call (512) 614-1996 to secure your spot!</strong></p>\r\n<p> </p>",
+        "email": "taitemltza@gmail.com",
+        "endDate": "2026-11-28T05:59:59.000Z",
+        "endTime": "00:00:00",
+        "endType": 3,
+        "eventTypeId": 2,
+        "expired": false,
+        "featured": false,
+        "filter_tags": [
+          "site_primary"
+        ],
+        "host_id": 49,
+        "hostname": "Lake Travis Zipline Adventures",
+        "interval": 0,
+        "linkUrl": "http://ziplaketravis.com",
+        "listing_id": 49,
+        "loc": {
+          "type": "Point",
+          "coordinates": [
+            -97.89018019999999,
+            30.4297294
+          ]
+        },
+        "location": "Lake Travis Zipline Adventures",
+        "media_raw": [
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/AdobeStock_220573409_42BF2825-0185-9DB5-F1B898BCB3BB5DBE_42c07e9f-aa9e-9348-1197b6450fc00c07.jpg",
+            "sortorder": 1,
+            "mediatype": "Image"
+          }
+        ],
+        "month": 0,
+        "never_expire": false,
+        "nextDate": "2026-11-28T05:59:59.000Z",
+        "occurrences": 0,
+        "past": false,
+        "phone": "(512) 614-1996",
+        "primary_site": "primary",
+        "primarycatid": "17",
+        "rank": 2,
+        "recId": "2066",
+        "recurType": 99,
+        "sites": [
+          "primary"
+        ],
+        "startDate": "2026-03-06T06:00:00.000Z",
+        "startTime": "16:00:00",
+        "state": "TX",
+        "times": "From: 04:00 PM to 12:00 AM",
+        "title": "Zipline Full Moon Tours",
+        "title_sort": "zipline full moon tours",
+        "typeName": "Ongoing Event",
+        "updated": "2026-11-24T06:47:50.748Z",
+        "week": 0,
+        "weekday": 0,
+        "zip": "78641",
+        "id": "6b0533180347610476613d8a",
+        "slug": "zipline-full-moon-tours",
+        "url": "/event/zipline-full-moon-tours/2066/",
+        "genericUrl": "/event/zipline-full-moon-tours/2066/",
+        "absoluteUrl": "https://visitcedarparktexas.com/event/zipline-full-moon-tours/2066/",
+        "absolute_primary_url": "https://visitcedarparktexas.com/event/zipline-full-moon-tours/2066/",
+        "teaser": "<p><strong><img src=\"https://CedarParkTX.simpleviewcrm.com/images/tinymce/zipline-moon_414C4FCF-907D-7906-9E4A21DB96AF2ABA.jpg\" alt width=\"566\" height=\"283\"></strong></p> <p><strong>Looking for the perfect date night or unforgettable thrill for the whole family? Lake Travis Zipline Adventures is proud to offer you the &#x201C;Adventure of a Lifetime!&#x201D;</strong></p> <p><strong>Join us for our limited time full</strong></p>",
+        "longitude": -97.89018019999999,
+        "latitude": 30.4297294
+      },
+      {
+        "_id": "6b01f4f20347610476b63025",
+        "date": "2026-11-29T05:59:59.000Z",
+        "recid": "3353",
+        "_media": [
+          {
+            "mediafile": "SPURS_DF44ED40-E28E-4185-99F7D97F613E9570.jpg",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/SPURS_DF44ED40-E28E-4185-99F7D97F613E9570_df6c8977-b8cd-15ba-fe7d5a150a286e5f.jpg",
+            "sortorder": 1
+          }
+        ],
+        "accountId": 190,
+        "active": true,
+        "address1": "2100 Avenue of the Stars",
+        "calendarid": "1",
+        "categories": [
+          {
+            "catName": "Austin Spurs Basketball",
+            "catId": "2"
+          },
+          {
+            "catName": "Sports",
+            "catId": "8"
+          },
+          {
+            "catName": "H-E-B Center at Cedar Park",
+            "catId": "22"
+          }
+        ],
+        "city": "Cedar Park",
+        "cms_title": "Austin Spurs vs Mexico City Capitanes (3353)",
+        "cms_title_sort": "austin spurs vs mexico city capitanes (3353)",
+        "dates": {
+          "eventDate": "2026-11-29T05:59:59.000Z"
+        },
+        "day": 0,
+        "dayMask": 0,
+        "description": "<p>H-E-B Center at Cedar Park is the home of the Austin Spurs, the NBA G League affiliate of the San Antonio Spurs. Since Austin’s inaugural season in 2005, the team has won two G League championships (2012, 2018) and advanced to the playoffs nine seasons. </p>\r\n<p> </p>\r\n<p>The G League is the NBA’s official minor league, preparing players, coaches, officials, trainers and front-office staff for the NBA while acting as the league’s research and development laboratory. A record 53 percent of players on NBA rosters at the end of the 2020-21 NBA season had played in the G League.</p>",
+        "endDate": "2027-01-29T05:59:59.000Z",
+        "endType": 3,
+        "eventTypeId": 1,
+        "expired": false,
+        "featured": false,
+        "filter_tags": [
+          "site_primary"
+        ],
+        "host_id": 182,
+        "hostname": "Austin Spurs",
+        "interval": 0,
+        "linkUrl": "https://www.hebcenter.com/teams/detail/austin-spurs",
+        "listing_id": 37,
+        "loc": {
+          "type": "Point",
+          "coordinates": [
+            -97.8203092,
+            30.5412859
+          ]
+        },
+        "location": "H-E-B Center at Cedar Park",
+        "media_raw": [
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/SPURS_DF44ED40-E28E-4185-99F7D97F613E9570_df6c8977-b8cd-15ba-fe7d5a150a286e5f.jpg",
+            "sortorder": 1,
+            "mediatype": "Image"
+          }
+        ],
+        "month": 0,
+        "never_expire": false,
+        "nextDate": "2026-11-29T05:59:59.000Z",
+        "occurrences": 0,
+        "past": false,
+        "phone": "(512) 600-5000",
+        "primary_site": "primary",
+        "primarycatid": "2",
+        "rank": 1,
+        "recId": "3353",
+        "recurType": 99,
+        "sites": [
+          "primary"
+        ],
+        "startDate": "2026-11-28T06:00:00.000Z",
+        "state": "TX",
+        "title": "Austin Spurs vs Mexico City Capitanes",
+        "title_sort": "austin spurs vs mexico city capitanes",
+        "typeName": "One Time Event",
+        "updated": "2026-11-21T19:45:52.714Z",
+        "week": 0,
+        "weekday": 0,
+        "zip": "78613",
+        "id": "6b01f4f20347610476b63025",
+        "slug": "austin-spurs-vs-mexico-city-capitanes",
+        "url": "/event/austin-spurs-vs-mexico-city-capitanes/3353/",
+        "genericUrl": "/event/austin-spurs-vs-mexico-city-capitanes/3353/",
+        "absoluteUrl": "https://visitcedarparktexas.com/event/austin-spurs-vs-mexico-city-capitanes/3353/",
+        "absolute_primary_url": "https://visitcedarparktexas.com/event/austin-spurs-vs-mexico-city-capitanes/3353/",
+        "teaser": "<p>H-E-B Center at Cedar Park is the home of the Austin Spurs, the NBA G League affiliate of the San Antonio Spurs. Since Austin&#x2019;s inaugural season in 2005, the team has won two G League championships</p>",
+        "longitude": -97.8203092,
+        "latitude": 30.5412859
+      },
+      {
+        "_id": "6b02e3ec0347610476e3eff5",
+        "recid": "3395",
+        "date": "2026-11-29T05:59:59.000Z",
+        "_media": [
+          {
+            "mediafile": "Family-wheel-scaled-e1754883636342-450x450_B6571F11-C751-F241-B5F22EA3B033AC90.jpg",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/Family-wheel-scaled-e1754883636342-450x450_B6571F11-C751-F241-B5F22EA3B033AC90_b657ae53-0cb4-6cec-d0a241edccf9aabe.jpg",
+            "sortorder": 1
+          }
+        ],
+        "accountId": 356,
+        "active": true,
+        "address1": "200 Buttercup Creek, Ste. 122",
+        "admission": "75",
+        "calendarid": "1",
+        "categories": [
+          {
+            "catName": "Fun For The Whole Family",
+            "catId": "17"
+          }
+        ],
+        "city": "Cedar Park",
+        "cms_title": "Family Wheel Workshop (3395)",
+        "cms_title_sort": "family wheel workshop (3395)",
+        "dates": {
+          "eventDate": "2026-11-29T05:59:59.000Z"
+        },
+        "day": 0,
+        "dayMask": 0,
+        "description": "<p>Enroll for some family fun in this one-time class for parents, kids, tweens or teens interested in learning to use the potter’s wheel. Have fun and connect with your family while receiving a lesson from our talented ceramic artists. Students will each work on individual pottery wheels to complete a one-of-a-kind ceramic piece with the assistance of our teacher. Beginners are welcome and no previous experience is necessary. For ages 8 and up. Students under 12 must register with an adult.</p>",
+        "email": "janine@cordovanartschool.com",
+        "endDate": "2027-02-28T05:59:59.000Z",
+        "endTime": "15:00:00",
+        "endType": 3,
+        "eventTypeId": 1,
+        "expired": false,
+        "featured": false,
+        "filter_tags": [
+          "site_primary"
+        ],
+        "host_id": 335,
+        "interval": 0,
+        "linkUrl": "https://cordovanartschool.com/location/cedar-park/#workshops",
+        "listing_id": 335,
+        "loc": {
+          "type": "Point",
+          "coordinates": [
+            -97.82065759999999,
+            30.50282249999999
+          ]
+        },
+        "location": "Cordovan Art School & Pottery Parlor",
+        "media_raw": [
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/Family-wheel-scaled-e1754883636342-450x450_B6571F11-C751-F241-B5F22EA3B033AC90_b657ae53-0cb4-6cec-d0a241edccf9aabe.jpg",
+            "sortorder": 1,
+            "mediatype": "Image"
+          }
+        ],
+        "month": 0,
+        "never_expire": false,
+        "nextDate": "2026-11-29T05:59:59.000Z",
+        "occurrences": 0,
+        "past": false,
+        "phone": "(512) 284-9874",
+        "primary_site": "primary",
+        "primarycatid": "17",
+        "rank": 1,
+        "recId": "3395",
+        "recurType": 99,
+        "sites": [
+          "primary"
+        ],
+        "startDate": "2026-10-24T05:00:00.000Z",
+        "startTime": "13:00:00",
+        "state": "TX",
+        "title": "Family Wheel Workshop",
+        "title_sort": "family wheel workshop",
+        "typeName": "One Time Event",
+        "updated": "2026-11-22T12:45:28.709Z",
+        "week": 0,
+        "weekday": 0,
+        "zip": "78613",
+        "id": "6b02e3ec0347610476e3eff5",
+        "slug": "family-wheel-workshop",
+        "url": "/event/family-wheel-workshop/3395/",
+        "genericUrl": "/event/family-wheel-workshop/3395/",
+        "absoluteUrl": "https://visitcedarparktexas.com/event/family-wheel-workshop/3395/",
+        "absolute_primary_url": "https://visitcedarparktexas.com/event/family-wheel-workshop/3395/",
+        "teaser": "<p>Enroll for some family fun in this one-time class for parents, kids, tweens or teens interested in learning to use the potter&#x2019;s wheel. Have fun and connect with your family while receiving a lesson</p>",
+        "longitude": -97.82065759999999,
+        "latitude": 30.50282249999999
+      },
+      {
+        "_id": "6b0363000347610476fbe014",
+        "date": "2026-11-29T05:59:59.000Z",
+        "recid": "2160",
+        "_media": [
+          {
+            "mediafile": "LIVE-MUSIC-SATURDAY_1D7213F3-BF27-7DD6-8DCCA949456DCCC0.png",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/LIVE-MUSIC-SATURDAY_1D7213F3-BF27-7DD6-8DCCA949456DCCC0_1d72fb34-bbf0-2724-058ec180f01a03ad.png",
+            "sortorder": 1
+          },
+          {
+            "mediafile": "roall-microphone-2425452_1920_BE6C6D2E-C8A3-A9DD-E4C02F1E5CBE9A2B.jpg",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/roall-microphone-2425452_1920_BE6C6D2E-C8A3-A9DD-E4C02F1E5CBE9A2B_be6e82e2-f407-c119-22e9fc8134a135f6.jpg",
+            "sortorder": 2
+          }
+        ],
+        "accountId": 80,
+        "active": true,
+        "address1": "601 East Whitestone Blvd.",
+        "admission": "FREE",
+        "calendarid": "1",
+        "categories": [
+          {
+            "catName": "Concerts/Live Music/Live Entertainment",
+            "catId": "5"
+          },
+          {
+            "catName": "Free",
+            "catId": "14"
+          }
+        ],
+        "city": "Cedar Park",
+        "cms_title": "Free Live Music (2160)",
+        "cms_title_sort": "free live music (2160)",
+        "dates": {
+          "eventDate": "2026-11-29T05:59:59.000Z"
+        },
+        "day": 0,
+        "dayMask": 128,
+        "description": "<p>Catch FREE Live Music at Shooters every Saturday night! Enjoy a round of pool, good drinks, great bands and fine folks every weekend!</p>",
+        "endTime": "01:00:00",
+        "endType": 1,
+        "eventTypeId": 1,
+        "expired": false,
+        "featured": false,
+        "filter_tags": [
+          "site_primary"
+        ],
+        "host_id": 74,
+        "interval": 1,
+        "linkUrl": "https://shootersbilliards.net/cedar-park-events",
+        "listing_id": 74,
+        "loc": {
+          "type": "Point",
+          "coordinates": [
+            -97.825251,
+            30.5234068
+          ]
+        },
+        "location": "Shooters Billiards & Sports Bar",
+        "media_raw": [
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/LIVE-MUSIC-SATURDAY_1D7213F3-BF27-7DD6-8DCCA949456DCCC0_1d72fb34-bbf0-2724-058ec180f01a03ad.png",
+            "sortorder": 1,
+            "mediatype": "Image"
+          },
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/roall-microphone-2425452_1920_BE6C6D2E-C8A3-A9DD-E4C02F1E5CBE9A2B_be6e82e2-f407-c119-22e9fc8134a135f6.jpg",
+            "sortorder": 2,
+            "mediatype": "Image"
+          }
+        ],
+        "month": 0,
+        "never_expire": false,
+        "nextDate": "2026-11-29T05:59:59.000Z",
+        "occurrences": 0,
+        "past": false,
+        "primary_site": "primary",
+        "primarycatid": "5",
+        "rank": 1,
+        "recId": "2160",
+        "recurType": 3,
+        "recurrence": "Recurring weekly on Saturday",
+        "sites": [
+          "primary"
+        ],
+        "startDate": "2026-05-16T05:00:00.000Z",
+        "startTime": "09:00:00",
+        "state": "TX",
+        "title": "Free Live Music",
+        "title_sort": "free live music",
+        "typeName": "One Time Event",
+        "updated": "2026-11-22T21:47:42.723Z",
+        "week": 0,
+        "weekday": 0,
+        "zip": "78613",
+        "id": "6b0363000347610476fbe014",
+        "slug": "free-live-music",
+        "url": "/event/free-live-music/2160/",
+        "genericUrl": "/event/free-live-music/2160/",
+        "absoluteUrl": "https://visitcedarparktexas.com/event/free-live-music/2160/",
+        "absolute_primary_url": "https://visitcedarparktexas.com/event/free-live-music/2160/",
+        "teaser": "<p>Catch FREE Live Music at Shooters every Saturday night! Enjoy a round of pool, good drinks, great bands and fine folks every weekend!</p>",
+        "longitude": -97.825251,
+        "latitude": 30.5234068
+      },
+      {
+        "_id": "6b014c78034761047695971c",
+        "recid": "2230",
+        "date": "2026-11-29T05:59:59.000Z",
+        "_media": [
+          {
+            "mediafile": "kiddie-open-gym_4D0032D2-9C3D-5E91-4F92147465518EEF.png",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/kiddie-open-gym_4D0032D2-9C3D-5E91-4F92147465518EEF_4d01fb95-d76e-d756-5302d492cfd352dd.png",
+            "sortorder": 1
+          },
+          {
+            "mediafile": "little-land_F8E7B86C-F807-71C8-DA937ABCBEC86D8D.jpg",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/little-land_F8E7B86C-F807-71C8-DA937ABCBEC86D8D_ffbc1bd8-a7ba-7f05-678c0b2e6187ce8c.jpg",
+            "sortorder": 2
+          }
+        ],
+        "accountId": 690,
+        "active": true,
+        "address1": "200 Buttercup Creek Blvd",
+        "address2": "Suite 104",
+        "admission": "15$ per child, children under 1 get in for free with paying sibling",
+        "calendarid": "1",
+        "categories": [
+          {
+            "catName": "Fun For The Whole Family",
+            "catId": "17"
+          }
+        ],
+        "city": "Cedar Park",
+        "cms_title": "Kiddie Gym - Open Play (2230)",
+        "cms_title_sort": "kiddie gym - open play (2230)",
+        "dates": {
+          "eventDate": "2026-11-29T05:59:59.000Z"
+        },
+        "day": 0,
+        "dayMask": 0,
+        "description": "<p>Our play gym is filled with climbers, slides, sensory bins, art stations, ball pits, and imagination zones — all designed by pediatric therapists. Open Play is unstructured time for children to explore, regulate, and grow at their own pace, with friendly staff nearby and parents welcome to relax and connect</p>",
+        "email": "connor@mylittleland.com",
+        "endType": 1,
+        "eventTypeId": 1,
+        "expired": false,
+        "featured": false,
+        "filter_tags": [
+          "site_primary"
+        ],
+        "hostname": "Little Land",
+        "interval": 1,
+        "linkUrl": "https://mylittleland.com/services/open-play",
+        "listing_id": 730,
+        "loc": {
+          "type": "Point",
+          "coordinates": [
+            -97.8219236,
+            30.5023048
+          ]
+        },
+        "location": "Little Land",
+        "media_raw": [
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/kiddie-open-gym_4D0032D2-9C3D-5E91-4F92147465518EEF_4d01fb95-d76e-d756-5302d492cfd352dd.png",
+            "sortorder": 1,
+            "mediatype": "Image"
+          },
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/little-land_F8E7B86C-F807-71C8-DA937ABCBEC86D8D_ffbc1bd8-a7ba-7f05-678c0b2e6187ce8c.jpg",
+            "sortorder": 2,
+            "mediatype": "Image"
+          }
+        ],
+        "month": 0,
+        "never_expire": false,
+        "nextDate": "2026-11-22T05:59:59.000Z",
+        "occurrences": 0,
+        "past": false,
+        "primary_site": "primary",
+        "primarycatid": "17",
+        "rank": 1,
+        "recId": "2230",
+        "recurType": 1,
+        "recurrence": "Recurring daily",
+        "sites": [
+          "primary"
+        ],
+        "startDate": "2026-07-02T05:00:00.000Z",
+        "state": "TX",
+        "title": "Kiddie Gym - Open Play",
+        "title_sort": "kiddie gym - open play",
+        "typeName": "One Time Event",
+        "updated": "2026-11-21T07:47:02.151Z",
+        "week": 0,
+        "weekday": 0,
+        "zip": "78613",
+        "id": "6b014c78034761047695971c",
+        "slug": "kiddie-gym-open-play",
+        "url": "/event/kiddie-gym-open-play/2230/",
+        "genericUrl": "/event/kiddie-gym-open-play/2230/",
+        "absoluteUrl": "https://visitcedarparktexas.com/event/kiddie-gym-open-play/2230/",
+        "absolute_primary_url": "https://visitcedarparktexas.com/event/kiddie-gym-open-play/2230/",
+        "teaser": "<p>Our play gym is filled with climbers, slides, sensory bins, art stations, ball pits, and imagination zones &#x2014; all designed by pediatric therapists. Open Play is unstructured time for children to</p>",
+        "longitude": -97.8219236,
+        "latitude": 30.5023048
+      },
+      {
+        "_id": "6b03b6dd03476104760d873b",
+        "date": "2026-11-29T05:59:59.000Z",
+        "recid": "3389",
+        "_media": [
+          {
+            "mediafile": "Bingo-Night-_AE38B24C-BCAF-5A66-78D177AA91B243F4.png",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/Bingo-Night-_AE38B24C-BCAF-5A66-78D177AA91B243F4_ae3982e2-d2ee-5551-75ac124809781e77.png",
+            "sortorder": 1
+          },
+          {
+            "mediafile": "Generic-Bingo_54F8DC26-D399-4A89-A43CF3566748B7FA.jpg",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/Generic-Bingo_54F8DC26-D399-4A89-A43CF3566748B7FA_adecb9c0-35e6-4d7b-aa16eb207f80c764.jpg",
+            "sortorder": 2
+          }
+        ],
+        "accountId": 222,
+        "active": true,
+        "address1": "401 Cypress Creek Road, Ste. 100",
+        "admission": "Free",
+        "calendarid": "1",
+        "categories": [
+          {
+            "catName": "Pub Fun/Nightlife",
+            "catId": "16"
+          }
+        ],
+        "city": "Cedar Park",
+        "cms_title": "Bingo Night! (3389)",
+        "cms_title_sort": "bingo night! (3389)",
+        "contactEmail": "scottsemail1977@gmail.com",
+        "contactFirstName": "Scott",
+        "contactId": 389,
+        "contactLastName": "Smith",
+        "contactName": "Scott Smith",
+        "dates": {
+          "eventDate": "2026-11-29T05:59:59.000Z"
+        },
+        "day": 0,
+        "dayMask": 0,
+        "description": "<p>Every last Saturday we feature a FREE bingo night. With rotating hosts, comedian bingo callers! Great vibe, fun prizes! Beer, Bingo and aa good time!</p>",
+        "email": "scott@thebrewtique.com",
+        "endTime": "21:15:00",
+        "endType": 1,
+        "eventTypeId": 2,
+        "expired": false,
+        "featured": false,
+        "filter_tags": [
+          "site_primary"
+        ],
+        "interval": 1,
+        "linkUrl": "http://thebrewtiquecedarpark.com",
+        "listing_id": 214,
+        "loc": {
+          "type": "Point",
+          "coordinates": [
+            -97.8209291,
+            30.4975681
+          ]
+        },
+        "location": "The Brewtique",
+        "media_raw": [
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/Bingo-Night-_AE38B24C-BCAF-5A66-78D177AA91B243F4_ae3982e2-d2ee-5551-75ac124809781e77.png",
+            "sortorder": 1,
+            "mediatype": "Image"
+          },
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/Generic-Bingo_54F8DC26-D399-4A89-A43CF3566748B7FA_adecb9c0-35e6-4d7b-aa16eb207f80c764.jpg",
+            "sortorder": 2,
+            "mediatype": "Image"
+          }
+        ],
+        "month": 0,
+        "never_expire": false,
+        "nextDate": "2026-11-29T05:59:59.000Z",
+        "occurrences": 0,
+        "past": false,
+        "phone": "(512) 291-2622",
+        "primary_site": "primary",
+        "primarycatid": "16",
+        "rank": 2,
+        "recId": "3389",
+        "recurType": 5,
+        "recurrence": "Recurring monthly on the 4th Saturday",
+        "sites": [
+          "primary"
+        ],
+        "startDate": "2026-09-26T05:00:00.000Z",
+        "startTime": "19:00:00",
+        "state": "TX",
+        "times": "From: 07:00 PM to 09:15 PM",
+        "title": "Bingo Night!",
+        "title_sort": "bingo night!",
+        "typeName": "Ongoing Event",
+        "updated": "2026-11-23T03:45:31.493Z",
+        "week": 4,
+        "weekday": 7,
+        "zip": "78613",
+        "id": "6b03b6dd03476104760d873b",
+        "slug": "bingo-night!",
+        "url": "/event/bingo-night!/3389/",
+        "genericUrl": "/event/bingo-night!/3389/",
+        "absoluteUrl": "https://visitcedarparktexas.com/event/bingo-night!/3389/",
+        "absolute_primary_url": "https://visitcedarparktexas.com/event/bingo-night!/3389/",
+        "teaser": "<p>Every last Saturday we feature a FREE bingo night. With rotating hosts, comedian bingo callers! Great vibe, fun prizes! Beer, Bingo and aa good time!</p>",
+        "longitude": -97.8209291,
+        "latitude": 30.4975681
+      },
+      {
+        "_id": "6b07b96ff11255df48d08efa",
+        "recid": "2143",
+        "date": "2026-11-29T05:59:59.000Z",
+        "_media": [
+          {
+            "mediafile": "PATTY-CHALLENGE_4E026335-9298-A00D-1EC421953F319FEB.png",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/PATTY-CHALLENGE_4E026335-9298-A00D-1EC421953F319FEB_4e03c12f-ce08-aa5a-aa9832cb0a15033f.png",
+            "sortorder": 1
+          },
+          {
+            "mediafile": "burger-bar-burger-champion_8ED12C1C-A94A-D43E-022BE6BB4B6BCCD4.png",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/burger-bar-burger-champion_8ED12C1C-A94A-D43E-022BE6BB4B6BCCD4_8ed1a555-9a13-8951-03115c5a1a15f27b.png",
+            "sortorder": 2
+          }
+        ],
+        "accountId": 560,
+        "active": true,
+        "address1": "2005 Little Elm Trl",
+        "address2": "BLDG A STE 100",
+        "calendarid": "1",
+        "categories": [
+          {
+            "catName": "Social/Other/Miscellaneous",
+            "catId": "12"
+          },
+          {
+            "catName": "Free",
+            "catId": "14"
+          }
+        ],
+        "city": "Cedar Park",
+        "cms_title": "Burger Eating Challenge (2143)",
+        "cms_title_sort": "burger eating challenge (2143)",
+        "dates": {
+          "eventDate": "2026-11-29T05:59:59.000Z"
+        },
+        "day": 0,
+        "dayMask": 0,
+        "description": "<p>Think you can eat a minimum of 6 patties in patty matching minutes? Let your server know if you want to try!</p>\r\n<p>But be careful; if you fail, you will end up on the wall of shame!</p>\r\n<p>Choose your patty amount and take your place on the leaderboard (Burger Bar Hall of Fame)!</p>\r\n<p> </p>",
+        "endType": 1,
+        "eventTypeId": 2,
+        "expired": false,
+        "featured": false,
+        "filter_tags": [
+          "site_primary"
+        ],
+        "interval": 1,
+        "listing_id": 594,
+        "loc": {
+          "type": "Point",
+          "coordinates": [
+            -97.8300685,
+            30.4798406
+          ]
+        },
+        "location": "The Burger Bar",
+        "media_raw": [
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/PATTY-CHALLENGE_4E026335-9298-A00D-1EC421953F319FEB_4e03c12f-ce08-aa5a-aa9832cb0a15033f.png",
+            "sortorder": 1,
+            "mediatype": "Image"
+          },
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/burger-bar-burger-champion_8ED12C1C-A94A-D43E-022BE6BB4B6BCCD4_8ed1a555-9a13-8951-03115c5a1a15f27b.png",
+            "sortorder": 2,
+            "mediatype": "Image"
+          }
+        ],
+        "month": 0,
+        "never_expire": true,
+        "nextDate": "2026-11-26T05:59:59.000Z",
+        "occurrences": 0,
+        "past": false,
+        "primary_site": "primary",
+        "primarycatid": "12",
+        "rank": 2,
+        "recId": "2143",
+        "recurType": 1,
+        "recurrence": "Recurring daily",
+        "sites": [
+          "primary"
+        ],
+        "startDate": "2026-04-29T05:00:00.000Z",
+        "state": "TX",
+        "title": "Burger Eating Challenge",
+        "title_sort": "burger eating challenge",
+        "typeName": "Ongoing Event",
+        "updated": "2026-11-26T04:45:33.327Z",
+        "week": 0,
+        "weekday": 0,
+        "zip": "78613",
+        "id": "6b07b96ff11255df48d08efa",
+        "slug": "burger-eating-challenge",
+        "url": "/event/burger-eating-challenge/2143/",
+        "genericUrl": "/event/burger-eating-challenge/2143/",
+        "absoluteUrl": "https://visitcedarparktexas.com/event/burger-eating-challenge/2143/",
+        "absolute_primary_url": "https://visitcedarparktexas.com/event/burger-eating-challenge/2143/",
+        "teaser": "<p>Think you can eat a minimum of 6 patties in patty matching minutes? Let your server know if you want to try!</p> <p>But be careful; if you fail, you will end up on the wall of shame!</p> <p>Choose your patty amount</p>",
+        "longitude": -97.8300685,
+        "latitude": 30.4798406
+      },
+      {
+        "_id": "6b09433ef11255df4821651a",
+        "date": "2026-11-29T05:59:59.000Z",
+        "recid": "2242",
+        "_media": [
+          {
+            "mediafile": "weekday-dance-lessons_5012434A-D9AB-94E2-50E900194FC0BFC1.png",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/weekday-dance-lessons_5012434A-D9AB-94E2-50E900194FC0BFC1_50131163-0470-9125-448d93c1404a4000.png",
+            "sortorder": 1
+          },
+          {
+            "mediafile": "AdobeStock_930750306_C79388F7-C39E-3E43-78881319B6F7D7F3.jpeg",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/AdobeStock_930750306_C79388F7-C39E-3E43-78881319B6F7D7F3_c7970b6a-d4ca-7eb4-e16d7815c29f10f0.jpg",
+            "sortorder": 2
+          }
+        ],
+        "accountId": 28,
+        "active": true,
+        "address1": "401 East Whitestone Blvd.",
+        "admission": "18+ establishment. Patrons age 18 to 20 are subject to additional cover fees at the door.",
+        "calendarid": "1",
+        "categories": [
+          {
+            "catName": "Pub Fun/Nightlife",
+            "catId": "16"
+          }
+        ],
+        "city": "Cedar Park",
+        "cms_title": "Dance Lessons at Wild West (2242)",
+        "cms_title_sort": "dance lessons at wild west (2242)",
+        "dates": {
+          "eventDate": "2026-11-29T05:59:59.000Z"
+        },
+        "day": 0,
+        "dayMask": 208,
+        "description": "<div class=\"elementor-element elementor-element-8d3ae15 elementor-widget elementor-widget-heading\" data-id=\"8d3ae15\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"heading.default\">\r\n<div class=\"elementor-widget-container\">\r\n<h2 class=\"elementor-heading-title elementor-size-default\">Wednesday</h2>\r\n</div>\r\n</div>\r\n<div class=\"elementor-element elementor-element-7ee1a54 elementor-widget elementor-widget-heading\" data-id=\"7ee1a54\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"heading.default\">\r\n<div class=\"elementor-widget-container\">\r\n<h2 class=\"elementor-heading-title elementor-size-default\">Dance Lessons</h2>\r\n</div>\r\n</div>\r\n<div class=\"elementor-element elementor-element-d5a5379 elementor-widget elementor-widget-text-editor\" data-id=\"d5a5379\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"text-editor.default\">\r\n<div class=\"elementor-widget-container\">\r\n<p><strong>by Ask Me To Dance &#8211; Luke Martz</strong></p>\r\n<p>7:30pm &#8211; 8:30pm</p>\r\n</div>\r\n</div>\r\n<div class=\"elementor-element elementor-element-dccf87b elementor-widget elementor-widget-text-editor\" data-id=\"dccf87b\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"text-editor.default\">\r\n<div class=\"elementor-widget-container\">\r\n<p>No Cover for Ladies 18+</p>\r\n<p>$5 for Men 21+</p>\r\n<p>Men age 18 to 20 pay additional fee at the door</p>\r\n</div>\r\n</div>\r\n<div class=\"elementor-element elementor-element-c65d8c1 elementor-widget elementor-widget-text-editor\" data-id=\"c65d8c1\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"text-editor.default\">\r\n<div class=\"elementor-widget-container\"> </div>\r\n</div>\r\n<div class=\"elementor-element elementor-element-bc3ddf6 elementor-widget-divider--view-line_icon elementor-view-default elementor-widget-divider--element-align-center elementor-widget elementor-widget-divider\" data-id=\"bc3ddf6\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"divider.default\">\r\n<div class=\"elementor-widget-container\">\r\n<div class=\"elementor-divider\">\r\n<div class=\"elementor-icon elementor-divider__element\"> </div>\r\n</div>\r\n</div>\r\n</div>\r\n<div class=\"elementor-element elementor-element-566777d elementor-widget elementor-widget-heading\" data-id=\"566777d\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"heading.default\">\r\n<div class=\"elementor-widget-container\">\r\n<h2 class=\"elementor-heading-title elementor-size-default\">Friday</h2>\r\n</div>\r\n</div>\r\n<div class=\"elementor-element elementor-element-5a5ba2a elementor-widget elementor-widget-text-editor\" data-id=\"5a5ba2a\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"text-editor.default\">\r\n<div class=\"elementor-widget-container\">\r\n<h3>Dance Lessons</h3>\r\n<p>7:30pm &#8211; 8:30pm</p>\r\n<p>with David Miller</p>\r\n</div>\r\n</div>\r\n<div class=\"elementor-element elementor-element-78f01a0 elementor-widget elementor-widget-text-editor\" data-id=\"78f01a0\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"text-editor.default\">\r\n<div class=\"elementor-widget-container\">\r\n<p><strong>Cover:</strong></p>\r\n<p>$6 Everyone 21+</p>\r\n<p>Patrons age 18 to 20 pay additional fee at the door</p>\r\n</div>\r\n</div>\r\n<div class=\"elementor-element elementor-element-7912835 elementor-widget elementor-widget-menu-anchor\" data-id=\"7912835\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"menu-anchor.default\">\r\n<div class=\"elementor-widget-container\">\r\n<div id=\"saturday\" class=\"elementor-menu-anchor\"></div>\r\n</div>\r\n</div>\r\n<div class=\"elementor-element elementor-element-4df6b94 elementor-widget-divider--view-line_icon elementor-view-default elementor-widget-divider--element-align-center elementor-widget elementor-widget-divider\" data-id=\"4df6b94\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"divider.default\">\r\n<div class=\"elementor-widget-container\">\r\n<div class=\"elementor-divider\">\r\n<div class=\"elementor-icon elementor-divider__element\"> </div>\r\n</div>\r\n</div>\r\n</div>\r\n<div class=\"elementor-element elementor-element-1572b73 elementor-widget elementor-widget-heading\" data-id=\"1572b73\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"heading.default\">\r\n<div class=\"elementor-widget-container\">\r\n<h2 class=\"elementor-heading-title elementor-size-default\">Saturday</h2>\r\n</div>\r\n</div>\r\n<div class=\"elementor-element elementor-element-2786f38 elementor-widget elementor-widget-text-editor\" data-id=\"2786f38\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"text-editor.default\">\r\n<div class=\"elementor-widget-container\">\r\n<h3>21+ Ladies Night!</h3>\r\n<h3>Line Dance Lessons</h3>\r\n<p>9:15pm &#8211; 10:00pm</p>\r\n<p> </p>\r\n<p><strong>Cover:</strong></p>\r\n<p>No Cover for Ladies 21+</p>\r\n<p>Patrons age 18 to 20 pay additional fee at the door</p>\r\n</div>\r\n</div>",
+        "endType": 1,
+        "eventTypeId": 2,
+        "expired": false,
+        "featured": false,
+        "filter_tags": [
+          "site_primary"
+        ],
+        "interval": 1,
+        "linkUrl": "https://wildwestcedarpark.com/specials/",
+        "listing_id": 267,
+        "loc": {
+          "type": "Point",
+          "coordinates": [
+            -97.8270646,
+            30.5225119
+          ]
+        },
+        "location": "Wild West",
+        "media_raw": [
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/weekday-dance-lessons_5012434A-D9AB-94E2-50E900194FC0BFC1_50131163-0470-9125-448d93c1404a4000.png",
+            "sortorder": 1,
+            "mediatype": "Image"
+          },
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/AdobeStock_930750306_C79388F7-C39E-3E43-78881319B6F7D7F3_c7970b6a-d4ca-7eb4-e16d7815c29f10f0.jpg",
+            "sortorder": 2,
+            "mediatype": "Image"
+          }
+        ],
+        "month": 0,
+        "never_expire": false,
+        "nextDate": "2026-11-28T05:59:59.000Z",
+        "occurrences": 0,
+        "past": false,
+        "primary_site": "primary",
+        "primarycatid": "16",
+        "rank": 2,
+        "recId": "2242",
+        "recurType": 3,
+        "recurrence": "Recurring weekly on Wednesday, Friday, Saturday",
+        "sites": [
+          "primary"
+        ],
+        "startDate": "2026-07-10T05:00:00.000Z",
+        "state": "TX",
+        "title": "Dance Lessons at Wild West",
+        "title_sort": "dance lessons at wild west",
+        "typeName": "Ongoing Event",
+        "updated": "2026-11-27T08:45:48.751Z",
+        "week": 0,
+        "weekday": 0,
+        "zip": "78613",
+        "id": "6b09433ef11255df4821651a",
+        "slug": "dance-lessons-at-wild-west",
+        "url": "/event/dance-lessons-at-wild-west/2242/",
+        "genericUrl": "/event/dance-lessons-at-wild-west/2242/",
+        "absoluteUrl": "https://visitcedarparktexas.com/event/dance-lessons-at-wild-west/2242/",
+        "absolute_primary_url": "https://visitcedarparktexas.com/event/dance-lessons-at-wild-west/2242/",
+        "teaser": "<div class=\"elementor-element elementor-element-8d3ae15 elementor-widget elementor-widget-heading\" data-id=\"8d3ae15\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"heading.default\"> <div class=\"elementor-widget-container\"> <h2 class=\"elementor-heading-title elementor-size-default\">Wednesday</h2> </div> </div> <div class=\"elementor-element elementor-element-7ee1a54 elementor-widget elementor-widget-heading\" data-id=\"7ee1a54\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"heading.default\"> <div class=\"elementor-widget-container\"> <h2 class=\"elementor-heading-title elementor-size-default\">Dance Lessons</h2> </div> </div> <div class=\"elementor-element elementor-element-d5a5379 elementor-widget elementor-widget-text-editor\" data-id=\"d5a5379\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"text-editor.default\"> <div class=\"elementor-widget-container\"> <p><strong>by Ask Me To Dance &#x2013; Luke Martz</strong></p> <p>7:30pm &#x2013; 8:30pm</p> </div> </div> <div class=\"elementor-element elementor-element-dccf87b elementor-widget elementor-widget-text-editor\" data-id=\"dccf87b\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"text-editor.default\"> <div class=\"elementor-widget-container\"> <p>No Cover for Ladies 18+</p> <p>$5 for Men 21+</p> <p>Men age 18 to 20 pay additional fee at the door</p> </div> </div> <div class=\"elementor-element elementor-element-c65d8c1 elementor-widget elementor-widget-text-editor\" data-id=\"c65d8c1\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"text-editor.default\"> <div class=\"elementor-widget-container\"> </div> </div> <div class=\"elementor-element elementor-element-bc3ddf6 elementor-widget-divider--view-line_icon elementor-view-default elementor-widget-divider--element-align-center elementor-widget elementor-widget-divider\" data-id=\"bc3ddf6\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"divider.default\"> <div class=\"elementor-widget-container\"> <div class=\"elementor-divider\"> <div class=\"elementor-icon elementor-divider__element\"> </div> </div> </div> </div> <div class=\"elementor-element elementor-element-566777d elementor-widget elementor-widget-heading\" data-id=\"566777d\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"heading.default\"> <div class=\"elementor-widget-container\"> <h2 class=\"elementor-heading-title elementor-size-default\">Friday</h2> </div> </div> <div class=\"elementor-element elementor-element-5a5ba2a elementor-widget elementor-widget-text-editor\" data-id=\"5a5ba2a\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"text-editor.default\"> <div class=\"elementor-widget-container\"></div></div>",
+        "longitude": -97.8270646,
+        "latitude": 30.5225119
+      },
+      {
+        "_id": "6b04c2910347610476491bfb",
+        "recid": "1056",
+        "date": "2026-11-29T05:59:59.000Z",
+        "_media": [
+          {
+            "mediafile": "LIVE-MUSIC-GOOD-LOT_53A7C7C2-A942-6C99-566D0DFEB99EFDAD.png",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/LIVE-MUSIC-GOOD-LOT_53A7C7C2-A942-6C99-566D0DFEB99EFDAD_53a9080c-a0c7-8ec4-53f0860261cccab9.png",
+            "sortorder": 1
+          },
+          {
+            "mediafile": "musician-2943109_1920_AAF7CA4A-0B80-F3B3-0F66E3F7DEE5098C.jpg",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/musician-2943109_1920_AAF7CA4A-0B80-F3B3-0F66E3F7DEE5098C_aaf861a3-f102-ac23-741234d69524be65.jpg",
+            "sortorder": 2
+          }
+        ],
+        "accountId": 21,
+        "active": true,
+        "address1": "2500 West New Hope Drive",
+        "admission": "Free",
+        "calendarid": "1",
+        "categories": [
+          {
+            "catName": "Concerts/Live Music/Live Entertainment",
+            "catId": "5"
+          },
+          {
+            "catName": "Free",
+            "catId": "14"
+          },
+          {
+            "catName": "Pub Fun/Nightlife",
+            "catId": "16"
+          }
+        ],
+        "city": "Cedar Park",
+        "cms_title": "Free Live Music (1056)",
+        "cms_title_sort": "free live music (1056)",
+        "dates": {
+          "eventDate": "2026-11-29T05:59:59.000Z"
+        },
+        "day": 0,
+        "dayMask": 192,
+        "description": "<p>Free live music<strong> </strong>every Friday and Saturday night at The Good Lot in Cedar Park, TX!</p>",
+        "endTime": "21:30:00",
+        "endType": 1,
+        "eventTypeId": 2,
+        "expired": false,
+        "featured": false,
+        "filter_tags": [
+          "site_primary"
+        ],
+        "host_id": 21,
+        "hostname": "The Good Lot",
+        "interval": 1,
+        "linkUrl": "https://www.thegoodlotcp.com/happenings",
+        "listing_id": 21,
+        "loc": {
+          "type": "Point",
+          "coordinates": [
+            -97.8648278,
+            30.5235721
+          ]
+        },
+        "location": "The Good Lot",
+        "media_raw": [
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/LIVE-MUSIC-GOOD-LOT_53A7C7C2-A942-6C99-566D0DFEB99EFDAD_53a9080c-a0c7-8ec4-53f0860261cccab9.png",
+            "sortorder": 1,
+            "mediatype": "Image"
+          },
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/musician-2943109_1920_AAF7CA4A-0B80-F3B3-0F66E3F7DEE5098C_aaf861a3-f102-ac23-741234d69524be65.jpg",
+            "sortorder": 2,
+            "mediatype": "Image"
+          }
+        ],
+        "month": 0,
+        "never_expire": false,
+        "nextDate": "2026-11-28T05:59:59.000Z",
+        "occurrences": 0,
+        "past": false,
+        "primary_site": "primary",
+        "primarycatid": "5",
+        "rank": 2,
+        "recId": "1056",
+        "recurType": 3,
+        "recurrence": "Recurring weekly on Friday, Saturday",
+        "sites": [
+          "primary"
+        ],
+        "startDate": "2023-09-01T05:00:00.000Z",
+        "startTime": "19:00:00",
+        "state": "TX",
+        "times": "From: 07:00 PM to 09:30 PM",
+        "title": "Free Live Music",
+        "title_sort": "free live music",
+        "typeName": "Ongoing Event",
+        "updated": "2026-11-23T22:47:43.153Z",
+        "week": 0,
+        "weekday": 0,
+        "zip": "78613",
+        "id": "6b04c2910347610476491bfb",
+        "slug": "free-live-music",
+        "url": "/event/free-live-music/1056/",
+        "genericUrl": "/event/free-live-music/1056/",
+        "absoluteUrl": "https://visitcedarparktexas.com/event/free-live-music/1056/",
+        "absolute_primary_url": "https://visitcedarparktexas.com/event/free-live-music/1056/",
+        "teaser": "<p>Free live music<strong> </strong>every Friday and Saturday night at The Good Lot in Cedar Park, TX!</p>",
+        "longitude": -97.8648278,
+        "latitude": 30.5235721
+      },
+      {
+        "_id": "6b01307f034761047690a034",
+        "recid": "2021",
+        "date": "2026-11-29T05:59:59.000Z",
+        "_media": [
+          {
+            "mediafile": "jazz-lounge-live-music_EB0E13D7-DCA4-7362-69FE0BEFB4741B34.png",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/jazz-lounge-live-music_EB0E13D7-DCA4-7362-69FE0BEFB4741B34_eb0f23aa-c94a-c01b-1cd387ce7f5091b3.png",
+            "sortorder": 1
+          }
+        ],
+        "accountId": 152,
+        "active": true,
+        "address1": "1525 Cypress Creek Road",
+        "admission": "Cover charge can vary (can even be free!) \r\n\r\nContact Tuscanos for more information. (512) 996-8990",
+        "calendarid": "1",
+        "categories": [
+          {
+            "catName": "Concerts/Live Music/Live Entertainment",
+            "catId": "5"
+          }
+        ],
+        "city": "Cedar Park",
+        "cms_title": "Jazz Lounge (2021)",
+        "cms_title_sort": "jazz lounge (2021)",
+        "dates": {
+          "eventDate": "2026-11-29T05:59:59.000Z"
+        },
+        "day": 0,
+        "dayMask": 0,
+        "description": "<p>Italian kitchen &amp; jazz lounge</p>\r\n<p>Make a night of it.</p>\r\n<p><br>Join us for Italian cuisine, cocktails, and live music in Cedar Park.</p>",
+        "endTime": "22:00:00",
+        "endType": 1,
+        "eventTypeId": 2,
+        "expired": false,
+        "featured": false,
+        "filter_tags": [
+          "site_primary"
+        ],
+        "interval": 1,
+        "linkUrl": "https://www.tuscanoitalian.com/events",
+        "listing_id": 144,
+        "loc": {
+          "type": "Point",
+          "coordinates": [
+            -97.8343732,
+            30.4813053
+          ]
+        },
+        "location": "Tuscano",
+        "media_raw": [
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/jazz-lounge-live-music_EB0E13D7-DCA4-7362-69FE0BEFB4741B34_eb0f23aa-c94a-c01b-1cd387ce7f5091b3.png",
+            "sortorder": 1,
+            "mediatype": "Image"
+          }
+        ],
+        "month": 0,
+        "never_expire": false,
+        "nextDate": "2026-11-21T05:59:59.000Z",
+        "occurrences": 0,
+        "past": false,
+        "phone": "(512) 996-8990",
+        "primary_site": "primary",
+        "primarycatid": "5",
+        "rank": 2,
+        "recId": "2021",
+        "recurType": 1,
+        "recurrence": "Recurring daily",
+        "sites": [
+          "primary"
+        ],
+        "startDate": "2025-12-19T06:00:00.000Z",
+        "startTime": "19:00:00",
+        "state": "TX",
+        "title": "Jazz Lounge",
+        "title_sort": "jazz lounge",
+        "typeName": "Ongoing Event",
+        "updated": "2026-11-21T05:47:41.271Z",
+        "week": 0,
+        "weekday": 0,
+        "zip": "78613",
+        "id": "6b01307f034761047690a034",
+        "slug": "jazz-lounge",
+        "url": "/event/jazz-lounge/2021/",
+        "genericUrl": "/event/jazz-lounge/2021/",
+        "absoluteUrl": "https://visitcedarparktexas.com/event/jazz-lounge/2021/",
+        "absolute_primary_url": "https://visitcedarparktexas.com/event/jazz-lounge/2021/",
+        "teaser": "<p>Italian kitchen &amp; jazz lounge</p>\r\n<p>Make a night of it.</p>\r\n<p><br>Join us for Italian cuisine, cocktails, and live music in Cedar Park.</p>",
+        "longitude": -97.8343732,
+        "latitude": 30.4813053
+      },
+      {
+        "_id": "6b08c4d8f11255df480528e8",
+        "date": "2026-11-29T05:59:59.000Z",
+        "recid": "2240",
+        "_media": [
+          {
+            "mediafile": "chocolate-bar-class_51327315-E69F-A709-B7CF4CD582A5071E.png",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/chocolate-bar-class_51327315-E69F-A709-B7CF4CD582A5071E_5135622e-0ce2-d52c-ceae0e39be11dfd3.png",
+            "sortorder": 1
+          },
+          {
+            "mediafile": "kushi-chocolate-bar_C44EC883-E00E-42E6-49FA6F8DC81C17F3.jpg",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/kushi-chocolate-bar_C44EC883-E00E-42E6-49FA6F8DC81C17F3_c462dc41-f2f6-52b1-021b4f35ae07017d.jpg",
+            "sortorder": 2
+          }
+        ],
+        "accountId": 219,
+        "active": true,
+        "address1": "251 North Bell Blvd., Ste. 110",
+        "admission": " $25 + tax per participant (through August only)\r\nStarting September, pricing goes up to $30 + tax — so don’t wait!\r\n\r\nRecurring every second and last Saturday of the month. ",
+        "calendarid": "1",
+        "categories": [
+          {
+            "catName": "Outdoors",
+            "catId": "7"
+          },
+          {
+            "catName": "Social/Other/Miscellaneous",
+            "catId": "12"
+          },
+          {
+            "catName": "Fun For The Whole Family",
+            "catId": "17"
+          }
+        ],
+        "city": "Cedar Park",
+        "cms_title": "Make Your Own Chocolate Bar Class (2240)",
+        "cms_title_sort": "make your own chocolate bar class (2240)",
+        "contactEmail": "kushichocoec@gmail.com",
+        "contactFirstName": "Business",
+        "contactId": 163,
+        "contactLastName": "Owner",
+        "contactName": "Business Owner",
+        "dates": {
+          "eventDate": "2026-11-29T05:59:59.000Z"
+        },
+        "day": 0,
+        "dayMask": 0,
+        "description": "<div dir=\"auto\">\r\n<p>Chocolate Explorer: Family Edition</p>\r\n<p><br>Chocolate &amp; Cacao: Adult Experience</p>\r\n<p><br>El Viaje del Cacao (Español)</p>\r\n<p><br>Planning Something Bigger?</p>\r\n<p>🎉<br>Private &amp; Group Events</p>\r\n<p>Birthdays, showers, team events</p>\r\n</div>",
+        "email": "info@theecuadorianchocolate.com",
+        "endTime": "17:30:00",
+        "endType": 1,
+        "eventTypeId": 2,
+        "expired": false,
+        "featured": false,
+        "filter_tags": [
+          "site_primary"
+        ],
+        "interval": 1,
+        "linkUrl": "https://kushichocolate.netlify.app/",
+        "listing_id": 211,
+        "loc": {
+          "type": "Point",
+          "coordinates": [
+            -97.8248979,
+            30.5110906
+          ]
+        },
+        "location": "Kushi Ecuadorian Chocolate",
+        "media_raw": [
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/chocolate-bar-class_51327315-E69F-A709-B7CF4CD582A5071E_5135622e-0ce2-d52c-ceae0e39be11dfd3.png",
+            "sortorder": 1,
+            "mediatype": "Image"
+          },
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/kushi-chocolate-bar_C44EC883-E00E-42E6-49FA6F8DC81C17F3_c462dc41-f2f6-52b1-021b4f35ae07017d.jpg",
+            "sortorder": 2,
+            "mediatype": "Image"
+          }
+        ],
+        "month": 0,
+        "never_expire": false,
+        "nextDate": "2026-11-27T05:59:59.000Z",
+        "occurrences": 0,
+        "past": false,
+        "phone": "(737) 802-9651",
+        "primary_site": "primary",
+        "primarycatid": "7",
+        "rank": 2,
+        "recId": "2240",
+        "recurType": 1,
+        "recurrence": "Recurring daily",
+        "sites": [
+          "primary"
+        ],
+        "startDate": "2026-07-11T05:00:00.000Z",
+        "startTime": "16:00:00",
+        "state": "TX",
+        "times": "From: 4:00 PM to 5:30 PM",
+        "title": "Make Your Own Chocolate Bar Class",
+        "title_sort": "make your own chocolate bar class",
+        "typeName": "Ongoing Event",
+        "updated": "2026-11-26T23:46:30.137Z",
+        "week": 0,
+        "weekday": 0,
+        "zip": "78613",
+        "id": "6b08c4d8f11255df480528e8",
+        "slug": "make-your-own-chocolate-bar-class",
+        "url": "/event/make-your-own-chocolate-bar-class/2240/",
+        "genericUrl": "/event/make-your-own-chocolate-bar-class/2240/",
+        "absoluteUrl": "https://visitcedarparktexas.com/event/make-your-own-chocolate-bar-class/2240/",
+        "absolute_primary_url": "https://visitcedarparktexas.com/event/make-your-own-chocolate-bar-class/2240/",
+        "teaser": "<div dir=\"auto\"> <p>Chocolate Explorer: Family Edition</p> <p><br>Chocolate &amp; Cacao: Adult Experience</p> <p><br>El Viaje del Cacao (Espa&#xF1;ol)</p> <p><br>Planning Something Bigger?</p> <p>&#x1F389;<br>Private &amp; Group Events</p> <p>Birthdays, showers, team events</p> </div>",
+        "longitude": -97.8248979,
+        "latitude": 30.5110906
+      },
+      {
+        "_id": "6b029de80347610476d7772d",
+        "recid": "1699",
+        "date": "2026-11-29T05:59:59.000Z",
+        "_media": [
+          {
+            "mediafile": "TFM_June2024-2717_D6877F87-AEE3-4817-8AA3F6AF3022CA5F.jpg",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/TFM_June2024-2717_D6877F87-AEE3-4817-8AA3F6AF3022CA5F_fb86401f-7d7b-4890-9c5a74abf21eda35.jpg",
+            "sortorder": 1
+          }
+        ],
+        "accountId": 408,
+        "active": true,
+        "address1": "200 s bell",
+        "calendarid": "1",
+        "categories": [
+          {
+            "catName": "Free",
+            "catId": "14"
+          },
+          {
+            "catName": "Festivals/Markets",
+            "catId": "15"
+          },
+          {
+            "catName": "Fun For The Whole Family",
+            "catId": "17"
+          }
+        ],
+        "city": "cedar park",
+        "cms_title": "Texas Farmers' Market at Bell (1699)",
+        "cms_title_sort": "texas farmers' market at bell (1699)",
+        "contactEmail": "marketing@texasfarmersmarket.org",
+        "contactFirstName": "Business",
+        "contactId": 280,
+        "contactLastName": "Owner",
+        "contactName": "Business Owner",
+        "dates": {
+          "eventDate": "2026-11-29T05:59:59.000Z"
+        },
+        "day": 0,
+        "dayMask": 128,
+        "description": "<p>Texas Farmers Market at Bell is a fun event every Saturday where you can shop fresh produce, sustainably raised meat, prepared food &amp; beverages, artisan goods, and more. Enjoy live music from local artists while you shop and participate in our <a href=\"https://texasfarmersmarket.org/texas-farmers-market-composting\" target=\"\">community composting</a> program!</p>",
+        "email": "marketing@texasfarmersmarket.org",
+        "endTime": "13:00:00",
+        "endType": 1,
+        "eventTypeId": 2,
+        "expired": false,
+        "featured": false,
+        "filter_tags": [
+          "site_primary"
+        ],
+        "host_id": 392,
+        "hostname": "Texas Farmers' Market",
+        "interval": 1,
+        "linkUrl": "http://www.texasfarmersmarket.org",
+        "listing_id": 392,
+        "loc": {
+          "type": "Point",
+          "coordinates": [
+            -97.8218811,
+            30.5079843
+          ]
+        },
+        "location": "Texas Farmer's Market at Bell",
+        "media_raw": [
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/TFM_June2024-2717_D6877F87-AEE3-4817-8AA3F6AF3022CA5F_fb86401f-7d7b-4890-9c5a74abf21eda35.jpg",
+            "sortorder": 1,
+            "mediatype": "Image"
+          }
+        ],
+        "month": 0,
+        "never_expire": false,
+        "nextDate": "2026-11-29T05:59:59.000Z",
+        "occurrences": 0,
+        "past": false,
+        "primary_site": "primary",
+        "primarycatid": "14",
+        "rank": 2,
+        "recId": "1699",
+        "recurType": 3,
+        "recurrence": "Recurring weekly on Saturday",
+        "sites": [
+          "primary"
+        ],
+        "startDate": "2025-05-17T05:00:00.000Z",
+        "startTime": "09:00:00",
+        "state": "TX",
+        "times": "From: 09:00 AM to 01:00 PM",
+        "title": "Texas Farmers' Market at Bell",
+        "title_sort": "texas farmers' market at bell",
+        "typeName": "Ongoing Event",
+        "updated": "2026-11-22T07:46:46.668Z",
+        "week": 0,
+        "weekday": 0,
+        "zip": "78613",
+        "id": "6b029de80347610476d7772d",
+        "slug": "texas-farmers-market-at-bell",
+        "url": "/event/texas-farmers-market-at-bell/1699/",
+        "genericUrl": "/event/texas-farmers-market-at-bell/1699/",
+        "absoluteUrl": "https://visitcedarparktexas.com/event/texas-farmers-market-at-bell/1699/",
+        "absolute_primary_url": "https://visitcedarparktexas.com/event/texas-farmers-market-at-bell/1699/",
+        "teaser": "<p>Texas Farmers Market at Bell is a fun event every Saturday where you can shop fresh produce, sustainably raised meat, prepared food &amp; beverages, artisan goods, and more. Enjoy live music from local</p>",
+        "longitude": -97.8218811,
+        "latitude": 30.5079843
+      },
+      {
+        "_id": "6b01307f034761047690a2de",
+        "date": "2026-11-29T05:59:59.000Z",
+        "recid": "3463",
+        "_media": [
+          {
+            "mediafile": "Website-Event-Templates-2026-11-1-_57677F5C-CBB2-789C-DA33D09EB3739A29.png",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/Website-Event-Templates-2026-11-1-_57677F5C-CBB2-789C-DA33D09EB3739A29_5779207e-05f8-af9e-f78665f1a297293a.png",
+            "sortorder": 1
+          }
+        ],
+        "accountId": 30,
+        "active": true,
+        "address1": "1717 Scottsdale",
+        "admission": "FREE",
+        "calendarid": "1",
+        "categories": [
+          {
+            "catName": "Holiday Festivities",
+            "catId": "10"
+          }
+        ],
+        "city": "Cedar Park",
+        "cms_title": "Trail of Cheer (3463)",
+        "cms_title_sort": "trail of cheer (3463)",
+        "dates": {
+          "eventDate": "2026-11-29T05:59:59.000Z"
+        },
+        "day": 0,
+        "dayMask": 0,
+        "description": "<p> A little Christmas magic is coming to Cedar Park, Texas!<br><br>Join us at The Fieldhouse at The Crossover for TRAIL OF CHEER, a FREE holiday walk-through for the whole family!<br><br>From November 20th through January 10th, explore a festive trail filled with Christmas decorations, holiday photo ops, and plenty of cheer around every corner. 🎅<br><br>Whether you're looking for a fun outing with the kids, a festive date night, or a place to take some Christmas photos, we'd love to have you!<br><br>🎄 November 20th &#8211; January 10<br>🎟️ FREE admission! No tickets needed.<br>📸 Festive holiday photo ops<br>🍹 Seasonal cocktails &amp; festive drinks<br>🍔 Food trucks on-site<br>👨‍👩‍👧‍👦 Family-friendly fun for all ages<br><br>Make a night of it! Walk through the trail, grab a bite from our food trucks, enjoy a holiday drink, and spend some time with family and friends.<br><br>Times:<br><strong>Monday -Thursday:</strong><br>2PM-12AM</p>\r\n<p><strong>Friday-Sunday:</strong><br>11AM-12AM<br><br>📍 The Fieldhouse at The Crossover | Cedar Park, TX</p>",
+        "endDate": "2027-01-11T05:59:59.000Z",
+        "endType": 3,
+        "eventTypeId": 2,
+        "expired": false,
+        "featured": false,
+        "filter_tags": [
+          "site_primary"
+        ],
+        "host_id": 269,
+        "interval": 1,
+        "linkUrl": "https://www.thefieldhousetexas.com/events/trail-of-cheer-free-holiday-walk-through-at-the-fieldhouse",
+        "listing_id": 269,
+        "loc": {
+          "type": "Point",
+          "coordinates": [
+            -97.8148482,
+            30.5484002
+          ]
+        },
+        "location": "Fieldhouse at The Crossover",
+        "media_raw": [
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/Website-Event-Templates-2026-11-1-_57677F5C-CBB2-789C-DA33D09EB3739A29_5779207e-05f8-af9e-f78665f1a297293a.png",
+            "sortorder": 1,
+            "mediatype": "Image"
+          }
+        ],
+        "month": 0,
+        "never_expire": false,
+        "nextDate": "2026-11-21T05:59:59.000Z",
+        "occurrences": 0,
+        "past": false,
+        "primary_site": "primary",
+        "primarycatid": "10",
+        "rank": 2,
+        "recId": "3463",
+        "recurType": 1,
+        "recurrence": "Recurring daily",
+        "sites": [
+          "primary"
+        ],
+        "startDate": "2026-11-20T06:00:00.000Z",
+        "state": "TX",
+        "times": "Monday -Thursday: 2PM-12AM   Friday-Sunday: 11AM-12AM",
+        "title": "Trail of Cheer",
+        "title_sort": "trail of cheer",
+        "typeName": "Ongoing Event",
+        "updated": "2026-11-21T05:47:41.279Z",
+        "week": 0,
+        "weekday": 0,
+        "zip": "78641",
+        "id": "6b01307f034761047690a2de",
+        "slug": "trail-of-cheer",
+        "url": "/event/trail-of-cheer/3463/",
+        "genericUrl": "/event/trail-of-cheer/3463/",
+        "absoluteUrl": "https://visitcedarparktexas.com/event/trail-of-cheer/3463/",
+        "absolute_primary_url": "https://visitcedarparktexas.com/event/trail-of-cheer/3463/",
+        "teaser": "<p> A little Christmas magic is coming to Cedar Park, Texas!<br><br>Join us at The Fieldhouse at The Crossover for TRAIL OF CHEER, a FREE holiday walk-through for the whole family!<br><br>From November 20th through</p>",
+        "longitude": -97.8148482,
+        "latitude": 30.5484002
+      },
+      {
+        "_id": "6b0605e1f11255df4871e900",
+        "date": "2026-11-29T05:59:59.000Z",
+        "recid": "2115",
+        "_media": [
+          {
+            "mediafile": "always-fun-market_7F4DC221-AFFD-6B0F-636800032F55AF7C.png",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/always-fun-market_7F4DC221-AFFD-6B0F-636800032F55AF7C_7f52d879-94a8-0b1b-f9562de2a5edd4e2.png",
+            "sortorder": 1
+          }
+        ],
+        "accountId": 636,
+        "active": true,
+        "address1": "11066 Pecan Park Blvd",
+        "admission": "Free",
+        "calendarid": "1",
+        "categories": [
+          {
+            "catName": "Outdoors",
+            "catId": "7"
+          },
+          {
+            "catName": "Free",
+            "catId": "14"
+          },
+          {
+            "catName": "Festivals/Markets",
+            "catId": "15"
+          },
+          {
+            "catName": "Fun For The Whole Family",
+            "catId": "17"
+          }
+        ],
+        "city": "Cedar Park",
+        "cms_title": "Vendor Markets Cedar Park, tx (2115)",
+        "cms_title_sort": "vendor markets cedar park, tx (2115)",
+        "contact": "Jake Allard",
+        "dates": {
+          "eventDate": "2026-11-29T05:59:59.000Z"
+        },
+        "day": 0,
+        "dayMask": 0,
+        "description": "<p>Welcome to Always Fun Markets!</p>\r\n<p><br>Join us at Always Fun Markets to shop with incredible local businesses featuring Baked Good, Handmade Items, Custom Woodworking, Jewelry, Soaps, Candles, Delicious Hot Food, Refreshing Drinks, Frozen Treats, and so many more Unique Products from the Central Texas community.</p>\r\n<p>Explore our markets in Cedar Park at Lakeline Plaza!</p>",
+        "email": "alwaysfunmarkets@gmail.com",
+        "endTime": "15:00:00",
+        "endType": 1,
+        "eventTypeId": 2,
+        "expired": false,
+        "featured": false,
+        "filter_tags": [
+          "site_primary"
+        ],
+        "host_id": 672,
+        "hostname": "Always Fun Market",
+        "interval": 1,
+        "linkUrl": "https://Www.AlwaysFunMarkets.com",
+        "listing_id": 672,
+        "loc": {
+          "type": "Point",
+          "coordinates": [
+            -97.79957399999999,
+            30.4715689
+          ]
+        },
+        "location": "Always Fun Market",
+        "media_raw": [
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/always-fun-market_7F4DC221-AFFD-6B0F-636800032F55AF7C_7f52d879-94a8-0b1b-f9562de2a5edd4e2.png",
+            "sortorder": 1,
+            "mediatype": "Image"
+          }
+        ],
+        "month": 0,
+        "never_expire": false,
+        "nextDate": "2026-11-29T05:59:59.000Z",
+        "occurrences": 0,
+        "past": false,
+        "phone": "(805) 624-1520",
+        "primary_site": "primary",
+        "primarycatid": "7",
+        "rank": 2,
+        "recId": "2115",
+        "recurType": 5,
+        "recurrence": "Recurring monthly on the 4th Saturday",
+        "sites": [
+          "primary"
+        ],
+        "startDate": "2026-03-28T05:00:00.000Z",
+        "startTime": "09:00:00",
+        "state": "TX",
+        "title": "Vendor Markets Cedar Park, tx",
+        "title_sort": "vendor markets cedar park, tx",
+        "typeName": "Ongoing Event",
+        "updated": "2026-11-24T21:47:10.937Z",
+        "week": 4,
+        "weekday": 7,
+        "zip": "78613",
+        "id": "6b0605e1f11255df4871e900",
+        "slug": "vendor-markets-cedar-park-tx",
+        "url": "/event/vendor-markets-cedar-park-tx/2115/",
+        "genericUrl": "/event/vendor-markets-cedar-park-tx/2115/",
+        "absoluteUrl": "https://visitcedarparktexas.com/event/vendor-markets-cedar-park-tx/2115/",
+        "absolute_primary_url": "https://visitcedarparktexas.com/event/vendor-markets-cedar-park-tx/2115/",
+        "teaser": "<p>Welcome to Always Fun Markets!</p> <p><br>Join us at Always Fun Markets to shop with incredible local businesses featuring Baked Good, Handmade Items, Custom Woodworking, Jewelry, Soaps, Candles, Delicious Hot</p>",
+        "longitude": -97.79957399999999,
+        "latitude": 30.4715689
+      },
+      {
+        "_id": "6b0257ca0347610476c9b9d9",
+        "recid": "1704",
+        "date": "2026-11-29T05:59:59.000Z",
+        "_media": [
+          {
+            "mediafile": "IMG_0038_48BC8B78-DDA9-9172-0E8E3572255993F2.JPG",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/IMG_0038_48BC8B78-DDA9-9172-0E8E3572255993F2_48cd1081-b556-4ca6-c322a0267298a721.jpg",
+            "sortorder": 1
+          }
+        ],
+        "accountId": 540,
+        "active": true,
+        "address1": "301 S Bell Blvd",
+        "admission": "$0",
+        "calendarid": "1",
+        "categories": [
+          {
+            "catName": "Outdoors",
+            "catId": "7"
+          },
+          {
+            "catName": "Sports",
+            "catId": "8"
+          },
+          {
+            "catName": "Free",
+            "catId": "14"
+          }
+        ],
+        "city": "Austin",
+        "cms_title": "Yoga in The Park (1704)",
+        "cms_title_sort": "yoga in the park (1704)",
+        "contact": "info@flowyogatx.com",
+        "dates": {
+          "eventDate": "2026-11-29T05:59:59.000Z"
+        },
+        "day": 0,
+        "dayMask": 128,
+        "description": "<p>Get ready to stretch, breathe, and chill with us right next to the awesome new <strong>Cedar Park, Texas Library at The Bell Distric</strong>t! Every Saturday, we're hosting a FREE yoga session that's perfect whether you're just starting out or you can already do a headstand! Come join the fun and find your inner Zen with your neighbors. See you on the mat! </p>",
+        "email": "info@flowyogatx.com",
+        "endType": 1,
+        "eventTypeId": 2,
+        "expired": false,
+        "featured": false,
+        "filter_tags": [
+          "site_primary"
+        ],
+        "host_id": 506,
+        "hostname": "Flow Yoga- Cedar Park",
+        "interval": 1,
+        "linkUrl": "https://flowyogatx.com/community/yoga-in-the-park",
+        "listing_id": 535,
+        "loc": {
+          "type": "Point",
+          "coordinates": [
+            -97.8215282,
+            30.5062925
+          ]
+        },
+        "location": "Next to Cedar Park library @ The Bell district",
+        "media_raw": [
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/IMG_0038_48BC8B78-DDA9-9172-0E8E3572255993F2_48cd1081-b556-4ca6-c322a0267298a721.jpg",
+            "sortorder": 1,
+            "mediatype": "Image"
+          }
+        ],
+        "month": 0,
+        "never_expire": false,
+        "nextDate": "2026-11-22T05:59:59.000Z",
+        "occurrences": 0,
+        "past": false,
+        "phone": "(512) 260-9642",
+        "primary_site": "primary",
+        "primarycatid": "7",
+        "rank": 2,
+        "recId": "1704",
+        "recurType": 3,
+        "recurrence": "Recurring weekly on Saturday",
+        "sites": [
+          "primary"
+        ],
+        "startDate": "2025-05-17T05:00:00.000Z",
+        "startTime": "09:00:00",
+        "state": "TX",
+        "title": "Yoga in The Park",
+        "title_sort": "yoga in the park",
+        "typeName": "Ongoing Event",
+        "updated": "2026-11-22T02:47:36.771Z",
+        "week": 0,
+        "weekday": 0,
+        "zip": "78626",
+        "id": "6b0257ca0347610476c9b9d9",
+        "slug": "yoga-in-the-park",
+        "url": "/event/yoga-in-the-park/1704/",
+        "genericUrl": "/event/yoga-in-the-park/1704/",
+        "absoluteUrl": "https://visitcedarparktexas.com/event/yoga-in-the-park/1704/",
+        "absolute_primary_url": "https://visitcedarparktexas.com/event/yoga-in-the-park/1704/",
+        "teaser": "<p>Get ready to stretch, breathe, and chill with us right next to the awesome new <strong>Cedar Park, Texas Library at The Bell Distric</strong>t! Every Saturday, we&apos;re hosting a FREE yoga session that&apos;s perfect whether</p>",
+        "longitude": -97.8215282,
+        "latitude": 30.5062925
+      },
+      {
+        "_id": "6b0497fa03476104763ef1fd",
+        "date": "2026-11-30T05:59:59.000Z",
+        "recid": "3464",
+        "_media": [
+          {
+            "mediafile": "Website-Event-Templates-2026-12-1-_F4582E45-F7D0-E61B-EAA375E05E493F9F.png",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/Website-Event-Templates-2026-12-1-_F4582E45-F7D0-E61B-EAA375E05E493F9F_f45b8285-b36e-23f7-b6a38c767224fc88.png",
+            "sortorder": 1
+          }
+        ],
+        "accountId": 343,
+        "active": true,
+        "address1": "115 S. Lakeline Blvd",
+        "address2": "Suite 350",
+        "admission": "Free",
+        "calendarid": "1",
+        "categories": [
+          {
+            "catName": "Sports",
+            "catId": "8"
+          },
+          {
+            "catName": "Social/Other/Miscellaneous",
+            "catId": "12"
+          }
+        ],
+        "city": "Cedar Park",
+        "cms_title": "9th Annual Friendsgiving (3464)",
+        "cms_title_sort": "9th annual friendsgiving (3464)",
+        "dates": {
+          "eventDate": "2026-11-30T05:59:59.000Z"
+        },
+        "day": 0,
+        "dayMask": 0,
+        "description": "<p>We are hosting our 9th Annual Friendsgiving Potluck, and you are all invited.<br><br>Sunday, November 29, 5 to 9 PM. We open our doors on a Sunday for this one night.<br><br>We provide the turkey. You bring a side dish or a dessert, and you are welcome to bring your friends and family too.<br><br><br>BYOB. <br>21 and over.</p>",
+        "email": "info@smokersabbeyaustin.com",
+        "endDate": "2026-11-30T05:59:59.000Z",
+        "endTime": "21:00:00",
+        "endType": 0,
+        "eventTypeId": 1,
+        "expired": false,
+        "featured": false,
+        "filter_tags": [
+          "site_primary"
+        ],
+        "host_id": 330,
+        "hostname": "Smokers Abbey",
+        "interval": 0,
+        "linkUrl": "http://www.smokersabbeyaustin.com",
+        "listing_id": 330,
+        "loc": {
+          "type": "Point",
+          "coordinates": [
+            -97.84792309999999,
+            30.5014719
+          ]
+        },
+        "location": "Smokers Abbey",
+        "media_raw": [
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/Website-Event-Templates-2026-12-1-_F4582E45-F7D0-E61B-EAA375E05E493F9F_f45b8285-b36e-23f7-b6a38c767224fc88.png",
+            "sortorder": 1,
+            "mediatype": "Image"
+          }
+        ],
+        "month": 0,
+        "never_expire": false,
+        "nextDate": "2026-11-30T05:59:59.000Z",
+        "occurrences": 0,
+        "past": false,
+        "phone": "(512) 986-4173",
+        "primary_site": "primary",
+        "primarycatid": "8",
+        "rank": 1,
+        "recId": "3464",
+        "recurType": 0,
+        "sites": [
+          "primary"
+        ],
+        "startDate": "2026-11-29T06:00:00.000Z",
+        "startTime": "17:00:00",
+        "state": "TX",
+        "title": "9th Annual Friendsgiving",
+        "title_sort": "9th annual friendsgiving",
+        "typeName": "One Time Event",
+        "updated": "2026-11-23T19:46:00.826Z",
+        "week": 0,
+        "weekday": 0,
+        "zip": "78613",
+        "id": "6b0497fa03476104763ef1fd",
+        "slug": "9th-annual-friendsgiving",
+        "url": "/event/9th-annual-friendsgiving/3464/",
+        "genericUrl": "/event/9th-annual-friendsgiving/3464/",
+        "absoluteUrl": "https://visitcedarparktexas.com/event/9th-annual-friendsgiving/3464/",
+        "absolute_primary_url": "https://visitcedarparktexas.com/event/9th-annual-friendsgiving/3464/",
+        "teaser": "<p>We are hosting our 9th Annual Friendsgiving Potluck, and you are all invited.<br><br>Sunday, November 29, 5 to 9 PM. We open our doors on a Sunday for this one night.<br><br>We provide the turkey. You bring a side</p>",
+        "longitude": -97.84792309999999,
+        "latitude": 30.5014719
+      },
+      {
+        "_id": "6b01f4f20347610476b63026",
+        "date": "2026-11-30T05:59:59.000Z",
+        "recid": "3353",
+        "_media": [
+          {
+            "mediafile": "SPURS_DF44ED40-E28E-4185-99F7D97F613E9570.jpg",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/SPURS_DF44ED40-E28E-4185-99F7D97F613E9570_df6c8977-b8cd-15ba-fe7d5a150a286e5f.jpg",
+            "sortorder": 1
+          }
+        ],
+        "accountId": 190,
+        "active": true,
+        "address1": "2100 Avenue of the Stars",
+        "calendarid": "1",
+        "categories": [
+          {
+            "catName": "Austin Spurs Basketball",
+            "catId": "2"
+          },
+          {
+            "catName": "Sports",
+            "catId": "8"
+          },
+          {
+            "catName": "H-E-B Center at Cedar Park",
+            "catId": "22"
+          }
+        ],
+        "city": "Cedar Park",
+        "cms_title": "Austin Spurs vs Mexico City Capitanes (3353)",
+        "cms_title_sort": "austin spurs vs mexico city capitanes (3353)",
+        "dates": {
+          "eventDate": "2026-11-30T05:59:59.000Z"
+        },
+        "day": 0,
+        "dayMask": 0,
+        "description": "<p>H-E-B Center at Cedar Park is the home of the Austin Spurs, the NBA G League affiliate of the San Antonio Spurs. Since Austin’s inaugural season in 2005, the team has won two G League championships (2012, 2018) and advanced to the playoffs nine seasons. </p>\r\n<p> </p>\r\n<p>The G League is the NBA’s official minor league, preparing players, coaches, officials, trainers and front-office staff for the NBA while acting as the league’s research and development laboratory. A record 53 percent of players on NBA rosters at the end of the 2020-21 NBA season had played in the G League.</p>",
+        "endDate": "2027-01-29T05:59:59.000Z",
+        "endType": 3,
+        "eventTypeId": 1,
+        "expired": false,
+        "featured": false,
+        "filter_tags": [
+          "site_primary"
+        ],
+        "host_id": 182,
+        "hostname": "Austin Spurs",
+        "interval": 0,
+        "linkUrl": "https://www.hebcenter.com/teams/detail/austin-spurs",
+        "listing_id": 37,
+        "loc": {
+          "type": "Point",
+          "coordinates": [
+            -97.8203092,
+            30.5412859
+          ]
+        },
+        "location": "H-E-B Center at Cedar Park",
+        "media_raw": [
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/SPURS_DF44ED40-E28E-4185-99F7D97F613E9570_df6c8977-b8cd-15ba-fe7d5a150a286e5f.jpg",
+            "sortorder": 1,
+            "mediatype": "Image"
+          }
+        ],
+        "month": 0,
+        "never_expire": false,
+        "nextDate": "2026-11-29T05:59:59.000Z",
+        "occurrences": 0,
+        "past": false,
+        "phone": "(512) 600-5000",
+        "primary_site": "primary",
+        "primarycatid": "2",
+        "rank": 1,
+        "recId": "3353",
+        "recurType": 99,
+        "sites": [
+          "primary"
+        ],
+        "startDate": "2026-11-28T06:00:00.000Z",
+        "state": "TX",
+        "title": "Austin Spurs vs Mexico City Capitanes",
+        "title_sort": "austin spurs vs mexico city capitanes",
+        "typeName": "One Time Event",
+        "updated": "2026-11-21T19:45:52.714Z",
+        "week": 0,
+        "weekday": 0,
+        "zip": "78613",
+        "id": "6b01f4f20347610476b63026",
+        "slug": "austin-spurs-vs-mexico-city-capitanes",
+        "url": "/event/austin-spurs-vs-mexico-city-capitanes/3353/",
+        "genericUrl": "/event/austin-spurs-vs-mexico-city-capitanes/3353/",
+        "absoluteUrl": "https://visitcedarparktexas.com/event/austin-spurs-vs-mexico-city-capitanes/3353/",
+        "absolute_primary_url": "https://visitcedarparktexas.com/event/austin-spurs-vs-mexico-city-capitanes/3353/",
+        "teaser": "<p>H-E-B Center at Cedar Park is the home of the Austin Spurs, the NBA G League affiliate of the San Antonio Spurs. Since Austin&#x2019;s inaugural season in 2005, the team has won two G League championships</p>",
+        "longitude": -97.8203092,
+        "latitude": 30.5412859
+      },
+      {
+        "_id": "6b014c78034761047695971d",
+        "recid": "2230",
+        "date": "2026-11-30T05:59:59.000Z",
+        "_media": [
+          {
+            "mediafile": "kiddie-open-gym_4D0032D2-9C3D-5E91-4F92147465518EEF.png",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/kiddie-open-gym_4D0032D2-9C3D-5E91-4F92147465518EEF_4d01fb95-d76e-d756-5302d492cfd352dd.png",
+            "sortorder": 1
+          },
+          {
+            "mediafile": "little-land_F8E7B86C-F807-71C8-DA937ABCBEC86D8D.jpg",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/little-land_F8E7B86C-F807-71C8-DA937ABCBEC86D8D_ffbc1bd8-a7ba-7f05-678c0b2e6187ce8c.jpg",
+            "sortorder": 2
+          }
+        ],
+        "accountId": 690,
+        "active": true,
+        "address1": "200 Buttercup Creek Blvd",
+        "address2": "Suite 104",
+        "admission": "15$ per child, children under 1 get in for free with paying sibling",
+        "calendarid": "1",
+        "categories": [
+          {
+            "catName": "Fun For The Whole Family",
+            "catId": "17"
+          }
+        ],
+        "city": "Cedar Park",
+        "cms_title": "Kiddie Gym - Open Play (2230)",
+        "cms_title_sort": "kiddie gym - open play (2230)",
+        "dates": {
+          "eventDate": "2026-11-30T05:59:59.000Z"
+        },
+        "day": 0,
+        "dayMask": 0,
+        "description": "<p>Our play gym is filled with climbers, slides, sensory bins, art stations, ball pits, and imagination zones — all designed by pediatric therapists. Open Play is unstructured time for children to explore, regulate, and grow at their own pace, with friendly staff nearby and parents welcome to relax and connect</p>",
+        "email": "connor@mylittleland.com",
+        "endType": 1,
+        "eventTypeId": 1,
+        "expired": false,
+        "featured": false,
+        "filter_tags": [
+          "site_primary"
+        ],
+        "hostname": "Little Land",
+        "interval": 1,
+        "linkUrl": "https://mylittleland.com/services/open-play",
+        "listing_id": 730,
+        "loc": {
+          "type": "Point",
+          "coordinates": [
+            -97.8219236,
+            30.5023048
+          ]
+        },
+        "location": "Little Land",
+        "media_raw": [
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/kiddie-open-gym_4D0032D2-9C3D-5E91-4F92147465518EEF_4d01fb95-d76e-d756-5302d492cfd352dd.png",
+            "sortorder": 1,
+            "mediatype": "Image"
+          },
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/little-land_F8E7B86C-F807-71C8-DA937ABCBEC86D8D_ffbc1bd8-a7ba-7f05-678c0b2e6187ce8c.jpg",
+            "sortorder": 2,
+            "mediatype": "Image"
+          }
+        ],
+        "month": 0,
+        "never_expire": false,
+        "nextDate": "2026-11-22T05:59:59.000Z",
+        "occurrences": 0,
+        "past": false,
+        "primary_site": "primary",
+        "primarycatid": "17",
+        "rank": 1,
+        "recId": "2230",
+        "recurType": 1,
+        "recurrence": "Recurring daily",
+        "sites": [
+          "primary"
+        ],
+        "startDate": "2026-07-02T05:00:00.000Z",
+        "state": "TX",
+        "title": "Kiddie Gym - Open Play",
+        "title_sort": "kiddie gym - open play",
+        "typeName": "One Time Event",
+        "updated": "2026-11-21T07:47:02.151Z",
+        "week": 0,
+        "weekday": 0,
+        "zip": "78613",
+        "id": "6b014c78034761047695971d",
+        "slug": "kiddie-gym-open-play",
+        "url": "/event/kiddie-gym-open-play/2230/",
+        "genericUrl": "/event/kiddie-gym-open-play/2230/",
+        "absoluteUrl": "https://visitcedarparktexas.com/event/kiddie-gym-open-play/2230/",
+        "absolute_primary_url": "https://visitcedarparktexas.com/event/kiddie-gym-open-play/2230/",
+        "teaser": "<p>Our play gym is filled with climbers, slides, sensory bins, art stations, ball pits, and imagination zones &#x2014; all designed by pediatric therapists. Open Play is unstructured time for children to</p>",
+        "longitude": -97.8219236,
+        "latitude": 30.5023048
+      },
+      {
+        "_id": "6b07b96ff11255df48d08efb",
+        "date": "2026-11-30T05:59:59.000Z",
+        "recid": "2143",
+        "_media": [
+          {
+            "mediafile": "PATTY-CHALLENGE_4E026335-9298-A00D-1EC421953F319FEB.png",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/PATTY-CHALLENGE_4E026335-9298-A00D-1EC421953F319FEB_4e03c12f-ce08-aa5a-aa9832cb0a15033f.png",
+            "sortorder": 1
+          },
+          {
+            "mediafile": "burger-bar-burger-champion_8ED12C1C-A94A-D43E-022BE6BB4B6BCCD4.png",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/burger-bar-burger-champion_8ED12C1C-A94A-D43E-022BE6BB4B6BCCD4_8ed1a555-9a13-8951-03115c5a1a15f27b.png",
+            "sortorder": 2
+          }
+        ],
+        "accountId": 560,
+        "active": true,
+        "address1": "2005 Little Elm Trl",
+        "address2": "BLDG A STE 100",
+        "calendarid": "1",
+        "categories": [
+          {
+            "catName": "Social/Other/Miscellaneous",
+            "catId": "12"
+          },
+          {
+            "catName": "Free",
+            "catId": "14"
+          }
+        ],
+        "city": "Cedar Park",
+        "cms_title": "Burger Eating Challenge (2143)",
+        "cms_title_sort": "burger eating challenge (2143)",
+        "dates": {
+          "eventDate": "2026-11-30T05:59:59.000Z"
+        },
+        "day": 0,
+        "dayMask": 0,
+        "description": "<p>Think you can eat a minimum of 6 patties in patty matching minutes? Let your server know if you want to try!</p>\r\n<p>But be careful; if you fail, you will end up on the wall of shame!</p>\r\n<p>Choose your patty amount and take your place on the leaderboard (Burger Bar Hall of Fame)!</p>\r\n<p> </p>",
+        "endType": 1,
+        "eventTypeId": 2,
+        "expired": false,
+        "featured": false,
+        "filter_tags": [
+          "site_primary"
+        ],
+        "interval": 1,
+        "listing_id": 594,
+        "loc": {
+          "type": "Point",
+          "coordinates": [
+            -97.8300685,
+            30.4798406
+          ]
+        },
+        "location": "The Burger Bar",
+        "media_raw": [
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/PATTY-CHALLENGE_4E026335-9298-A00D-1EC421953F319FEB_4e03c12f-ce08-aa5a-aa9832cb0a15033f.png",
+            "sortorder": 1,
+            "mediatype": "Image"
+          },
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/burger-bar-burger-champion_8ED12C1C-A94A-D43E-022BE6BB4B6BCCD4_8ed1a555-9a13-8951-03115c5a1a15f27b.png",
+            "sortorder": 2,
+            "mediatype": "Image"
+          }
+        ],
+        "month": 0,
+        "never_expire": true,
+        "nextDate": "2026-11-26T05:59:59.000Z",
+        "occurrences": 0,
+        "past": false,
+        "primary_site": "primary",
+        "primarycatid": "12",
+        "rank": 2,
+        "recId": "2143",
+        "recurType": 1,
+        "recurrence": "Recurring daily",
+        "sites": [
+          "primary"
+        ],
+        "startDate": "2026-04-29T05:00:00.000Z",
+        "state": "TX",
+        "title": "Burger Eating Challenge",
+        "title_sort": "burger eating challenge",
+        "typeName": "Ongoing Event",
+        "updated": "2026-11-26T04:45:33.327Z",
+        "week": 0,
+        "weekday": 0,
+        "zip": "78613",
+        "id": "6b07b96ff11255df48d08efb",
+        "slug": "burger-eating-challenge",
+        "url": "/event/burger-eating-challenge/2143/",
+        "genericUrl": "/event/burger-eating-challenge/2143/",
+        "absoluteUrl": "https://visitcedarparktexas.com/event/burger-eating-challenge/2143/",
+        "absolute_primary_url": "https://visitcedarparktexas.com/event/burger-eating-challenge/2143/",
+        "teaser": "<p>Think you can eat a minimum of 6 patties in patty matching minutes? Let your server know if you want to try!</p> <p>But be careful; if you fail, you will end up on the wall of shame!</p> <p>Choose your patty amount</p>",
+        "longitude": -97.8300685,
+        "latitude": 30.4798406
+      },
+      {
+        "_id": "6b01307f034761047690a035",
+        "date": "2026-11-30T05:59:59.000Z",
+        "recid": "2021",
+        "_media": [
+          {
+            "mediafile": "jazz-lounge-live-music_EB0E13D7-DCA4-7362-69FE0BEFB4741B34.png",
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/jazz-lounge-live-music_EB0E13D7-DCA4-7362-69FE0BEFB4741B34_eb0f23aa-c94a-c01b-1cd387ce7f5091b3.png",
+            "sortorder": 1
+          }
+        ],
+        "accountId": 152,
+        "active": true,
+        "address1": "1525 Cypress Creek Road",
+        "admission": "Cover charge can vary (can even be free!) \r\n\r\nContact Tuscanos for more information. (512) 996-8990",
+        "calendarid": "1",
+        "categories": [
+          {
+            "catName": "Concerts/Live Music/Live Entertainment",
+            "catId": "5"
+          }
+        ],
+        "city": "Cedar Park",
+        "cms_title": "Jazz Lounge (2021)",
+        "cms_title_sort": "jazz lounge (2021)",
+        "dates": {
+          "eventDate": "2026-11-30T05:59:59.000Z"
+        },
+        "day": 0,
+        "dayMask": 0,
+        "description": "<p>Italian kitchen &amp; jazz lounge</p>\r\n<p>Make a night of it.</p>\r\n<p><br>Join us for Italian cuisine, cocktails, and live music in Cedar Park.</p>",
+        "endTime": "22:00:00",
+        "endType": 1,
+        "eventTypeId": 2,
+        "expired": false,
+        "featured": false,
+        "filter_tags": [
+          "site_primary"
+        ],
+        "interval": 1,
+        "linkUrl": "https://www.tuscanoitalian.com/events",
+        "listing_id": 144,
+        "loc": {
+          "type": "Point",
+          "coordinates": [
+            -97.8343732,
+            30.4813053
+          ]
+        },
+        "location": "Tuscano",
+        "media_raw": [
+          {
+            "mediaurl": "https://assets.simpleviewinc.com/simpleview/image/upload/crm/cedarparktx/jazz-lounge-live-music_EB0E13D7-DCA4-7362-69FE0BEFB4741B34_eb0f23aa-c94a-c01b-1cd387ce7f5091b3.png",
+            "sortorder": 1,
+            "mediatype": "Image"
+          }
+        ],
+        "month": 0,
+        "never_expire": false,
+        "nextDate": "2026-11-21T05:59:59.000Z",
+        "occurrences": 0,
+        "past": false,
+        "phone": "(512) 996-8990",
+        "primary_site": "primary",
+        "primarycatid": "5",
+        "rank": 2,
+        "recId": "2021",
+        "recurType": 1,
+        "recurrence": "Recurring daily",
+        "sites": [
+          "primary"
+        ],
+        "startDate": "2025-12-19T06:00:00.000Z",
+        "startTime": "19:00:00",
+        "state": "TX",
+        "title": "Jazz Lounge",
+        "title_sort": "jazz lounge",
+        "typeName": "Ongoing Event",
+        "updated": "2026-11-21T05:47:41.271Z",
+        "week": 0,
+        "weekday": 0,
+        "zip": "78613",
+        "id": "6b01307f034761047690a035",
+        "slug": "jazz-lounge",
+        "url": "/event/jazz-lounge/2021/",
+        "genericUrl": "/event/jazz-lounge/2021/",
+        "absoluteUrl": "https://visitcedarparktexas.com/event/jazz-lounge/2021/",
+        "absolute_primary_url": "https://visitcedarparktexas.com/event/jazz-lounge/2021/",
+        "teaser": "<p>Italian kitchen &amp; jazz lounge</p>\r\n<p>Make a night of it.</p>\r\n<p><br>Join us for Italian cuisine, cocktails, and live music in Cedar Park.</p>",
+        "longitude": -97.8343732,
+        "latitude": 30.4813053
+      }
+    ]
+  }
+}
