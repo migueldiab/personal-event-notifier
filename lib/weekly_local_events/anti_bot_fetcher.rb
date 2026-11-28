@@ -16,8 +16,9 @@ module WeeklyLocalEvents
     MAX_REDIRECTS = 3
 
     BOT_MARKERS = [
-      /just a moment\.\.\./i,
-      /attention required!.*cloudflare/i,
+      # Interstitial text is the reliable signal: a bot wall can answer 200.
+      /just a moment/i,
+      /attention required/i,
       /cf-browser-verification/i,
       /cf_chl_/i,
       /px-captcha/i,
@@ -37,7 +38,7 @@ module WeeklyLocalEvents
                    sleeper: ->(seconds) { Kernel.sleep(seconds) },
                    random: Random.new, headless_fetcher: nil,
                    stealth_headers: HeadlessBrowserFetcher::STEALTH_HEADERS,
-                   login_path: LOGIN_PATH)
+                   login_path: LOGIN_PATH, fixture_path: nil)
       @request = request
       @rate_limiter = rate_limiter
       @max_retries = [max_retries.to_i, 1].max
@@ -50,6 +51,7 @@ module WeeklyLocalEvents
       @headless_fetcher = headless_fetcher
       @stealth_headers = stealth_headers
       @login_path = login_path
+      @fixture_path = fixture_path
     end
 
     # Fetch the first URL that returns usable HTML.
@@ -57,7 +59,7 @@ module WeeklyLocalEvents
     # @param url [String] the primary URL
     # @param fallback_urls [Array<String>] regional variants to try in order
     # @param headless [Boolean] whether to try the headless browser last
-    # @return [String, nil] HTML body, or nil when every route failed
+    # @return [String, nil] HTML body, cached fixture HTML, or nil when every route failed
     def fetch(url, fallback_urls: [], headless: true)
       candidates = [url, *fallback_urls].uniq
 
@@ -67,9 +69,10 @@ module WeeklyLocalEvents
         return nil if result.login_wall?
       end
 
-      return nil unless headless && @headless_fetcher
+      body = headless && @headless_fetcher ? fetch_headless(url) : nil
+      return body unless body.to_s.strip.empty?
 
-      fetch_headless(url)
+      fetch_cached_fixture
     end
 
     private
@@ -177,6 +180,22 @@ module WeeklyLocalEvents
     def blocked(url, reason)
       log_warn("Blocked #{url}: #{reason}")
       Result.new(status: :blocked, url: url)
+    end
+
+    # Last resort: replay a previously captured fixture when every live route
+    # was blocked. Cached HTML is read from disk, never requested over HTTP.
+    def fetch_cached_fixture
+      return nil if @fixture_path.to_s.strip.empty?
+      return log_and_nil("Cached fixture not found at #{@fixture_path}") unless File.file?(@fixture_path)
+
+      body = File.read(@fixture_path)
+      return log_and_nil("Cached fixture #{@fixture_path} is empty") if body.to_s.strip.empty?
+      return log_and_nil("Cached fixture #{@fixture_path} is a bot challenge") if bot_challenge?(body)
+
+      log_warn("All live routes blocked; using cached fixture #{@fixture_path}")
+      body
+    rescue StandardError => e
+      log_and_nil("Could not read cached fixture #{@fixture_path}: #{e.class} - #{e.message}")
     end
 
     def log_and_nil(message)
