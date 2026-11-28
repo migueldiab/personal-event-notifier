@@ -7,7 +7,7 @@ Automated monitoring system for high-interest cultural and social events (Oscars
 - **Detection:** Identifies when major events are occurring.
 - **Smart Info:** Fetches broadcast (TV) and streaming information.
 - **Telegram Alerts:** Sends formatted notifications to your Telegram channel.
-- **Multi-source:** Aggregates from Austin Chronicle, Do512, Community Impact, Eventbrite, ACL Live, Stubbs's, Paramount Austin, Visit Cedar Park, and the City of Cedar Park's public RSS calendar.
+- **Multi-source:** Aggregates from Austin Chronicle, Do512, Community Impact, Eventbrite, ACL Live, Stubbs's, Paramount Austin, Visit Cedar Park, and the City of Cedar Park's public RSS calendar (`cedar_park`).
 - **Weekly Digest:** Sunday 6PM CST as primary schedule; optional daily new-event alert (7AM CST) as secondary.
 
 ## Pipeline
@@ -71,6 +71,8 @@ enabled_scrapers:
   - paramount_austin
   - visit_cedar_park
   - cedar_park_rss
+  # Authoritative live Cedar Park route; HTML/API paths are Cloudflare-blocked.
+  - cedar_park
 # Optional offline fallback for Akamai-blocked sources:
 cached_fixture_path: /home/madrax/src/ai/WeeklyLocalEvents/spec/fixtures/vcr_cassettes/visit_cedar_park_events.yml
 ```
@@ -85,7 +87,8 @@ cached_fixture_path: /home/madrax/src/ai/WeeklyLocalEvents/spec/fixtures/vcr_cas
 | `stubbss` | stubbs.net | HTML listings |
 | `paramount_austin` | paramountaustin.com | HTML listings |
 | `visit_cedar_park` | visitcedarparktexas.com | Simpleview JSON API; see caveat below |
-| `cedar_park_rss` | cedarparktexas.gov | Public CivicEngage RSS feed; primary live Cedar Park route |
+| `cedar_park_rss` | cedarparktexas.gov | Public CivicEngage RSS feed (alternate source) |
+| `cedar_park` | cedarparktexas.gov | Public CivicEngage RSS feed; primary live Cedar Park route; see caveat below |
 
 `cedar_park_rss` reads the city's unauthenticated feed at
 <https://www.cedarparktexas.gov/RSSFeed.aspx?ModID=58&CID=All-calendar.xml>
@@ -100,6 +103,38 @@ Only the *archived* 2023 copy of that feed had zero items. The other
 `cedarparktexas.gov` paths (`/calendar.aspx`, `/iCalendar.aspx`, `/api/...`)
 remain Cloudflare-blocked, so the older Wayback HTML fixture is **fallback
 only**. Details and the corrected history are in `docs/cedar_park_recon.md`.
+
+### Cedar Park (`cedar_park`): Cloudflare caveat and cassette refresh
+
+`cedar_park` is the authoritative live Cedar Park source. It reads the same
+unauthenticated CivicEngage RSS feed (HTTP 200, `text/xml`, no credentials)
+through `BaseScraper#http_get`, so the configured headers, user agent and
+timeouts apply. Every event has an absolute
+`https://www.cedarparktexas.gov/Calendar.aspx?EID=<id>` link, an `eid:<id>` tag
+and a `cedar_park:<id>` dedupe key. Dates and times come from the namespaced
+`calendarEvent` fields in `America/Chicago`; `<pubDate>` is publication time and
+is never used as the event start. An event that shares a title with another
+source is kept when the venue differs — the Aggregator dedupes on venue + date
++ normalized title.
+
+**Anti-bot caveat:** the RSS feed is not blocked, but the HTML calendar and API
+paths on `cedarparktexas.gov` are behind Cloudflare (403 or an interstitial body
+even with HTTP 200). Do not point `cedar_park` at those paths. The archived 2026
+Wayback HTML snapshot is historical fallback only, parsed by
+`CedarParkCalendarScraper`, and is never presented as live. See
+`docs/cedar_park_recon.md`.
+
+The network-free replay cassettes are
+`spec/fixtures/vcr_cassettes/cedar_park_calendar_rss.yml` (live feed) and
+`spec/fixtures/vcr_cassettes/cedar_park_events.yml` (archived HTML). To refresh
+them — the only command that performs live HTTP — run:
+
+```bash
+bundle exec ruby bin/record_vcr_cassettes
+```
+
+Cassettes carry no credentials, cookies or API keys, and the archive capture
+timestamp is recorded in the cassette header so the snapshot stays auditable.
 
 ### Visit Cedar Park: Akamai and JS-shell caveat
 
