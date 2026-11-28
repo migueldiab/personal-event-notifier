@@ -216,4 +216,33 @@ RSpec.describe WeeklyLocalEvents::ScraperRegistry do
       expect(WebMock).not_to have_requested(:get, beta_url)
     end
   end
+
+  describe "Visit Cedar Park registration" do
+    let(:registered_names) { described_class::KNOWN_SCRAPERS.keys }
+
+    it "maps visit_cedar_park to the VisitCedarParkScraper class" do
+      expect(described_class::KNOWN_SCRAPERS["visit_cedar_park"])
+        .to eq("WeeklyLocalEvents::Scrapers::VisitCedarParkScraper")
+    end
+
+    it "lists visit_cedar_park in DEFAULT_SCRAPERS" do
+      expect(described_class::DEFAULT_SCRAPERS).to include("visit_cedar_park")
+    end
+
+    it "includes visit_cedar_park in #all" do
+      expect(described_class.new(nil).all.map(&:name)).to include("visit_cedar_park")
+    end
+
+    it "includes visit_cedar_park in #active when config lists it" do
+      enabled = double("config", enabled_scrapers: %w[visit_cedar_park], logger: logger)
+
+      expect(described_class.new(enabled).active.map(&:name)).to include("visit_cedar_park")
+    end
+
+    it "keeps visit_cedar_park distinct from cedar_park with no duplicate names" do
+      expect(registered_names).to eq(registered_names.uniq)
+      expect(registered_names).to include("visit_cedar_park")
+      expect(registered_names).not_to include("cedar_park")
+    end
+  end
 end
