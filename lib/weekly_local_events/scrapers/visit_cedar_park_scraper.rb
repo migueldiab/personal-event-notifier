@@ -5,8 +5,10 @@ require "json"
 require "nokogiri"
 require "time"
 require "tzinfo"
+require "weekly_local_events/anti_bot_fetcher"
 require "weekly_local_events/base_scraper"
 require "weekly_local_events/event"
+require "weekly_local_events/rate_limiter"
 require "weekly_local_events/venue"
 
 module WeeklyLocalEvents
@@ -30,12 +32,14 @@ module WeeklyLocalEvents
                            "(KHTML, like Gecko) Chrome/124.0 Safari/537.36".freeze
       DEFAULT_LIMIT = 30
       DEFAULT_MAX_PAGES = 5
+      JS_SHELL_MARKER = "layoutjsContainer"
       TIMEZONE = TZInfo::Timezone.get("America/Chicago")
 
-      attr_reader :page_size, :max_pages
+      attr_reader :page_size, :max_pages, :token_fetcher, :events_fetcher
 
       # @param config [Config, Hash, nil] scraper configuration; a Hash may set
-      #   :page_size, :max_pages, :user_agent and the usual BaseScraper options.
+      #   :page_size, :max_pages, :user_agent, :fixture_path (a cached JSON file
+      #   or VCR cassette), :logger, :sleeper and the usual BaseScraper options.
       def initialize(config = nil)
         cfg = config.is_a?(Hash) ? config.dup : {}
         cfg[:name] = SOURCE_NAME
@@ -48,6 +52,14 @@ module WeeklyLocalEvents
         @page_size = (cfg.delete(:page_size) || DEFAULT_LIMIT).to_i
         @max_pages = (cfg.delete(:max_pages) || DEFAULT_MAX_PAGES).to_i
         super(cfg)
+
+        # Both endpoints share the same fetch pipeline. Only the events
+        # endpoint may replay a cached response; replaying a JSON fixture at
+        # the token endpoint would be handed to the API as a bogus token.
+        @token_fetcher = build_fetcher(cfg, fixture_path: nil)
+        @events_fetcher = build_fetcher(
+          cfg, fixture_path: cfg[:fixture_path] || configured_fixture_path
+        )
       end
 
       # Fetch the token and every page of upcoming events.
@@ -57,20 +69,10 @@ module WeeklyLocalEvents
         token = fetch_token
         return [] if token.nil? || token.empty?
 
-        collected = []
-        skip = 0
-        max_pages.times do
-          payload = fetch_page(token, skip)
-          break if payload.nil?
-
-          batch = parse_response(payload)
-          break if batch.empty?
-
-          collected.concat(batch)
-          skip += page_size
-          break if skip >= payload.dig("docs", "count").to_i
-        end
-        collected
+        collect_pages(token)
+      rescue StandardError => e
+        log_error "Failed to collect events: #{e.class} - #{e.message}"
+        []
       end
 
       # Parse a Simpleview envelope (or its JSON string) into Event instances.
@@ -89,15 +91,39 @@ module WeeklyLocalEvents
 
       private
 
+      # Walk pages until the API runs out of documents or a cached snapshot is
+      # replayed. A replayed page must not be fetched again with a larger skip:
+      # that would duplicate the same events in the digest.
+      #
+      # @return [Array<Event>]
+      def collect_pages(token)
+        collected = []
+        skip = 0
+        max_pages.times do
+          payload = fetch_page(token, skip)
+          break if payload.nil?
+
+          batch = parse_response(payload)
+          break if batch.empty?
+
+          collected.concat(batch)
+          break if events_fetcher.last_source == :fixture
+
+          skip += page_size
+          break if skip >= payload.dig("docs", "count").to_i
+        end
+        collected
+      end
+
       # Fetch the short-lived public token. A body that is not a token (for
       # example the site's "Invalid credentials" fake success) is rejected.
+      # The fetcher logs and swallows 403/429/denial responses, so a blocked
+      # source never raises into the digest pipeline.
       #
       # @return [String, nil]
       def fetch_token
-        response = request_with_retries("#{BASE_URL}#{TOKEN_PATH}", "Accept" => "text/plain")
-        return nil unless response
-
-        value = response.body.to_s.strip
+        body = token_fetcher.fetch(token_url, headless: false)
+        value = body.to_s.strip
         return nil if value.empty? || value.match?(/denied|invalid|just a moment/i)
 
         value
@@ -107,10 +133,50 @@ module WeeklyLocalEvents
       #
       # @return [Hash, nil]
       def fetch_page(token, skip)
-        response = request_with_retries(events_url(token, skip), "Accept" => "application/json")
-        return nil unless response
+        body = events_fetcher.fetch(events_url(token, skip), headless: false)
+        return nil if body.to_s.strip.empty?
 
-        parse_json(response.body)
+        parse_json(body)
+      end
+
+      def token_url
+        "#{BASE_URL}#{TOKEN_PATH}"
+      end
+
+      # Build the shared anti-bot pipeline for one endpoint. There is no second
+      # HTTP stack here: both requests go through AntiBotFetcher -> BaseScraper.
+      #
+      # @return [AntiBotFetcher]
+      def build_fetcher(cfg, fixture_path:)
+        AntiBotFetcher.new(
+          request: cfg[:request] || ->(url, headers:) { http_get(url, headers) },
+          rate_limiter: cfg[:rate_limiter],
+          max_retries: max_retries,
+          backoff_base: cfg.fetch(:backoff_base, 2.0),
+          max_backoff: cfg.fetch(:max_backoff, 30.0),
+          jitter: cfg.fetch(:jitter, RateLimiter::DEFAULT_JITTER),
+          logger: cfg[:logger] || config.logger,
+          sleeper: cfg[:sleeper] || ->(seconds) { Kernel.sleep(seconds) },
+          random: cfg[:random] || Random.new,
+          fixture_path: fixture_path,
+          body_validator: ->(body) { usable_payload?(body) }
+        )
+      end
+
+      def configured_fixture_path
+        return nil unless config.respond_to?(:cached_fixture_path)
+
+        config.cached_fixture_path
+      end
+
+      # A 200 can still be the client-side widget shell with no event data.
+      # Treat that as a denial so the cached fixture/cassette can take over.
+      #
+      # @return [Boolean]
+      def usable_payload?(body)
+        text = body.to_s
+        shell = text.match?(/#{Regexp.escape(JS_SHELL_MARKER)}/i)
+        shell && !text.match?(/"docs"\s*:/) ? false : true
       end
 
       # Build the REST URL for one page. The filter/options object must be
@@ -130,30 +196,6 @@ module WeeklyLocalEvents
         uri = URI("#{BASE_URL}#{EVENTS_PATH}")
         uri.query = URI.encode_www_form("json" => JSON.generate(filter), "token" => token)
         uri.to_s
-      end
-
-      # Perform a request through BaseScraper#http_get with the configured
-      # retries. Returns nil rather than raising so one blocked source cannot
-      # abort the whole digest.
-      #
-      # @return [Net::HTTPResponse, nil]
-      def request_with_retries(url, extra_headers = {})
-        attempts = 0
-        begin
-          sleep(rate_limit_delay) if attempts.positive?
-          response = http_get(url, extra_headers)
-          return response if response.is_a?(Net::HTTPSuccess)
-
-          raise ScraperError, "HTTP #{response.code}: #{url}"
-        rescue StandardError => e
-          attempts += 1
-          if attempts < max_retries
-            log_warn "Retrying #{url} after #{e.class}: #{e.message}"
-            retry
-          end
-          log_error "Failed to fetch #{url}: #{e.class} - #{e.message}"
-          nil
-        end
       end
 
       def parse_json(body)

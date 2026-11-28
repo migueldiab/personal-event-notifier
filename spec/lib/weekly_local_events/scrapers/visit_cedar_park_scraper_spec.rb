@@ -323,4 +323,107 @@ RSpec.describe WeeklyLocalEvents::Scrapers::VisitCedarParkScraper do
       ).to have_been_made.once
     end
   end
+
+  describe "bot-wall degradation" do
+    let(:logger) { instance_double(Logger, info: nil, warn: nil, error: nil) }
+    let(:blocked_config) do
+      { rate_limit_delay: 0, max_retries: 3, logger: logger, sleeper: ->(_seconds) {} }
+    end
+    let(:cached_fixture) do
+      "/home/madrax/src/ai/WeeklyLocalEvents/spec/fixtures/visit_cedar_park_events.json"
+    end
+    let(:cached_cassette) do
+      "/home/madrax/src/ai/WeeklyLocalEvents/spec/fixtures/vcr_cassettes/visit_cedar_park_events.yml"
+    end
+    let(:shell_body) do
+      '<html><body><div id="layoutjsContainer"></div><!-- no layoutjs data --></body></html>'
+    end
+
+    before { stub_request(:get, token_url).to_return(status: 200, body: token_body) }
+
+    it "logs a warning and returns no events when the API answers 403" do
+      stub_request(:get, events_url_pattern).to_return(status: 403, body: "Access Denied")
+      scraper = described_class.new(blocked_config)
+
+      expect(scraper.events).to eq([])
+      expect(logger).to have_received(:warn).with(/Blocked.*HTTP 403/)
+      expect(a_request(:get, events_url_pattern)).to have_been_made.once
+    end
+
+    it "replays a cached JSON fixture when the API is 403-blocked" do
+      stub_request(:get, events_url_pattern).to_return(status: 403, body: "Access Denied")
+      scraper = described_class.new(blocked_config.merge(fixture_path: cached_fixture))
+
+      events = scraper.events
+
+      expect(events.size).to eq(30)
+      expect(events.map(&:title)).to include("Kiddie Gym - Open Play")
+      expect(logger).to have_received(:warn).with(/cached fixture/i)
+      expect(a_request(:get, events_url_pattern)).to have_been_made.once
+    end
+
+    it "replays a cached VCR cassette when the API is 403-blocked" do
+      stub_request(:get, events_url_pattern).to_return(status: 403, body: "Access Denied")
+      scraper = described_class.new(blocked_config.merge(fixture_path: cached_cassette))
+
+      events = scraper.events
+
+      expect(events).not_to be_empty
+      expect(events.map(&:title)).to include("Kiddie Gym - Open Play")
+      expect(logger).to have_received(:warn).with(/cached fixture/i)
+    end
+
+    it "backs off on 429 responses and then replays the cached fixture" do
+      stub_request(:get, events_url_pattern).to_return(
+        status: 429, body: "", headers: { "Retry-After" => "0" }
+      )
+      scraper = described_class.new(blocked_config.merge(fixture_path: cached_fixture))
+
+      expect(scraper.events.size).to eq(30)
+      expect(a_request(:get, events_url_pattern)).to have_been_made.times(3)
+    end
+
+    it "treats a 200 JS shell without event data as a denial" do
+      stub_request(:get, events_url_pattern).to_return(status: 200, body: shell_body)
+      scraper = described_class.new(blocked_config)
+
+      expect(scraper.events).to eq([])
+      expect(logger).to have_received(:warn).with(/no usable data/i)
+    end
+
+    it "replays the cached fixture for a 200 shell without event data" do
+      stub_request(:get, events_url_pattern).to_return(status: 200, body: shell_body)
+      scraper = described_class.new(blocked_config.merge(fixture_path: cached_fixture))
+
+      expect(scraper.events.size).to eq(30)
+      expect(logger).to have_received(:warn).with(/no usable data/i)
+    end
+
+    it "detects an Akamai denial body even with a 200 status" do
+      akamai_body = "<html><body>Access Denied - errors.edgesuite.net</body></html>"
+      stub_request(:get, events_url_pattern).to_return(status: 200, body: akamai_body)
+      scraper = described_class.new(blocked_config)
+
+      expect(scraper.events).to eq([])
+      expect(logger).to have_received(:warn).with(/bot protection/i)
+    end
+
+    it "stops after a 403 token denial without touching the events endpoint" do
+      stub_request(:get, token_url).to_return(status: 403, body: "Access Denied")
+      scraper = described_class.new(blocked_config)
+
+      expect(scraper.events).to eq([])
+      expect(logger).to have_received(:warn).with(/HTTP 403/)
+      expect(a_request(:get, events_url_pattern)).not_to have_been_made
+    end
+
+    it "does not raise when every request fails" do
+      stub_request(:get, token_url).to_return(status: 503, body: "")
+      scraper = described_class.new(blocked_config)
+      events = nil
+
+      expect { events = scraper.events }.not_to raise_error
+      expect(events).to eq([])
+    end
+  end
 end

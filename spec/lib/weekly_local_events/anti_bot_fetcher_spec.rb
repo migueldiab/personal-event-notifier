@@ -212,4 +212,60 @@ RSpec.describe WeeklyLocalEvents::AntiBotFetcher do
       expect(logger).to have_received(:warn).with(/bot challenge/i)
     end
   end
+
+  describe "body-content denials" do
+    it "treats an Akamai error body as blocked even with a 200 status" do
+      allow(request).to receive(:call).and_return(
+        response(200, "<html>errors.edgesuite.net</html>")
+      )
+      allow(headless_fetcher).to receive(:call).and_return(nil)
+
+      expect(fetcher.fetch("https://example.com/calendar")).to be_nil
+      expect(logger).to have_received(:warn).with(/bot protection/i)
+    end
+
+    it "rejects a JS shell with no data when a validator is configured" do
+      validator = ->(body) { !body.include?("layoutjsContainer") || body.include?("EVENT_DATA") }
+      selective = described_class.new(
+        request: request, max_retries: 1, logger: logger,
+        headless_fetcher: nil, body_validator: validator
+      )
+      allow(request).to receive(:call).and_return(
+        response(200, "<div id='layoutjsContainer'></div>")
+      )
+
+      expect(selective.fetch("https://example.com/calendar", headless: false)).to be_nil
+      expect(logger).to have_received(:warn).with(/no usable data/i)
+    end
+
+    it "reports where the returned body came from" do
+      allow(request).to receive(:call).and_return(response(200, "live data"))
+
+      expect(fetcher.fetch("https://example.com/calendar")).to eq("live data")
+      expect(fetcher.last_source).to eq(:live)
+    end
+  end
+
+  describe "cached VCR cassette fallback" do
+    subject(:cassette_fetcher) do
+      described_class.new(
+        request: request, max_retries: 1, logger: logger,
+        headless_fetcher: nil, fixture_path: cassette_path
+      )
+    end
+
+    let(:cassette_path) do
+      "/home/madrax/src/ai/WeeklyLocalEvents/spec/fixtures/vcr_cassettes/visit_cedar_park_events.yml"
+    end
+
+    before { allow(request).to receive(:call).and_return(response(403, "Forbidden")) }
+
+    it "reads the recorded response body from the cassette" do
+      body = cassette_fetcher.fetch("https://example.com/events", headless: false)
+
+      expect(body).to include("Kiddie Gym - Open Play")
+      expect(cassette_fetcher.last_source).to eq(:fixture)
+      expect(logger).to have_received(:warn).with(/cached fixture/i)
+    end
+  end
 end
