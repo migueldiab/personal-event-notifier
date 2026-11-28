@@ -12,6 +12,7 @@ defaults: &defaults
     - acl_live
     - stubbss
     - paramount_austin
+    - visit_cedar_park
 
 development:
   <<: *defaults

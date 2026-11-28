@@ -23,6 +23,7 @@ module WeeklyLocalEvents
       acl_live
       stubbss
       paramount_austin
+      visit_cedar_park
     ].freeze
 
     # Map of scraper names to their class constants.
@@ -36,6 +37,7 @@ module WeeklyLocalEvents
       "acl_live"             => "WeeklyLocalEvents::Scrapers::ACLLiveScraper",
       "stubbss"              => "WeeklyLocalEvents::Scrapers::StubbssScraper",
       "paramount_austin"     => "WeeklyLocalEvents::Scrapers::ParamountAustinScraper",
+      "visit_cedar_park"     => "WeeklyLocalEvents::Scrapers::VisitCedarParkScraper",
     }.freeze
 
     def initialize(config = nil)
