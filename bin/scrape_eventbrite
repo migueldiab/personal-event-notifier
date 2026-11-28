@@ -1,0 +1,68 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# End-to-end runner for the Eventbrite API v3 scraper.
+#
+# Usage:
+#   bin/scrape_eventbrite [sources.json] [events.json]
+#
+# Environment:
+#   EVENTBRITE_PRIVATE_TOKEN  API token (falls back to EVENTBRITE_CLIENT_SECRET)
+#   MAX_VENUES                sources to scrape (default 5)
+#   MAX_PAGES                 pages per source (default 2)
+#   MAX_DETAILS               detail calls per source (default 3)
+#   RATE_PER_MINUTE           request throttle (default 10)
+#   SCRAPE_DATE_RANGE         optional "YYYY-MM-DD..YYYY-MM-DD" filter
+
+require "bundler/setup"
+require "date"
+require "dotenv/load"
+
+$LOAD_PATH.unshift(File.expand_path("../lib", __dir__))
+require "weekly_local_events/eventbrite_api_client"
+require "weekly_local_events/event_store"
+require "weekly_local_events/scrapers/eventbrite_scraper"
+
+DEFAULT_SOURCES = "/home/madrax/.hermes/kanban/boards/weekly-local-events/attachments/t_bce122ee/austin_eventbrite_sources.json"
+DEFAULT_OUTPUT = "/home/madrax/src/ai/WeeklyLocalEvents/data/eventbrite_events.json"
+
+sources_path = ARGV[0].to_s.empty? ? DEFAULT_SOURCES : ARGV[0]
+output_path = ARGV[1].to_s.empty? ? DEFAULT_OUTPUT : ARGV[1]
+token = ENV["EVENTBRITE_PRIVATE_TOKEN"].to_s
+token = ENV["EVENTBRITE_CLIENT_SECRET"].to_s if token.empty?
+abort "No Eventbrite token configured (EVENTBRITE_PRIVATE_TOKEN)." if token.empty?
+abort "Sources file not found: #{sources_path}" unless File.file?(sources_path)
+
+rate = Integer(ENV.fetch("RATE_PER_MINUTE", "10"))
+low_level = WeeklyLocalEvents::EventbriteClient.new(private_token: token)
+api = WeeklyLocalEvents::EventbriteApiClient.new(
+  client: low_level,
+  rate_limiter: WeeklyLocalEvents::RateLimiter.new(requests_per_minute: rate)
+)
+store = WeeklyLocalEvents::EventStore.new(path: output_path)
+scraper = WeeklyLocalEvents::Scrapers::EventbriteScraper.new(
+  api_client: api,
+  sources: sources_path,
+  store: store,
+  max_pages: Integer(ENV.fetch("MAX_PAGES", "2")),
+  max_detail_events: Integer(ENV.fetch("MAX_DETAILS", "3"))
+)
+
+date_range = nil
+if ENV["SCRAPE_DATE_RANGE"].to_s.include?("..")
+  first, last = ENV["SCRAPE_DATE_RANGE"].split("..", 2)
+  date_range = Date.parse(first)..Date.parse(last)
+end
+
+puts "Scraping Eventbrite API v3 from #{sources_path}"
+puts "Throttle: #{rate} req/min; max venues: #{ENV.fetch('MAX_VENUES', '5')}; max pages: #{ENV.fetch('MAX_PAGES', '2')}"
+
+events = scraper.fetch_events(
+  max_venues: Integer(ENV.fetch("MAX_VENUES", "5")),
+  date_range: date_range
+)
+
+puts "Fetched #{events.length} structured events from #{events.map { |e| e[:source_id] }.uniq.length} sources"
+puts "Venues represented: #{events.map { |e| e[:venue_name] }.compact.uniq.length}"
+puts "With price: #{events.count { |e| e[:price_cents] }}"
+puts "Wrote #{store.path}"

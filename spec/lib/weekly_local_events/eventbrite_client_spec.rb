@@ -137,4 +137,19 @@ RSpec.describe WeeklyLocalEvents::EventbriteClient do
         .to raise_error(WeeklyLocalEvents::EventbriteClient::AuthenticationError, /401/)
     end
   end
+
+  describe "#get_response" do
+    it "returns the raw response so callers can inspect headers" do
+      client = described_class.new(private_token: "private-token")
+      stub_request(:get, "#{api_base_url}/v3/events/12345/?page=2")
+        .with(headers: { "Authorization" => "Bearer private-token" })
+        .to_return(status: 429, body: '{"error":"RATE_LIMIT"}',
+                   headers: { "Retry-After" => "12", "Content-Type" => "application/json" })
+
+      response = client.get_response("/v3/events/12345/", query: { page: 2 })
+
+      expect(response.code).to eq(429)
+      expect(response.headers["Retry-After"]).to eq("12")
+    end
+  end
 end

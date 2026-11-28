@@ -117,15 +117,25 @@ module WeeklyLocalEvents
     # @raise [AuthenticationError] on 401/403
     # @raise [Error] on any other failure
     def get(path, query: {})
-      response = HTTParty.get(
-        "#{API_BASE_URL}#{path}",
-        headers: { "Authorization" => "Bearer #{access_token}" },
-        query: query
-      )
+      response = get_response(path, query: query)
       raise AuthenticationError, "Eventbrite API returned #{response.code}" if [401, 403].include?(response.code)
       raise Error, "Eventbrite API returned #{response.code}: #{response.body}" unless response.success?
 
       response.parsed_response
+    end
+
+    # Perform an authenticated GET and return the raw response so callers can
+    # inspect status codes and headers (needed for 429 backoff and retries).
+    #
+    # @param path [String] path beginning with /v3/
+    # @param query [Hash] query parameters
+    # @return [HTTParty::Response] unmodified HTTP response
+    def get_response(path, query: {})
+      HTTParty.get(
+        "#{API_BASE_URL}#{path}",
+        headers: { "Authorization" => "Bearer #{access_token}" },
+        query: query
+      )
     end
 
     private
