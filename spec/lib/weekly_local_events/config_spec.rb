@@ -8,7 +8,9 @@ require "yaml"
 # require_relative "../../lib/weekly_local_events"
 
 RSpec.describe WeeklyLocalEvents::Config do
-  let(:config_path) { Tempfile.new(["config", ".yml"]).path }
+  # Retain the Tempfile object itself; dropping it lets GC unlink the path mid-example.
+  let(:config_file) { Tempfile.new(["config", ".yml"]) }
+  let(:config_path) { config_file.path }
   let(:yaml_content) do
     {
       "notification_channel_id" => "-1004330304115",
@@ -29,7 +31,7 @@ RSpec.describe WeeklyLocalEvents::Config do
   end
 
   after do
-    File.delete(config_path) if File.exist?(config_path)
+    config_file.close!
   end
 
   describe "#initialize" do
@@ -74,6 +76,13 @@ RSpec.describe WeeklyLocalEvents::Config do
         WeeklyLocalEvents::ConfigError,
         /Invalid YAML/
       )
+    end
+
+    it "keeps the config file readable after garbage collection" do
+      GC.start(full_mark: true, immediate_sweep: true)
+
+      expect(File.exist?(config_path)).to be(true)
+      expect(described_class.new.sites).to eq(%w[austin_chronicle do512])
     end
   end
 
