@@ -12,6 +12,12 @@ capture a real fixture.
 > The primary implementation is `CedarParkRssScraper` plus the recorded cassette
 > `spec/fixtures/vcr_cassettes/cedar_park_calendar_rss.yml`.
 
+> **Registration (2026-11-27, t_7f3ee58a):** `CedarParkCalendarScraper` is
+> registered as `cedar_park_calendar` but gated by the opt-in config flag
+> `enable_cedar_park_calendar` (default `false`). It is absent from
+> `DEFAULT_SCRAPERS` and skipped at registration unless the flag is true, so the
+> archived 2026-02-07 events can never enter the Sunday digest as live data.
+
 ## Decision
 
 The `/177/Events` page is **not a data source**. Its only archived copy (as archived 2025-10-25)

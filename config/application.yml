@@ -4,6 +4,12 @@ defaults: &defaults
   request_delay: 2
   max_retries: 3
   log_level: INFO
+  # Archived-only Cedar Park calendar (CedarParkCalendarScraper / Wayback
+  # snapshot). The live calendar, iCalendar and API paths on cedarparktexas.gov
+  # are Cloudflare-blocked, so there is no proven live fetch path. OFF by
+  # default: enabling it would surface stale historical events in the digest.
+  # To opt in, set this to true AND add `cedar_park_calendar` to the list below.
+  # enable_cedar_park_calendar: false
   enabled_scrapers:
     - austin_chronicle
     - do512

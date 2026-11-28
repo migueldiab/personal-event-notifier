@@ -89,6 +89,7 @@ cached_fixture_path: /home/madrax/src/ai/WeeklyLocalEvents/spec/fixtures/vcr_cas
 | `visit_cedar_park` | visitcedarparktexas.com | Simpleview JSON API; see caveat below |
 | `cedar_park_rss` | cedarparktexas.gov | Public CivicEngage RSS feed (alternate source) |
 | `cedar_park` | cedarparktexas.gov | Public CivicEngage RSS feed; primary live Cedar Park route; see caveat below |
+| `cedar_park_calendar` | cedarparktexas.gov | **Opt-in, OFF by default.** Archived Wayback snapshot only; never live data |
 
 `cedar_park_rss` reads the city's unauthenticated feed at
 <https://www.cedarparktexas.gov/RSSFeed.aspx?ModID=58&CID=All-calendar.xml>
@@ -135,6 +136,31 @@ bundle exec ruby bin/record_vcr_cassettes
 
 Cassettes carry no credentials, cookies or API keys, and the archive capture
 timestamp is recorded in the cassette header so the snapshot stays auditable.
+
+### Cedar Park calendar (`cedar_park_calendar`): archived-only, opt-in
+
+`CedarParkCalendarScraper` parses the CivicEngage month grid from a dated Wayback
+snapshot (`spec/fixtures/cedar_park_events.html`, captured 2026-02-07). The live
+`/calendar.aspx`, `/iCalendar.aspx` and `/api/...` paths on `cedarparktexas.gov`
+are Cloudflare-blocked, so there is **no proven live fetch path** for this
+source. Its events are historical and are **never presented as live/current** in
+the Sunday digest.
+
+Registration is gated by an opt-in flag that defaults to `false`:
+
+```yaml
+# ~/.hermes/weekly_local_events/config.yml
+enable_cedar_park_calendar: true   # default: false
+enabled_scrapers:
+  # ... other sources ...
+  - cedar_park_calendar            # also list it to make it active
+```
+
+With the flag off (the default), the scraper is not registered at all, so
+adding `cedar_park_calendar` to `enabled_scrapers` alone has no effect — both
+steps are required. Use this only for deliberate historical-coverage runs; for
+normal weekly digests use the live `cedar_park` RSS source above. See
+`docs/cedar_park_recon.md` for the full recon.
 
 ### Visit Cedar Park: Akamai and JS-shell caveat
 

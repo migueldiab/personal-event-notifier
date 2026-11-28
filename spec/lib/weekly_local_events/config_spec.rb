@@ -131,4 +131,29 @@ RSpec.describe WeeklyLocalEvents::Config do
       expect(described_class.new.cached_fixture_path).to be_nil
     end
   end
+
+  describe "Cedar Park calendar opt-in flag" do
+    it "defaults to false" do
+      expect(described_class.new.enable_cedar_park_calendar?).to be(false)
+    end
+
+    it "reads true from YAML" do
+      File.write(config_path, yaml_content.merge("enable_cedar_park_calendar" => true).to_yaml)
+
+      expect(described_class.new.enable_cedar_park_calendar?).to be(true)
+    end
+
+    context "when set from an ENV override" do
+      around do |example|
+        original = ENV.fetch("ENABLE_CEDAR_PARK_CALENDAR", nil)
+        ENV["ENABLE_CEDAR_PARK_CALENDAR"] = "true"
+        example.run
+        ENV["ENABLE_CEDAR_PARK_CALENDAR"] = original
+      end
+
+      it "accepts the string true" do
+        expect(described_class.new.enable_cedar_park_calendar?).to be(true)
+      end
+    end
+  end
 end
