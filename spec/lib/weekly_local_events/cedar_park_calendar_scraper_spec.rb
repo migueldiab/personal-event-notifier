@@ -91,6 +91,50 @@ RSpec.describe WeeklyLocalEvents::Scrapers::CedarParkCalendarScraper do
     end
   end
 
+  describe "archived snapshot field coverage" do
+    it "captures the venue address from the location microdata" do
+      venue = first_event.venue
+
+      expect(venue.name).to eq("Recreation Center")
+      expect(venue.address).to eq("1435 Main Street")
+      expect(venue.city).to eq("Cedar Park")
+      expect(venue.state).to eq("TX")
+      expect(venue.zip).to eq("78613")
+    end
+
+    it "leaves description empty and price unknown in this snapshot" do
+      expect(first_event.description).to eq("")
+      expect(first_event.price_cents).to be_nil
+      expect(first_event.price.to_s.strip).to eq("")
+      expect(first_event.category).to eq("Gym Court Schedule")
+    end
+
+    it "normalizes a human time range on an evening event" do
+      evening = events.find { |event| event.title.start_with?("CANCELLED:") }
+
+      expect(evening.begin_time).to eq("18:00")
+      expect(evening.end_time).to eq("21:00")
+    end
+  end
+
+  describe "cancellation handling" do
+    it "flags CANCELLED-prefixed events without dropping them" do
+      cancelled = events.select { |event| event.title.start_with?("CANCELLED:") }
+
+      expect(cancelled.length).to eq(1)
+      expect(cancelled.first.tags).to include("cancelled")
+      expect(events.length).to eq(84)
+    end
+  end
+
+  describe "#calendar_page_url" do
+    it "constructs the crawlable month-grid URL for an adjacent month" do
+      expect(scraper.calendar_page_url(1, 2026)).to eq(
+        "https://www.cedarparktexas.gov/calendar.aspx?month=1&year=2026"
+      )
+    end
+  end
+
   describe "fake-200 body rejection" do
     def expect_rejected(body)
       expect(WeeklyLocalEvents::ArchivedSnapshotFetcher.valid_body?(body)).to be(false)
